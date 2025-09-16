@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE | 0xMouise</title><meta name="author" content="0xMouise"><meta name="copyright" content="0xMouise"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE知识点：1、Java安全-原生反序列化-3大类接口函数&amp;利用2、Java安全-SpringBoot攻防-泄漏安全&amp;CVE安全 一、演示案例-Java安全-反序列化-原生序列化类函数1、前言序列化是将Java对象转换成字节流的过程。而反序列化是将字节流">
+<meta property="og:type" content="article">
+<meta property="og:title" content="068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE">
+<meta property="og:url" content="https://0xmouise.github.io/2025/09/15/068-WEB%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&SpringBoot%E6%94%BB%E9%98%B2&heapdump%E6%8F%90%E5%8F%96&CVE/index.html">
+<meta property="og:site_name" content="0xMouise">
+<meta property="og:description" content="068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE知识点：1、Java安全-原生反序列化-3大类接口函数&amp;利用2、Java安全-SpringBoot攻防-泄漏安全&amp;CVE安全 一、演示案例-Java安全-反序列化-原生序列化类函数1、前言序列化是将Java对象转换成字节流的过程。而反序列化是将字节流">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg">
+<meta property="article:published_time" content="2025-09-15T15:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-16T05:15:46.472Z">
+<meta property="article:author" content="0xMouise">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Web安全">
+<meta property="article:tag" content="网络安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "068-WEB攻防-Java安全&原生反序列化&SpringBoot攻防&heapdump提取&CVE",
+  "url": "https://0xmouise.github.io/2025/09/15/068-WEB%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&SpringBoot%E6%94%BB%E9%98%B2&heapdump%E6%8F%90%E5%8F%96&CVE/",
+  "image": "https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg",
+  "datePublished": "2025-09-15T15:30:00.000Z",
+  "dateModified": "2025-09-16T05:15:46.472Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "0xMouise",
+      "url": "https://0xMouise.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg"><link rel="canonical" href="https://0xmouise.github.io/2025/09/15/068-WEB%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&amp;%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&amp;SpringBoot%E6%94%BB%E9%98%B2&amp;heapdump%E6%8F%90%E5%8F%96&amp;CVE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '068-WEB攻防-Java安全&原生反序列化&SpringBoot攻防&heapdump提取&CVE',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">0xMouise</span></a><a class="nav-page-title" href="/"><span class="site-name">068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-16T05:15:46.472Z" title="更新于 2025-09-16 13:15:46">2025-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B0%8F%E8%BF%AA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">小迪学习笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="068-WEB攻防-Java安全-原生反序列化-SpringBoot攻防-heapdump提取-CVE"><a href="#068-WEB攻防-Java安全-原生反序列化-SpringBoot攻防-heapdump提取-CVE" class="headerlink" title="068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE"></a>068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE</h1><p>知识点：<br>1、Java安全-原生<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&spm=1001.2101.3001.7020">反序列化</a>-3大类接口函数&amp;利用<br>2、Java安全-SpringBoot攻防-泄漏安全&amp;<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=CVE&spm=1001.2101.3001.7020">CVE</a>安全</p>
+<h2 id="一、演示案例-Java安全-反序列化-原生序列化类函数"><a href="#一、演示案例-Java安全-反序列化-原生序列化类函数" class="headerlink" title="一、演示案例-Java安全-反序列化-原生序列化类函数"></a>一、演示案例-Java安全-反序列化-原生序列化类函数</h2><h3 id="1、前言"><a href="#1、前言" class="headerlink" title="1、前言"></a>1、前言</h3><p>序列化是将Java对象转换成字节流的过程。而反序列化是将字节流转换成Java对象的过程，java序列化的数据一般会以标记(<code>ac ed 00 05</code>)开头，base64编码的特征为<code>rO0AB</code>。</p>
+<p>JAVA常见的序列化和反序列化的方法有<code>JAVA 原生序列化</code>和<code>JSON 类（fastjson、jackson）</code>序列化两种方式。两种方式做的事情都是一样的，为什么要区分开来？</p>
+<blockquote>
+<p>因为利用起来有所不同<br>fastjson、jackson等反序列化就用网上给的EXP、POC去测试<br>java原生类反序列化就会用到专门工具(ysoserial)去生成payload去测试</p>
+</blockquote>
+<p>黑盒发现（流量捕获到特征<code>ac ed 00 05、rO0AB</code>）<br>白盒发现（特征类<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%8E%A5%E5%8F%A3%E5%87%BD%E6%95%B0&spm=1001.2101.3001.7020">接口函数</a>）</p>
+<h3 id="2、原生序列化类函数"><a href="#2、原生序列化类函数" class="headerlink" title="2、原生序列化类函数"></a>2、原生序列化类函数</h3><h4 id="SnakeYaml"><a href="#SnakeYaml" class="headerlink" title="SnakeYaml"></a>SnakeYaml</h4><p>完整的YAML1.1规范Processor，支持Java对象的序列化&#x2F;反序列化</p>
+<p><img src="/img/image-20250628204557892.png" alt="image-20250628204557892"></p>
+<p><img src="/img/image-20250628205651338.png" alt="image-20250628205651338"></p>
+<p><img src="/img/image-20250628205706565.png" alt="image-20250628205706565"></p>
+<p><img src="/img/image-20250628205720116.png" alt="image-20250628205720116"></p>
+<p><img src="/img/image-20250628205855793.png" alt="image-20250628205855793"></p>
+<p><img src="/img/image-20250628210049847.png" alt="image-20250628210049847"></p>
+<p>需要注意下<code>jndi</code>注入版本问题</p>
+<p><img src="/img/image-20250628210102796.png" alt="image-20250628210102796"></p>
+<h4 id="XMLDecoder"><a href="#XMLDecoder" class="headerlink" title="XMLDecoder"></a>XMLDecoder</h4><p>xml语言格式序列化类函数接口</p>
+<p><img src="/img/image-20250628210639826.png" alt="image-20250628210639826"></p>
+<p><img src="/img/image-20250628210743159.png" alt="image-20250628210743159"></p>
+<h4 id="ObjectInputStream-readObject"><a href="#ObjectInputStream-readObject" class="headerlink" title="ObjectInputStream.readObject"></a>ObjectInputStream.readObject</h4><p>任何类如果想要序列化必须实现<br><code>java.io.Serializable</code>接口</p>
+<p><img src="/img/image-20250628210809484.png" alt="image-20250628210809484"></p>
+<p><img src="/img/image-20250628210925953.png" alt="image-20250628210925953"></p>
+<p><img src="/img/image-20250628210939378.png" alt="image-20250628210939378"></p>
+<p>该项目有个好处就是能看到一些利用链对应的具体版本</p>
+<p><img src="/img/image-20250628211001101.png" alt="image-20250628211001101"></p>
+<h5 id="Yakit"><a href="#Yakit" class="headerlink" title="Yakit"></a>Yakit</h5><p><img src="/img/image-20250628211050360.png" alt="image-20250628211050360"></p>
+<p><img src="/img/image-20250628211240627.png" alt="image-20250628211240627"></p>
+<p><img src="/img/image-20250628211316710.png" alt="image-20250628211316710"></p>
+<p>假如不知道对方能用什么利用链生成payload，可以利用万能利用链(URLDNS)进行POC测试</p>
+<p><img src="/img/image-20250628211628736.png" alt="image-20250628211628736"></p>
+<h5 id="SerializedPayloadGenerator"><a href="#SerializedPayloadGenerator" class="headerlink" title="SerializedPayloadGenerator"></a>SerializedPayloadGenerator</h5><p>该工具项目搭建地址参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_60571842/article/details/134454939">https://blog.csdn.net/m0_60571842/article/details/134454939</a></p>
+<p><img src="/img/image-20250628211717223.png" alt="image-20250628211717223"></p>
+<p><img src="/img/image-20250628211731107.png" alt="image-20250628211731107"></p>
+<p><img src="/img/image-20250628211753644.png" alt="image-20250628211753644"></p>
+<p><img src="/img/image-20250628211802623.png" alt="image-20250628211802623"></p>
+<p><img src="/img/image-20250628211813523.png" alt="image-20250628211813523"></p>
+<p><img src="/img/image-20250628220336492.png" alt="image-20250628220336492"></p>
+<p><img src="/img/image-20250628220348105.png" alt="image-20250628220348105"></p>
+<p><img src="/img/image-20250628220355493.png" alt="image-20250628220355493"></p>
+<p><img src="/img/image-20250628220405687.png" alt="image-20250628220405687"></p>
+<h3 id="3、利用项目"><a href="#3、利用项目" class="headerlink" title="3、利用项目"></a>3、利用项目</h3><p>Yakit<br><a target="_blank" rel="noopener" href="https://yaklang.com/">https://yaklang.com/</a> &#x2F;&#x2F;集成了ysoserial工具，图形化生成，推荐使用</p>
+<p>ysoserial<br><a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial">https://github.com/frohoff/ysoserial</a> &#x2F;&#x2F;命令生成工具，不推荐使用</p>
+<p>SerializedPayloadGenerator<br><a target="_blank" rel="noopener" href="https://github.com/NotSoSecure/SerializedPayloadGenerator">https://github.com/NotSoSecure/SerializedPayloadGenerator</a> &#x2F;&#x2F;集成了ysoserial工具，网页图形化，推荐使用</p>
+<h2 id="二、演示案例-Java安全-SpringBoot框架-泄漏-CVE"><a href="#二、演示案例-Java安全-SpringBoot框架-泄漏-CVE" class="headerlink" title="二、演示案例-Java安全-SpringBoot框架-泄漏&amp;CVE"></a>二、演示案例-Java安全-SpringBoot框架-泄漏&amp;CVE</h2><p><code>SpringBoot Actuator</code>模块提供了生产级别的功能，比如健康检查，审计，指标收集，HTTP跟踪等，帮助我们监控和管理<code>Spring Boot</code>应用。</p>
+<h3 id="0、检测清单"><a href="#0、检测清单" class="headerlink" title="0、检测清单"></a>0、检测清单</h3><p><a target="_blank" rel="noopener" href="https://github.com/LandGrey/SpringBootVulExploit">https://github.com/LandGrey/SpringBootVulExploit</a></p>
+<p><img src="/img/image-20250628220448304.png" alt="image-20250628220448304"></p>
+<p><img src="/img/image-20250628220459375.png" alt="image-20250628220459375"></p>
+<p><img src="/img/image-20250628221655744.png" alt="image-20250628221655744"></p>
+<h3 id="1、黑盒发现（人工识别，BP插件）"><a href="#1、黑盒发现（人工识别，BP插件）" class="headerlink" title="1、黑盒发现（人工识别，BP插件）"></a>1、黑盒发现（人工识别，BP插件）</h3><h4 id="人工识别"><a href="#人工识别" class="headerlink" title="人工识别"></a>人工识别</h4><p>1、网站图片文件是一个绿色的树叶。2、特有的报错信息。3、Whitelabel Error Page关键字</p>
+<p><img src="/img/image-20250630000710372.png" alt="image-20250630000710372"></p>
+<p><img src="/img/image-20250630000728969.png" alt="image-20250630000728969"></p>
+<h4 id="BP插件"><a href="#BP插件" class="headerlink" title="BP插件"></a>BP插件</h4><p><a target="_blank" rel="noopener" href="https://github.com/API-Security/APIKit">https://github.com/API-Security/APIKit</a><br>打开BurpSuite页面,点击Extender然后选择Extensions,添加APIKit.jar</p>
+<ul>
+<li><img src="/img/image-20250630155232042.png" alt="image-20250630155232042"></li>
+<li>安装好插件后啥都不用管，让数据包经过BP即可触发插件被动扫描<ul>
+<li><img src="/img/image-20250630214311260.png" alt="image-20250630214311260"></li>
+</ul>
+</li>
+</ul>
+<h3 id="2、白盒发现（pom-xml-引用库）"><a href="#2、白盒发现（pom-xml-引用库）" class="headerlink" title="2、白盒发现（pom.xml,引用库）"></a>2、白盒发现（pom.xml,引用库）</h3><ol>
+<li>看引用库里面是否有应用<code>springframework</code>和<code>spring-boot-starter-actuator</code>模块</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>配置文件Actuator设置全部暴露</p>
+<ul>
+<li>全局搜索<code>actuator</code>模块应用库</li>
+<li><img src="/img/image-20250630214721425.png" alt="image-20250630214721425"></li>
+</ul>
+</li>
+<li><p><code>Actouator</code>设置全部暴露</p>
+<ul>
+<li><pre><code>management.endpoints.web.exposure.include=* 的作用是 暴露所有的 Spring Boot Actuator 端点，使得你可以通过 HTTP 请求访问所有内置的监控和管理端点。如果没有特别需求，通常建议限制暴露的端点，以提高安全性。
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   * ![image-20250630214821052](/img/image-20250630214821052.png)</span><br><span class="line"></span><br><span class="line">### 3、泄漏安全(内部路由泄露)</span><br><span class="line"></span><br><span class="line">https://github.com/AabyssZG/SpringBoot-Scan</span><br><span class="line"></span><br><span class="line">![image-20250628230402349](/img/image-20250628230402349.png)</span><br><span class="line"></span><br><span class="line">![image-20250628230449830](/img/image-20250628230449830.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">1. 在env下面泄露了一些关键信息 数据库账户密码什么 </span><br><span class="line">   </span><br><span class="line">   * ![image-20250628230556117](/img/image-20250628230556117.png)</span><br><span class="line">2. 如果需要详细查看需要进行下载我们需要访问`/heapdump`对文件进行下载</span><br><span class="line">   </span><br><span class="line">* ![image-20250628230749996](/img/image-20250628230749996.png)</span><br><span class="line">  </span><br><span class="line">3. 将下载后的文件放在工具目录下面</span><br><span class="line"></span><br><span class="line">   * #### heapdump敏感信息查询工具（配置密码，AK/SK等）</span><br><span class="line"></span><br><span class="line">   * https://github.com/whwlsfb/JDumpSpider(该工具不支持自定义关键字)</span><br><span class="line"></span><br><span class="line">   * ![image-20250628231420176](/img/image-20250628231420176.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250628231726901](/img/image-20250628231726901.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250628231919337](/img/image-20250628231919337.png)</span><br><span class="line"></span><br><span class="line">4. 第一个工具不支持自定义关键字，并且有的信息提取不到 这里推荐另外一个工具 </span><br><span class="line"></span><br><span class="line">   * https://github.com/wyzxxz/heapdump_tool(支持关键字搜索)</span><br><span class="line">   * ![image-20250629002112683](/img/image-20250629002112683.png)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 4、漏洞安全（利用类，CVE漏洞等）</span><br><span class="line"></span><br><span class="line">#### 一、针对于框架CVE漏洞</span><br><span class="line"></span><br><span class="line">https://github.com/AabyssZG/SpringBoot-Scan</span><br><span class="line"></span><br><span class="line">1. 检测不出来是因为该工具不支持这个漏洞检测</span><br><span class="line">2. 这个工具主要检测微服务的内容 </span><br><span class="line"></span><br><span class="line">* ![image-20250629002342003](/img/image-20250629002342003.png)</span><br><span class="line">* ![image-20250629194327837](/img/image-20250629194327837.png)</span><br><span class="line">* ![image-20250629194715836](/img/image-20250629194715836.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 二、利用类漏洞来进行RCE攻击</span><br><span class="line"></span><br><span class="line">https://github.com/0x727/SpringBootExploit</span><br><span class="line"></span><br><span class="line">1. 这个工具利用Springboot上面的泄露有没有可以利用的类 </span><br><span class="line">2. 然后使用这款工具来进行针对性的利用</span><br><span class="line">   * ![image-20250629115931209](/img/image-20250629115931209.png)</span><br><span class="line">   * ![image-20250629120617158](/img/image-20250629120617158.png)</span><br><span class="line"></span><br><span class="line">3. 服务器上执行`JNDIExploit`工具(可以本地、也可以远程VPS上运行)</span><br><span class="line">   * ![image-20250629121216636](/img/image-20250629121216636.png)</span><br><span class="line">   * ![image-20250629194050919](/img/image-20250629194050919.png)</span><br><span class="line">   * ![image-20250629194125600](/img/image-20250629194125600.png)</span><br><span class="line">   * ![image-20250629194139309](/img/image-20250629194139309.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 5、CMS源码审计</span><br><span class="line"></span><br><span class="line">#### 一、安装源码</span><br><span class="line"></span><br><span class="line">1. 打开项目先找到配置文件按照图片里面的路径修改为你当前数据库数据库用户名和密码</span><br><span class="line">   * ![image-20250630220046447](/img/image-20250630220046447.png)</span><br><span class="line">2. 打开小皮启动数据库 在数据库管理工具页面创建新的数据库`rbac`导入文件里面自带的数据库`rbac.sql`</span><br><span class="line">   * ![image-20250630220429114](/img/image-20250630220429114.png)</span><br><span class="line"></span><br><span class="line">3. 在idea里面的右边`Maven`这里进行`clean`和`install`重新启动</span><br><span class="line">   * ![image-20250630220637097](/img/image-20250630220637097.png)</span><br><span class="line">4. 重新加载成功后启动环境来到站点 用户名`admin`密码`123456`</span><br><span class="line">   * ![image-20250630221948251](/img/image-20250630221948251.png)</span><br><span class="line">   * ![image-20250630222830241](/img/image-20250630222830241.png)</span><br><span class="line"></span><br><span class="line">#### 二、源码审计</span><br><span class="line"></span><br><span class="line">1. 从pom.xml看有没有调用Actuator库</span><br><span class="line">   * ![image-20250630222922103](/img/image-20250630222922103.png)</span><br><span class="line"></span><br><span class="line">2. 配置文件中Actuator设置是否为*(全部暴露)</span><br><span class="line"></span><br><span class="line">   * ```</span><br><span class="line">     management.endpoints.web.exposure.include=*</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><p><img src="/img/image-20250630223413155.png" alt="image-20250630223413155"></p>
+</li>
+</ul>
+</li>
+<li><p>利用用具看看有没有存在的rce漏洞，没有只能从泄露安全headdump下手</p>
+<ul>
+<li><img src="/img/image-20250630223757221.png" alt="image-20250630223757221"></li>
+</ul>
+</li>
+<li><p>bp插件查看铭感信息</p>
+<ul>
+<li><img src="/img/image-20250630224018372.png" alt="image-20250630224018372"></li>
+</ul>
+</li>
+<li><p>使用JDumpSpider敏感信息查询工具heapdump对提取敏感信息提取</p>
+<ul>
+<li><img src="/img/image-20250630224104001.png" alt="image-20250630224104001"></li>
+<li><img src="/img/image-20250630224403520.png" alt="image-20250630224403520"></li>
+</ul>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://0xMouise.github.io">0xMouise</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://0xmouise.github.io/2025/09/15/068-WEB%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&amp;%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&amp;SpringBoot%E6%94%BB%E9%98%B2&amp;heapdump%E6%8F%90%E5%8F%96&amp;CVE/">https://0xmouise.github.io/2025/09/15/068-WEB%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&amp;%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&amp;SpringBoot%E6%94%BB%E9%98%B2&amp;heapdump%E6%8F%90%E5%8F%96&amp;CVE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://0xMouise.github.io" target="_blank">0xMouise</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/Web%E5%AE%89%E5%85%A8/">Web安全</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div><div class="post-share"><div class="social-share" data-image="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/15/069-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&amp;JWT%E9%A1%B9%E7%9B%AE%E6%8F%92%E4%BB%B6&amp;Postman%E4%B8%AD%E6%96%87%E5%8C%85%E7%AD%89/" title="069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">069-Web攻防-Java安全&JWT项目插件&Postman中文包等</div></div><div class="info-2"><div class="info-item-1">069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等知识点 1、Java安全-Druid监控-未授权访问&amp;信息泄漏 2、Java安全-Swagger接口-文档导入&amp;联动批量测试 2、Java安全-JWT令牌攻防-空算法&amp;未签名&amp;密匙提取 Java安全-Druid监控-未授权访问&amp;信息泄漏Druid是阿里巴巴数据库事业部出品，为监控而生的数据库连接池。Druid提供的监控功能，监控SQL的执行时间、监控Web URI的请求、Session监控。当开发者配置不当时就可能造成未授权访问漏洞。 参考：https://developer.aliyun.com/article/1260382 攻击点：  直接拼接URL路径，尝试能否直接未授权访问系统功能点。 结合泄露URL路径和Session信息，利用BurpSuite进行尝试登录。 利用Cookie编辑器替换Session，再次访问后台路径尝试进入后台。  黑盒环境下  在黑盒环境下 在url后面加上druid即可查看当前是否存在     ​	 白盒发现  在项目...</div></div></div></a><a class="pagination-related" href="/2025/09/15/066-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8JAR%E5%8C%85%E9%9D%B6%E5%9C%BA&amp;%E5%AE%A1%E8%AE%A1%E6%BA%90%E7%A0%81%E7%AD%89/" title="066-Web攻防-Java安全JAR包靶场&amp;审计源码等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">066-Web攻防-Java安全JAR包靶场&审计源码等</div></div><div class="info-2"><div class="info-item-1">066-Web攻防-Java安全JAR包靶场&amp;审计源码等知识点 1、Java安全-SQL注入-JDBC&amp;MyBatis 2、Java安全-XXE注入-Reader&amp;Builder 3、Java安全-SSTI模版-Thymeleaf&amp;URL 4、Java安全-SPEL表达式-SpringBoot框架 JavaSec搭建项目下载地址：https://github.com/bewhale/JavaSec 具体搭建请参考：https://blog.csdn.net/qq_61553520/article/details/136767473 默认账户密码admin&#x2F;admin  使用java -jar javasec-0.0.1-SNAPSHOT.jar启动靶场 成功之后会跳出如下信息      访问地址http://127.0.0.1:8000/ 账户名密码均为admin       Hello-Java-Sec搭建项目下载地址：https://github.com/j3ers3/Hello-Java-Sec 具体搭建请参考：https://bl...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/15/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&WAF&%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等</div></div><div class="info-2"><div class="info-item-1">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等 本节内容  1、端口扫描-应用&amp;协议2、WAF识别-分类&amp;识别3、蜜罐识别-分类&amp;识别解决：1、Web服务器&amp;应用服务器差异性2、WAF防火墙&amp;安全防护&amp;识别技术3、蜜罐平台&amp;安全防护&amp;识别技术  一.端口扫描-应用&amp;协议 Nmap：配置中：Quick scan plus是快速扫描，intense scan all TCP ports 是全部端口扫描    端口扫描的意义：通过扫描端口是否开放来确定主机上面安装过什么应用，网站应用数据库应用 等…. 在进行端口扫描的时候应该考虑 ：1.防火墙 2.内网环境 防火墙：对端口进行过滤 但不代表端口没有开启 只是没有对外服务 内网环境可能出现的情况：明明数据库端口是开的,网站也能正常打开 但是你对目标进行端口扫描 发现数据库端口没有开放（排除防火墙问题） 二.WAF防火墙&amp;安全防护&amp;识别技术1、WAF解释：Web应用防护系统（也称为：网站应用级入侵防御系统。英文：Web Applic...</div></div></div></a><a class="pagination-related" href="/2025/09/15/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&FUZZ%E7%88%AC%E8%99%AB&%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目</div></div><div class="info-2"><div class="info-item-1">第14天：信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目一.本节知识点1、JS前端架构-识别&amp;分析2、JS前端架构-开发框架分析3、JS前端架构-打包器分析4、JS前端架构-提取&amp;FUZZ解决：1、如何从表现中的JS提取价值信息2、如何从地址中FUZZ提取未知的JS文件3、如何从JS开放框架WebPack进行测试 1.什么是cms CMS（意思为“网站内容管理系统”， 用来管理网站后台，编辑网站前台。）Discuz、WordPress、Ecshop、蝉知等前端技术；HTML5、jquery、bootstrap、Vue等开发语言；PHP、JAVA、Ruby、Python、C#，JS等Web服务器；Apache、Nginx、IIS、lighttpd，Apache等应用服务器：；Tomcat、Jboss、Weblogic、Websphere等数据库类型：；Mysql、SqlServer、Oracle、Redis、MongoDB等操作系统信息；Linux、windows等应用服务信息：；FTP、SSH...</div></div></div></a><a class="pagination-related" href="/2025/09/15/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&%E8%B5%84%E6%BA%90URL&%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzvnvj31hc0xc1ky.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等</div></div><div class="info-2"><div class="info-item-1">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等 一.相关链接&amp;工具站&amp;项目工具超级Ping：http://www.17ce.com/ 超级Ping：https://ping.chinaz.com/ 接口查询：https://get-site-ip.com/ 接口查询：https://fofa.info/extensions/source 国外请求：https://tools.ipip.net/cdn.php 国外请求：https://boce.aliyun.com/detect/ IP社区库：https://www.cz88.net/geo-public 全网扫描：https://github.com/Tai7sy/fuckcdn 全网扫描：https://github.com/boy-hack/w8fuckcdn 全网扫描：https://github.com/Pluto-123/Bypass_cdn 大佬文章-CDN绕过 https://mp.weixin.qq.com/s/zxEH-HMqKukmq7qXfrdnQQ 二.CND前置知识...</div></div></div></a><a class="pagination-related" href="/2025/09/15/017-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E6%A1%86%E6%9E%B6%E7%BB%84%E4%BB%B6&CMS%E5%B7%A5%E5%85%B7&%E5%85%B6%E4%BB%96%E7%AD%89/" title="017-信息打点-框架组件&amp;CMS工具&amp;其他等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">017-信息打点-框架组件&amp;CMS工具&amp;其他等</div></div><div class="info-2"><div class="info-item-1">017-信息打点-框架组件&amp;CMS工具&amp;其他等 本节课主要知识点 1.CMS识别到后期漏洞利用和代码审计2.开发框架识别到后期漏洞利用和代码审计3.开发组件识别到后期漏洞利用和代码审计 一、CMS指纹识别-不出网程序识别1.概念CMS指纹识别一般能识别到的都是以PHP语言开发的网页为主，其他语言开发的网页识别难度大 识别的意义就是向着对应目标使用对应的工具进行攻击 1.后端：CMS：一般PHP开发居多源码程序（利用源码程序名去搜漏洞情况，源码去下载进行后期的代码审计） 2.前端：JS框架（爬取更多的JS从里面筛选URL或敏感泄漏KEY等）  也是可以通过对JS代码逻辑进行代码审计 3.组件： 组件：第三方的功能模块（日志记录，数据监控，数据转换等）  java居多，常见有过安全漏洞组件（shiro solr log4j sprintboot等） 4.框架： 框架：简单代码的一个整合库，如果使用框架就只需要学习使用框架调用即可 如：文件上传功能是需要很多代码来实现的，框架把这个代码进行封封装，调用即可 影响：如果采用框架开发，代码的安全性是取决于框架的过滤机制  p...</div></div></div></a><a class="pagination-related" href="/2025/09/15/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试</div></div><div class="info-2"><div class="info-item-1">第18天：信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试 本节内容 1、Web&amp;备案信息&amp;单位名称中发现APP2、APP资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标APP信息2、如何从APP信息中提取资产  一、如何获取到目标APP信息1.名称获取app信息(爱企查、小蓝本、七麦、点点)1.爱企查知识产权https://aiqicha.baidu.com/  2.七麦、点点查名称[七麦  点点查 2、URL网站备案查APP关于我们 (psbc-ubank.com)（中邮邮惠万家）  1、查备案信息在搜 2、网站上有APP下载 3、市场直接搜单位名称   二、如何从app中收集资产通过获取App配置、数据包，去获取url、api、osskey、js等敏感信息。   资产信息-IP 域名 网站 -转到对应Web测试 接口测试 服务测试 泄露信息-配置key 资源文件 - key（osskey利用，邮件配置等） 代码信息-java代码安全问题- 逆向相关   1、抓包-动态表现优...</div></div></div></a><a class="pagination-related" href="/2025/09/15/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">019-信息打点-小程序组手&amp;开发工具&amp;依赖等</div></div><div class="info-2"><div class="info-item-1">019-信息打点-小程序组手&amp;开发工具&amp;依赖等知识点 1、Web&amp;备案信息&amp;单位名称中发现小程序2、小程序资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标小程序信息2、如何从小程序中提取资产信息  一.➢小程序获取-各大平台&amp;关键字搜索微信百度支付宝抖音头条  二.小程序主题结构1.主体结构小程序包含一个描述整体程序的 app 和多个描述各自页面的 page。一个小程序主体部分(即app)由三个文件组成，必须放在项目的根目录，如下：    文件 必需 作用    app.js 是 小程序逻辑   app.json 是 小程序公共配置   app.wxss 否 小程序公共样式表   2.一个小程序页面由四个文件组成，分别是:   xxx.js 页面逻辑    xxx.json 页面配置   xxx.wxml 页面结构   xxx.wxss 页面样式   3.项目整体目录结构   pages 页面文件夹    index 首页   logs 日志   utils util 工具类(mina框架自动生成,你也可以建立一个：...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="author-info-name">0xMouise</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#068-WEB%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8-%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-SpringBoot%E6%94%BB%E9%98%B2-heapdump%E6%8F%90%E5%8F%96-CVE"><span class="toc-number">1.</span> <span class="toc-text">068-WEB攻防-Java安全&amp;原生反序列化&amp;SpringBoot攻防&amp;heapdump提取&amp;CVE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%BC%94%E7%A4%BA%E6%A1%88%E4%BE%8B-Java%E5%AE%89%E5%85%A8-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E5%8E%9F%E7%94%9F%E5%BA%8F%E5%88%97%E5%8C%96%E7%B1%BB%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">一、演示案例-Java安全-反序列化-原生序列化类函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.1.</span> <span class="toc-text">1、前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%8E%9F%E7%94%9F%E5%BA%8F%E5%88%97%E5%8C%96%E7%B1%BB%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">2、原生序列化类函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SnakeYaml"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">SnakeYaml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XMLDecoder"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">XMLDecoder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ObjectInputStream-readObject"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">ObjectInputStream.readObject</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Yakit"><span class="toc-number">1.1.2.3.1.</span> <span class="toc-text">Yakit</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SerializedPayloadGenerator"><span class="toc-number">1.1.2.3.2.</span> <span class="toc-text">SerializedPayloadGenerator</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E5%88%A9%E7%94%A8%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.1.3.</span> <span class="toc-text">3、利用项目</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%BC%94%E7%A4%BA%E6%A1%88%E4%BE%8B-Java%E5%AE%89%E5%85%A8-SpringBoot%E6%A1%86%E6%9E%B6-%E6%B3%84%E6%BC%8F-CVE"><span class="toc-number">1.2.</span> <span class="toc-text">二、演示案例-Java安全-SpringBoot框架-泄漏&amp;CVE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0%E3%80%81%E6%A3%80%E6%B5%8B%E6%B8%85%E5%8D%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">0、检测清单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E9%BB%91%E7%9B%92%E5%8F%91%E7%8E%B0%EF%BC%88%E4%BA%BA%E5%B7%A5%E8%AF%86%E5%88%AB%EF%BC%8CBP%E6%8F%92%E4%BB%B6%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">1、黑盒发现（人工识别，BP插件）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%BA%E5%B7%A5%E8%AF%86%E5%88%AB"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">人工识别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BP%E6%8F%92%E4%BB%B6"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">BP插件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E7%99%BD%E7%9B%92%E5%8F%91%E7%8E%B0%EF%BC%88pom-xml-%E5%BC%95%E7%94%A8%E5%BA%93%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">2、白盒发现（pom.xml,引用库）</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&amp;WAF&amp;%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"/></a><div class="content"><a class="title" href="/2025/09/15/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&amp;WAF&amp;%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&amp;%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&amp;%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&amp;API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&amp;FUZZ%E7%88%AC%E8%99%AB&amp;%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"/></a><div class="content"><a class="title" href="/2025/09/15/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&amp;%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&amp;%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&amp;API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&amp;FUZZ%E7%88%AC%E8%99%AB&amp;%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目">014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&amp;%E8%B5%84%E6%BA%90URL&amp;%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzvnvj31hc0xc1ky.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"/></a><div class="content"><a class="title" href="/2025/09/15/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&amp;%E8%B5%84%E6%BA%90URL&amp;%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/017-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E6%A1%86%E6%9E%B6%E7%BB%84%E4%BB%B6&amp;CMS%E5%B7%A5%E5%85%B7&amp;%E5%85%B6%E4%BB%96%E7%AD%89/" title="017-信息打点-框架组件&amp;CMS工具&amp;其他等"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="017-信息打点-框架组件&amp;CMS工具&amp;其他等"/></a><div class="content"><a class="title" href="/2025/09/15/017-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E6%A1%86%E6%9E%B6%E7%BB%84%E4%BB%B6&amp;CMS%E5%B7%A5%E5%85%B7&amp;%E5%85%B6%E4%BB%96%E7%AD%89/" title="017-信息打点-框架组件&amp;CMS工具&amp;其他等">017-信息打点-框架组件&amp;CMS工具&amp;其他等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&amp;%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&amp;%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&amp;%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&amp;%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&amp;%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"/></a><div class="content"><a class="title" href="/2025/09/15/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&amp;%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&amp;%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&amp;%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&amp;%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&amp;%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试">018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 0xMouise</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div><div class="footer_custom_text">如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="用我三生烟火，换你一世迷离,长街长，烟花繁，你挑灯回看,回得了过去，回不了当初,抬头看，人生是星辰大海,当你想要放弃时，想想当初为什么开始,因为现在的坚持正在重塑未来的你,抬头看，人生是星辰大海,你最大的冒险，是过你梦想的生活,等待完美条件的人永远无法开始,认知的边界就是命运的边界,在长大，在失去，在努力，在接受，在好好生活,如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机,纵有狂风拔地起 我亦乘风破万里,汗水不会辜负你的期待,享受你每一次锻炼完后的肌肉酸痛,因为这意味昨天那个预示着懦弱你的已经被你杀死了,肌肉的酸痛预示着懦弱的离场,当你快坚持不住的时候 困难也快坚持不住了,有些事不是看到了希望才努力，而是努力了才看到了希望,在无人问津的地方历练，在万众瞩目的地方出现,破茧成蝶必经淬炼,一颗向上跳动的心脏，不该有一副下坠的躯体,向下的躯体无法承载向上的灵魂,一个人要想成长你的意志力和身体都得尽力磨砺,宝剑锋从磨砺出梅花香自苦寒来" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
