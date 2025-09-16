@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等 | 0xMouise</title><meta name="author" content="0xMouise"><meta name="copyright" content="0xMouise"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等知识点 1、Java安全-Druid监控-未授权访问&amp;信息泄漏 2、Java安全-Swagger接口-文档导入&amp;联动批量测试 2、Java安全-JWT令牌攻防-空算法&amp;未签名&amp;密匙提取 Java安全-Druid监控-未授权访问&amp;信息泄漏Druid是阿里巴巴数据库事业部出品">
+<meta property="og:type" content="article">
+<meta property="og:title" content="069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等">
+<meta property="og:url" content="https://0xmouise.github.io/2025/09/16/069-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&JWT%E9%A1%B9%E7%9B%AE%E6%8F%92%E4%BB%B6&Postman%E4%B8%AD%E6%96%87%E5%8C%85%E7%AD%89/index.html">
+<meta property="og:site_name" content="0xMouise">
+<meta property="og:description" content="069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等知识点 1、Java安全-Druid监控-未授权访问&amp;信息泄漏 2、Java安全-Swagger接口-文档导入&amp;联动批量测试 2、Java安全-JWT令牌攻防-空算法&amp;未签名&amp;密匙提取 Java安全-Druid监控-未授权访问&amp;信息泄漏Druid是阿里巴巴数据库事业部出品">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg">
+<meta property="article:published_time" content="2025-09-16T04:48:44.000Z">
+<meta property="article:modified_time" content="2025-09-16T07:48:52.000Z">
+<meta property="article:author" content="0xMouise">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Web安全">
+<meta property="article:tag" content="网络安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "069-Web攻防-Java安全&JWT项目插件&Postman中文包等",
+  "url": "https://0xmouise.github.io/2025/09/16/069-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&JWT%E9%A1%B9%E7%9B%AE%E6%8F%92%E4%BB%B6&Postman%E4%B8%AD%E6%96%87%E5%8C%85%E7%AD%89/",
+  "image": "https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg",
+  "datePublished": "2025-09-16T04:48:44.000Z",
+  "dateModified": "2025-09-16T07:48:52.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "0xMouise",
+      "url": "https://0xMouise.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg"><link rel="canonical" href="https://0xmouise.github.io/2025/09/16/069-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&amp;JWT%E9%A1%B9%E7%9B%AE%E6%8F%92%E4%BB%B6&amp;Postman%E4%B8%AD%E6%96%87%E5%8C%85%E7%AD%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '069-Web攻防-Java安全&JWT项目插件&Postman中文包等',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">0xMouise</span></a><a class="nav-page-title" href="/"><span class="site-name">069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-16T04:48:44.000Z" title="发表于 2025-09-16 12:48:44">2025-09-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-16T07:48:52.000Z" title="更新于 2025-09-16 15:48:52">2025-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B0%8F%E8%BF%AA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">小迪学习笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="069-Web攻防-Java安全-JWT项目插件-Postman中文包等"><a href="#069-Web攻防-Java安全-JWT项目插件-Postman中文包等" class="headerlink" title="069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等"></a>069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等</h1><p>知识点</p>
+<p>1、Java安全-Druid监控-未授权访问&amp;信息泄漏</p>
+<p>2、Java安全-Swagger接口-文档导入&amp;联动批量测试</p>
+<p>2、Java安全-JWT令牌攻防-空算法&amp;未签名&amp;密匙提取</p>
+<h2 id="Java安全-Druid监控-未授权访问-信息泄漏"><a href="#Java安全-Druid监控-未授权访问-信息泄漏" class="headerlink" title="Java安全-Druid监控-未授权访问&amp;信息泄漏"></a>Java安全-Druid监控-未授权访问&amp;信息泄漏</h2><p>Druid是阿里巴巴数据库事业部出品，为监控而生的数据库连接池。Druid提供的监控功能，监控SQL的执行时间、监控Web URI的请求、Session监控。当开发者配置不当时就可能造成未授权访问漏洞。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1260382">https://developer.aliyun.com/article/1260382</a></p>
+<p>攻击点：</p>
+<ul>
+<li>直接拼接URL路径，尝试能否直接未授权访问系统功能点。</li>
+<li>结合泄露URL路径和Session信息，利用BurpSuite进行尝试登录。</li>
+<li>利用Cookie编辑器替换Session，再次访问后台路径尝试进入后台。</li>
+</ul>
+<p><strong>黑盒环境下</strong></p>
+<ol>
+<li>在黑盒环境下 在url后面加上<code>druid</code>即可查看当前是否存在<ul>
+<li><img src="/img/image-20250630231645508.png" alt="image-20250630231645508"></li>
+</ul>
+</li>
+</ol>
+<p>​	</p>
+<p><strong>白盒发现</strong></p>
+<ol>
+<li><p>在项目源码配置文件中搜索<code>druid</code>关键字</p>
+<ul>
+<li><img src="/img/image-20250701094750508.png" alt="image-20250701094750508"></li>
+</ul>
+</li>
+<li><p>把这里<code>#</code>去除就代表要进行登录</p>
+</li>
+<li><p>如果没有配置密码就是未授权访问</p>
+<ul>
+<li><img src="/img/image-20250701094818029.png" alt="image-20250701094818029"></li>
+<li><img src="/img/image-20250701094943692.png" alt="image-20250701094943692"></li>
+</ul>
+</li>
+</ol>
+<p><strong>攻击点</strong></p>
+<p>直接拼接URL路径，尝试能否直接未授权访问系统功能点。</p>
+<p><img src="/img/image-20250701095220509.png" alt="image-20250701095220509"></p>
+<p>结合泄露URL路径和Session信息，利用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=BurpSuite&spm=1001.2101.3001.7020">BurpSuite</a>进行尝试登录</p>
+<p><img src="/img/image-20250701095245288.png" alt="image-20250701095245288"></p>
+<p>利用Cookie编辑器替换Session，再次访问后台路径尝试进入后台。</p>
+<h2 id="Java安全-Swagger接口-导入-联动批量测试"><a href="#Java安全-Swagger接口-导入-联动批量测试" class="headerlink" title="Java安全-Swagger接口-导入&amp;联动批量测试"></a>Java安全-<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Swagger%E6%8E%A5%E5%8F%A3&spm=1001.2101.3001.7020">Swagger接口</a>-导入&amp;联动批量测试</h2><p>Swagger是一个用于生成、描述和调用RESTful接口的Web服务。就是将项目中所有（想要暴露的）接口展现在页面上，并可以进行接口调用和测试的服务。所以可以对这个接口进行漏洞测试，看是否存在未授权访问、sql注入、文件上传等漏洞。由于接口太多，一个个接口测试的话太费时间，所以一般会采用自动化接口漏洞安全测试。</p>
+<p>黑盒情况下</p>
+<p><strong>查看 Swagger 文档</strong>：Swagger 提供了自动生成的 API 文档，通常可以通过 <code>/swagger-ui/</code> 或类似路径访问到。通过查看这些文档，你可以了解所有可用的接口和请求的参数。</p>
+<h3 id="自动化发包测试"><a href="#自动化发包测试" class="headerlink" title="自动化发包测试"></a>自动化发包测试</h3><ol>
+<li>将网站上面的一些接口信息，显示到了页面上上面</li>
+</ol>
+<p><img src="/img/image-20250701100109552.png" alt="image-20250701100109552"></p>
+<ol start="2">
+<li>菜单管理尝试着去请求如果数据能够正常回显，那就是未授权访问</li>
+</ol>
+<p><img src="/img/image-20250701100326465.png" alt="image-20250701100326465"></p>
+<p><img src="/img/image-20250701100437746.png" alt="image-20250701100437746"></p>
+<p><img src="/img/image-20250701100455390.png" alt="image-20250701100455390"></p>
+<p><strong>黑盒情况下</strong></p>
+<ol>
+<li><p>实战中可以有几十个也有可能有几千个这样的接口 ，不可能一个一个去点，这个时候就要用到了工具自动化发包测试，Postman</p>
+<ul>
+<li><img src="/img/image-20250701102218848.png" alt="image-20250701102218848"></li>
+<li><img src="/img/image-20250701102319700.png" alt="image-20250701102319700"></li>
+</ul>
+</li>
+<li><p>通过这里得到api的所有接口</p>
+<ul>
+<li><img src="/img/image-20250701102608504.png" alt="image-20250701102608504"></li>
+</ul>
+</li>
+<li><p>一般根据自己需要进项设置 我们这里默认完事</p>
+<ul>
+<li><img src="/img/image-20250701102749541.png" alt="image-20250701102749541"></li>
+<li><img src="/img/image-20250701103018457.png" alt="image-20250701103018457"></li>
+<li><img src="/img/image-20250701103142357.png" alt="image-20250701103142357"></li>
+</ul>
+</li>
+<li><p>如果发生了报错点击整个文件 在变量环节将前面的双斜杠<code>//</code>删除即可正常用</p>
+<ul>
+<li><p><img src="/img/image-20250701103231019.png" alt="image-20250701103231019"></p>
+</li>
+<li><p><img src="/img/image-20250701103315581.png" alt="image-20250701103315581"></p>
+</li>
+<li><p><img src="/img/image-20250701103428425.png" alt="image-20250701103428425"></p>
+</li>
+</ul>
+</li>
+<li><p>这里还可以进行一个授权的key，因为有的接口需要登录才能使用</p>
+<ul>
+<li><img src="/img/image-20250701105315699.png" alt="image-20250701105315699"></li>
+</ul>
+</li>
+<li><p>运行后该工具会对swagger全部接口自动发包测试，但是这里发现都是500响应，浏览器接口访问又是200</p>
+<ul>
+<li><img src="/img/image-20250701105502301.png" alt="image-20250701105502301"></li>
+</ul>
+</li>
+<li><p>如果<code>postman</code>上有出现<code>200</code>的响应，那么就有可能是一个未授权接口</p>
+<ul>
+<li><img src="/img/image-20250701105743846.png" alt="image-20250701105743846"></li>
+</ul>
+</li>
+</ol>
+<h3 id="自动化漏洞测试"><a href="#自动化漏洞测试" class="headerlink" title="自动化漏洞测试"></a>自动化漏洞测试</h3><p>联动<code>BurpSuite Xray</code>等</p>
+<ol>
+<li><p>在<code>postman</code>左上角文件，设置里面选中代理，开启自定义代理配置，将代理的地址和端口和burp端口设置一样。</p>
+<ul>
+<li><img src="/img/image-20250701110420773.png" alt="image-20250701110420773"></li>
+<li><img src="/img/image-20250701110436088.png" alt="image-20250701110436088"></li>
+</ul>
+</li>
+<li><p>在<code>postman</code>上再次运行项目后可以看到流量转发到了burp上</p>
+</li>
+</ol>
+<ul>
+<li><img src="/img/image-20250701111004834.png" alt="image-20250701111004834"></li>
+</ul>
+<ol start="3">
+<li><p>我们这里设置代理规则，使用Xary对burp进行流量转发，然后进行检测</p>
+<ul>
+<li><p><img src="/img/image-20250701110942732.png" alt="image-20250701110942732"></p>
+</li>
+<li><p><img src="/img/image-20250701114146164.png" alt="image-20250701114146164"></p>
+</li>
+</ul>
+</li>
+<li><p>使用命令对流量包进行检测</p>
+<ul>
+<li><pre><code>webscan --listen 127.0.0.1:7777 --html-output proxy.html
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   * ![image-20250701114401775](/img/image-20250701114401775.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## Java安全-[JWT](https://so.csdn.net/so/search?q=JWT&amp;spm=1001.2101.3001.7020)令牌-空算法&amp;未签名&amp;密匙提取</span><br><span class="line"></span><br><span class="line">JSON Web Token(JWT)。它遵循JSON格式，将用户信息加密到token里，服务器不保存任何用户信息，只保存密钥信息，通过使用特定加密算法验证token，通过token验证用户身份。基于token的身份验证可以替代传统的cookie+session身份验证方法。这使得JWT成为高度分布式网站的热门选择，在这些网站中，用户需要与多个后端服务器无缝交互。</span><br><span class="line">![image-20250701114530780](/img/image-20250701114530780.png)</span><br><span class="line"></span><br><span class="line">### 识别 JWT</span><br><span class="line"></span><br><span class="line">JWT由三部分组成：表头，有效载荷，签名</span><br><span class="line"></span><br><span class="line">&gt; 标头（Header）</span><br><span class="line">&gt; Header是JWT的第一个部分，是一个JSON对象，主要声明了JWT的签名算法，如&quot;HS256”、&quot;RS256&quot;等，以及其他可选参数，如&quot;kid&quot;、&quot;jku&quot;、&quot;x5u&quot;等</span><br><span class="line">&gt; alg字段通常用于表示加密采用的算法。如&quot;HS256&quot;、&quot;RS256&quot;等</span><br><span class="line">&gt; typ字段通常用于表示类型</span><br><span class="line">&gt; 还有一些其他可选参数，如&quot;kid&quot;、&quot;jku&quot;、&quot;x5u&quot;等</span><br><span class="line"></span><br><span class="line">&gt; 有效载荷（Payload）</span><br><span class="line">&gt; Payload是JWT的第二个部分，这是一个JSON对象，主要承载了各种声明并传递明文数据，用于存储用户的信息，如id、用户名、角色、令牌生成时间和其他自定义声明。</span><br><span class="line">&gt; iss：该字段表示jwt的签发者。</span><br><span class="line">&gt; sub：该jwt面向的用户。</span><br><span class="line">&gt; aud：jwt的接收方。</span><br><span class="line">&gt; exp：jwt的过期时间,通常来说是一个时间戳。</span><br><span class="line">&gt; iat：jwt的签发时间,常来说是一个时间戳。</span><br><span class="line">&gt; jti：此jwt的唯一标识。通常用于解决请求中的重放攻击。该字段在大多数地方没有被提及或使用。因为使用此字段就意味着必须要在服务器维护一张jti表， 当客户端携带jwt访问的时候需要在jti表中查找这个唯一标识是否被使用过。使用这种方式防止重放攻击似乎让jwt有点怪怪的感觉, 毕竟jwt所宣称的优点就是无状态访问</span><br><span class="line"></span><br><span class="line">&gt; 签名（Signature）</span><br><span class="line">&gt; Signature是对Header和Payload进行签名，具体是用什么加密方式写在Header的alg 中。同时拥有该部分的JWT被称为JWS，也就是签了名的JWT。</span><br><span class="line">&gt; 对Header和Payload进行签名，具体是用什么加密方式写在Header的alg中。</span><br><span class="line">&gt; 同时拥有该部分的JWT被称为JWS，也就是签了名的JWT。</span><br><span class="line"></span><br><span class="line">第一部分：对 JSON 的头部做 base64 编码处理得到</span><br><span class="line">第二部分：对 JSON 类型的 payload 做 base64 编码处理得到</span><br><span class="line">第三部分：分别对头部和载荷做base64编码，并使用.拼接起来</span><br><span class="line">使用头部声明的加密方式，对base64编码前两部分合并的结果加盐加密处理，作为JWT</span><br><span class="line"></span><br><span class="line">JWT 分为三部分，每一部分都是 **Base64Url 编码** 的字符串：</span><br><span class="line"></span><br><span class="line">1. **Header**（头部）：描述 token 的类型（JWT）和签名算法（如 HS256）。</span><br><span class="line">2. **Payload**（载荷）：实际的数据部分，通常包括用户信息、权限、过期时间等。</span><br><span class="line">3. **Signature**（签名）：用于校验 token 是否被篡改。</span><br><span class="line"></span><br><span class="line">![40bb0992afa8883a37881a9b546bbec3](C:\Users\liuyuanbiao\Desktop\BlogPhoto\40bb0992afa8883a37881a9b546bbec3./img/jpeg)</span><br><span class="line"></span><br><span class="line">在线解析：https://jwt.io/</span><br><span class="line">BURP插件：Hae 或 JSON Web Tokens</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 方式一：人工识别</span><br><span class="line"></span><br><span class="line">1. 拆分为三段（按 `.`）</span><br><span class="line">2. 对前两段用 Base64 解码</span><br><span class="line">3. 前面两段开头都是`eyj`</span><br><span class="line"></span><br><span class="line">![image-20250701121235610](/img/image-20250701121235610.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 方式二：Burp插件识别</span><br><span class="line"></span><br><span class="line">Hae(需要自己下载项目)</span><br><span class="line"></span><br><span class="line">JSON Web Tokens(BP商店有，支持识别解析)</span><br><span class="line"></span><br><span class="line">![image-20250701142811248](/img/image-20250701142811248.png)</span><br><span class="line"></span><br><span class="line">![image-20250701143236914](/img/image-20250701143236914.png) </span><br><span class="line"></span><br><span class="line">![image-20250701150135860](/img/image-20250701150135860.png)</span><br><span class="line"></span><br><span class="line">![image-20250701150412443](/img/image-20250701150412443.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 解析JWT数据</span><br><span class="line"></span><br><span class="line">JWT在线解析：https://jwt.io/</span><br><span class="line"></span><br><span class="line">![image-20250701150329816](/img/image-20250701150329816.png) </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### JWT安全</span><br><span class="line"></span><br><span class="line">#### 空加密算法（攻击头部不使用加密）</span><br><span class="line"></span><br><span class="line">签名算法可被修改为none，JWT支持将算法设定为&quot;None&quot;。如果&quot;alg&quot;字段设为&quot;None&quot;，那么签名会被置空，这样任何token都是有效的。</span><br><span class="line"></span><br><span class="line">![image-20250701150640070](/img/image-20250701150640070.png)</span><br><span class="line"></span><br><span class="line">![image-20250701150828665](/img/image-20250701150828665.png)</span><br><span class="line"></span><br><span class="line">#### 未校验签名（攻击签名不使用签名认证）</span><br><span class="line">某些服务端并未校验JWT签名，可以尝试修改payload后然后直接请求token或者直接删除signature再次请求查看其是否还有效。</span><br><span class="line"></span><br><span class="line">#### 暴力破解密钥（攻击签名知道密钥实现重组）</span><br><span class="line">针对是对称加密算法（非对称没有用）</span><br><span class="line">非对称要使用方法：从源码获取公钥私钥文件</span><br><span class="line"></span><br><span class="line">某些签名算法，例如HS256（HMAC+SHA-256），会像密码一样使用一个任意的、独立的字符串作为秘密密钥。这个秘钥如被轻易猜到或暴力破解，则攻击者能以任意的头部和载荷值来创建JWT，然后用密钥重新给令牌签名。</span><br><span class="line"></span><br><span class="line">#### 其他安全参考：（源码泄漏密匙，Kid注入等）</span><br><span class="line">参考文章：https://blog.csdn.net/weixin_44288604/article/details/128562796</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### CTF-JWT</span><br><span class="line"></span><br><span class="line">JWT利用项目：https://github.com/ticarpi/jwt_tool</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<p>项目命令帮助</p>
+<h1 id="使用None算法"><a href="#使用None算法" class="headerlink" title="使用None算法"></a>使用None算法</h1><p>python3 jwt_tool.py JWT_HERE -X a</p>
+<h1 id="自定义修改生成"><a href="#自定义修改生成" class="headerlink" title="自定义修改生成"></a>自定义修改生成</h1><p>python3 jwt_tool.py JWT_HERE -T</p>
+<h1 id="使用字典破解"><a href="#使用字典破解" class="headerlink" title="使用字典破解"></a>使用字典破解</h1><p>python3 jwt_tool.py JWT_HERE -C -d dictionary.txt</p>
+<h1 id="指定密码测试"><a href="#指定密码测试" class="headerlink" title="指定密码测试"></a>指定密码测试</h1><p>python3 jwt_tool.py JWT_HERE -C -p password_here</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### **WEB345(None空加密算法)**</span><br><span class="line"></span><br><span class="line">签名算法可被修改为none，JWT支持将算法设定为 &quot;None&quot; 。如果 &quot;alg&quot; 字段设为 &quot;None&quot; ，那么签名会被置空，这样任何token都是有效的。</span><br><span class="line"></span><br><span class="line">![image-20250701151502567](/img/image-20250701151502567.png)</span><br><span class="line"></span><br><span class="line">![image-20250701151550641](/img/image-20250701151550641.png)</span><br><span class="line"></span><br><span class="line">![image-20250701151604997](/img/image-20250701151604997.png)</span><br><span class="line"></span><br><span class="line">![image-20250701151624756](/img/image-20250701151624756.png)</span><br><span class="line"></span><br><span class="line">因为第一部分和第二部分都是使用了base64加密我们这里放到decode里面去</span><br><span class="line"></span><br><span class="line">先解密将user修改为admin再base64加密</span><br><span class="line"></span><br><span class="line">![image-20250701152252471](/img/image-20250701152252471.png)</span><br><span class="line"></span><br><span class="line">将里面的jwt值进行替换 发送拿到flag，这里使用空算法none然后所以修改能成功</span><br><span class="line"></span><br><span class="line">![image-20250701152343369](/img/image-20250701152343369.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Web346(None算法绕过签名)</span><br><span class="line"></span><br><span class="line">1. 启动这题抓包后发现alg算法为HS256，这里就不能随意修改sub对象了</span><br><span class="line"></span><br><span class="line">![image-20250701152705048](/img/image-20250701152705048.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2. 解题思路：alg强制设置为none绕过签名</span><br><span class="line"></span><br><span class="line">   * ![image-20250701153715488](/img/image-20250701153715488.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250701153855784](/img/image-20250701153855784.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250701164646995](/img/image-20250701164646995.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250701164955736](/img/image-20250701164955736.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250701165055336](/img/image-20250701165055336.png)</span><br><span class="line"></span><br><span class="line">     * &gt; 签名算法可被修改为none，JWT支持将算法设定为 &quot;None&quot; 。如果 &quot;alg&quot; 字段设为 &quot;None&quot; ，那么签名会被置空，这样任何token都是有效的</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2. 使用插件修改JWT</span><br><span class="line"></span><br><span class="line">   * 将Alg修改为none 再把sub改为admin，这里在response模块就自动修改了</span><br><span class="line"></span><br><span class="line">   * ![image-20250701165237618](/img/image-20250701165237618.png)</span><br><span class="line">   * ![image-20250701165358768](/img/image-20250701165358768.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Web347(弱口令密钥获取)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">针对是对称加密算法（非对称没有用）</span><br><span class="line">非对称要使用方法：获取源码或者公钥私钥文件</span><br><span class="line"></span><br><span class="line">某些签名算法，例如HS256（HMAC+SHA-256），会像密码一样使用一个任意的、独立的字符串作为秘密密钥。这个秘钥如被轻易猜到或暴力破解，则攻击者能以任意的头部和载荷值来创建JWT，然后用密钥重新给令牌签名。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">![image-20250701170211672](/img/image-20250701170211672.png)</span><br><span class="line"></span><br><span class="line">![image-20250701170415777](/img/image-20250701170415777.png)</span><br><span class="line"></span><br><span class="line">![image-20250701170530022](/img/image-20250701170530022.png)</span><br><span class="line"></span><br><span class="line">![image-20250701170622103](/img/image-20250701170622103.png)</span><br><span class="line"></span><br><span class="line">#### Web348(爆破密钥上题一样)</span><br><span class="line"></span><br><span class="line">同上</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Web349(公钥私钥泄露)</span><br><span class="line"></span><br><span class="line">1. 环境启动后在页面app.js上下载源文件 分析</span><br><span class="line"></span><br><span class="line">2. 公钥加密，私钥解密，私钥签名，公钥验签</span><br><span class="line"></span><br><span class="line">   * ![image-20250701171509112](/img/image-20250701171509112.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250701171428087](/img/image-20250701171428087.png)</span><br><span class="line">   * ![image-20250701171641607](/img/image-20250701171641607.png)</span><br><span class="line">   * ![image-20250701172143919](/img/image-20250701172143919.png)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">   2. 源码中私钥生成jwt签名，利用公钥解密jwt，只要有私钥就可以重新生成JWT</span><br><span class="line"></span><br><span class="line">   * ![image-20250701172252392](/img/image-20250701172252392.png)</span><br><span class="line"></span><br><span class="line">   * ```python</span><br><span class="line">     import jwt</span><br><span class="line">     public = open(&#x27;private.key&#x27;, &#x27;r&#x27;).read()</span><br><span class="line">     payload=&#123;&quot;user&quot;:&quot;admin&quot;&#125;</span><br><span class="line">     print(jwt.encode(payload, key=public, algorithm=&#x27;RS256&#x27;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><img src="/img/image-20250701172632774.png" alt="image-20250701172632774"></p>
+</li>
+<li><p><img src="/img/image-20250701172815087.png" alt="image-20250701172815087"></p>
+</li>
+<li><p><img src="/img/image-20250701173725489.png" alt="image-20250701173725489"></p>
+</li>
+<li><p><img src="/img/image-20250701173732154.png" alt="image-20250701173732154"></p>
+</li>
+</ul>
+<h4 id="Web350-密钥混淆攻击RS256-HS256"><a href="#Web350-密钥混淆攻击RS256-HS256" class="headerlink" title="Web350(密钥混淆攻击RS256&#x3D;&gt;HS256)"></a>Web350(密钥混淆攻击RS256&#x3D;&gt;HS256)</h4><ol>
+<li><p>下载源码后使用Webstorm打开</p>
+</li>
+<li><p>从代码上看都是私钥生成签名，公钥进行验证，但是这里只能看到公钥，私钥是被删除了的，全局搜索无法找到</p>
+</li>
+<li><p>我们这里更换算法，把RS256更换为HS256 非对称算法改对称算法</p>
+<ul>
+<li><p><img src="/img/image-20250701174708741.png" alt="image-20250701174708741"></p>
+</li>
+<li><p><img src="/img/image-20250701174625872.png" alt="image-20250701174625872"></p>
+</li>
+<li><pre><code class="language-javascript">var jwt = require(&#39;jsonwebtoken&#39;);
+var fs = require(&#39;fs&#39;);
+var privateKey = fs.readFileSync(&#39;./public.key&#39;);
+var token = jwt.sign(&#123; user: &#39;admin&#39; &#125;, privateKey, &#123; algorithm: &#39;HS256&#39; &#125;);
+console.log(token)
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://0xMouise.github.io">0xMouise</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://0xmouise.github.io/2025/09/16/069-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&amp;JWT%E9%A1%B9%E7%9B%AE%E6%8F%92%E4%BB%B6&amp;Postman%E4%B8%AD%E6%96%87%E5%8C%85%E7%AD%89/">https://0xmouise.github.io/2025/09/16/069-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8&amp;JWT%E9%A1%B9%E7%9B%AE%E6%8F%92%E4%BB%B6&amp;Postman%E4%B8%AD%E6%96%87%E5%8C%85%E7%AD%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://0xMouise.github.io" target="_blank">0xMouise</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/Web%E5%AE%89%E5%85%A8/">Web安全</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div><div class="post-share"><div class="social-share" data-image="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/16/077-Web%E6%94%BB%E9%98%B2-%E5%90%88%E8%A7%84%E6%A3%80%E6%B5%8B&amp;URL%E9%87%8D%E5%AE%9A%E5%90%91&amp;%E5%8E%8B%E7%BC%A9%E8%B5%84%E6%BA%90DD%E6%9C%8D%E5%8A%A1%E7%AD%89/" title="077-Web攻防-合规检测&amp;URL重定向&amp;压缩资源DD服务等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">077-Web攻防-合规检测&URL重定向&压缩资源DD服务等</div></div><div class="info-2"><div class="info-item-1">077-Web攻防-合规检测&amp;URL重定向&amp;压缩资源DD服务等演示案例1、隐私合规-判断规则&amp;检测项目&gt; 2、URL 重定向-检测判断&amp;钓鱼配合  3、资源拒绝服务-加载受控&amp;处理受控 小迪说在实战中用不到，在 SRC 里面可能会字典 隐私合规 - 判断规则 &amp; 检测项目 主要针对小程序 (小程序可能需要逆向) 和 APP  对象：APP 小程序等，测试时即可测试目标的 app 或者小程序是否隐私合规  例如检测目标是否在偷偷监听、录音、获取信息等   appscan 官网： https://appscan.ly.com/  推荐这个，这个是动态分析 不过需要 root 安卓手机并且打开 ADB 调试   appshark 的 GitHub 地址： https://github.com/bytedance/appshark  这个是静态分析     vivo 隐私合规漏洞评分规则 v1.0 参考：https://mp.weixin.qq.com/s/tgEZth3TFyyis_EBrQ5PhQ  MobSF 也可以进行测试，不...</div></div></div></a><a class="pagination-related" href="/2025/09/16/075-Web%E6%94%BB%E9%98%B2-%E9%AA%8C%E8%AF%81%E7%A0%81%E5%AE%89%E5%85%A8&amp;%E8%AF%86%E5%88%AB%E6%8F%92%E4%BB%B6&amp;%E7%8E%AF%E5%A2%83%E6%BA%90%E7%A0%81%E6%BC%94%E7%A4%BA%E7%AD%89/" title="075-Web攻防-验证码安全&amp;识别插件&amp;环境源码演示等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzvnvj31hc0xc1ky.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">075-Web攻防-验证码安全&识别插件&环境源码演示等</div></div><div class="info-2"><div class="info-item-1">075-Web攻防-验证码安全&amp;识别插件&amp;环境源码演示等知识点： 1、验证码简单机制-验证码过于简单可爆破 2、验证码重复使用-验证码验证机制可绕过 3、验证码智能识别-验证码图形码被可识别 4、验证码接口调用-验证码触发接口可枚举 图片验证码-识别插件-登录爆破&amp;接口枚举 验证码识别绕过等技术适用于：口令存在爆破，接口枚举调用，任意用户注册等安全问题1、验证码简单机制-验证码过于简单可爆破2、验证码重复使用-验证码验证机制可绕过3、验证码智能识别-验证码图形码被可识别4、验证码接口调用-验证码触发接口可枚举    登录爆破自带白嫖版：https://github.com/smxiazi/NEW_xp_CAPTCHA1、Burp加载插件 2、运行监听py文件 3、设置插件-验证码地址 4、数据包验证码填入参数 5、发包线程设置1后开始              接口收费版：https://github.com/smxiazi/xp_CAPTCHA 1、Burp加载插件 2、注册接口帐号充值 3、设置插件-填入帐号 4、数据包验证码填入参数 5、发包线程设置...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/16/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&WAF&%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等</div></div><div class="info-2"><div class="info-item-1">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等 本节内容  1、端口扫描-应用&amp;协议2、WAF识别-分类&amp;识别3、蜜罐识别-分类&amp;识别解决：1、Web服务器&amp;应用服务器差异性2、WAF防火墙&amp;安全防护&amp;识别技术3、蜜罐平台&amp;安全防护&amp;识别技术  一.端口扫描-应用&amp;协议 Nmap：配置中：Quick scan plus是快速扫描，intense scan all TCP ports 是全部端口扫描    端口扫描的意义：通过扫描端口是否开放来确定主机上面安装过什么应用，网站应用数据库应用 等…. 在进行端口扫描的时候应该考虑 ：1.防火墙 2.内网环境 防火墙：对端口进行过滤 但不代表端口没有开启 只是没有对外服务 内网环境可能出现的情况：明明数据库端口是开的,网站也能正常打开 但是你对目标进行端口扫描 发现数据库端口没有开放（排除防火墙问题） 二.WAF防火墙&amp;安全防护&amp;识别技术1、WAF解释：Web应用防护系统（也称为：网站应用级入侵防御系统。英文：Web Applic...</div></div></div></a><a class="pagination-related" href="/2025/09/16/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&FUZZ%E7%88%AC%E8%99%AB&%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目</div></div><div class="info-2"><div class="info-item-1">第14天：信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目一.本节知识点1、JS前端架构-识别&amp;分析2、JS前端架构-开发框架分析3、JS前端架构-打包器分析4、JS前端架构-提取&amp;FUZZ解决：1、如何从表现中的JS提取价值信息2、如何从地址中FUZZ提取未知的JS文件3、如何从JS开放框架WebPack进行测试 1.什么是cms CMS（意思为“网站内容管理系统”， 用来管理网站后台，编辑网站前台。）Discuz、WordPress、Ecshop、蝉知等前端技术；HTML5、jquery、bootstrap、Vue等开发语言；PHP、JAVA、Ruby、Python、C#，JS等Web服务器；Apache、Nginx、IIS、lighttpd，Apache等应用服务器：；Tomcat、Jboss、Weblogic、Websphere等数据库类型：；Mysql、SqlServer、Oracle、Redis、MongoDB等操作系统信息；Linux、windows等应用服务信息：；FTP、SSH...</div></div></div></a><a class="pagination-related" href="/2025/09/16/017-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E6%A1%86%E6%9E%B6%E7%BB%84%E4%BB%B6&CMS%E5%B7%A5%E5%85%B7&%E5%85%B6%E4%BB%96%E7%AD%89/" title="017-信息打点-框架组件&amp;CMS工具&amp;其他等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">017-信息打点-框架组件&amp;CMS工具&amp;其他等</div></div><div class="info-2"><div class="info-item-1">017-信息打点-框架组件&amp;CMS工具&amp;其他等 本节课主要知识点 1.CMS识别到后期漏洞利用和代码审计2.开发框架识别到后期漏洞利用和代码审计3.开发组件识别到后期漏洞利用和代码审计 一、CMS指纹识别-不出网程序识别1.概念CMS指纹识别一般能识别到的都是以PHP语言开发的网页为主，其他语言开发的网页识别难度大 识别的意义就是向着对应目标使用对应的工具进行攻击 1.后端：CMS：一般PHP开发居多源码程序（利用源码程序名去搜漏洞情况，源码去下载进行后期的代码审计） 2.前端：JS框架（爬取更多的JS从里面筛选URL或敏感泄漏KEY等）  也是可以通过对JS代码逻辑进行代码审计 3.组件： 组件：第三方的功能模块（日志记录，数据监控，数据转换等）  java居多，常见有过安全漏洞组件（shiro solr log4j sprintboot等） 4.框架： 框架：简单代码的一个整合库，如果使用框架就只需要学习使用框架调用即可 如：文件上传功能是需要很多代码来实现的，框架把这个代码进行封封装，调用即可 影响：如果采用框架开发，代码的安全性是取决于框架的过滤机制  p...</div></div></div></a><a class="pagination-related" href="/2025/09/16/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzvnvj31hc0xc1ky.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试</div></div><div class="info-2"><div class="info-item-1">第18天：信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试 本节内容 1、Web&amp;备案信息&amp;单位名称中发现APP2、APP资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标APP信息2、如何从APP信息中提取资产  一、如何获取到目标APP信息1.名称获取app信息(爱企查、小蓝本、七麦、点点)1.爱企查知识产权https://aiqicha.baidu.com/  2.七麦、点点查名称[七麦  点点查 2、URL网站备案查APP关于我们 (psbc-ubank.com)（中邮邮惠万家）  1、查备案信息在搜 2、网站上有APP下载 3、市场直接搜单位名称   二、如何从app中收集资产通过获取App配置、数据包，去获取url、api、osskey、js等敏感信息。   资产信息-IP 域名 网站 -转到对应Web测试 接口测试 服务测试 泄露信息-配置key 资源文件 - key（osskey利用，邮件配置等） 代码信息-java代码安全问题- 逆向相关   1、抓包-动态表现优...</div></div></div></a><a class="pagination-related" href="/2025/09/16/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&%E8%B5%84%E6%BA%90URL&%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等</div></div><div class="info-2"><div class="info-item-1">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等 一.相关链接&amp;工具站&amp;项目工具超级Ping：http://www.17ce.com/ 超级Ping：https://ping.chinaz.com/ 接口查询：https://get-site-ip.com/ 接口查询：https://fofa.info/extensions/source 国外请求：https://tools.ipip.net/cdn.php 国外请求：https://boce.aliyun.com/detect/ IP社区库：https://www.cz88.net/geo-public 全网扫描：https://github.com/Tai7sy/fuckcdn 全网扫描：https://github.com/boy-hack/w8fuckcdn 全网扫描：https://github.com/Pluto-123/Bypass_cdn 大佬文章-CDN绕过 https://mp.weixin.qq.com/s/zxEH-HMqKukmq7qXfrdnQQ 二.CND前置知识...</div></div></div></a><a class="pagination-related" href="/2025/09/16/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-16</div><div class="info-item-2">019-信息打点-小程序组手&amp;开发工具&amp;依赖等</div></div><div class="info-2"><div class="info-item-1">019-信息打点-小程序组手&amp;开发工具&amp;依赖等知识点 1、Web&amp;备案信息&amp;单位名称中发现小程序2、小程序资产静态提取&amp;动态抓包&amp;动态调试解决：1、如何获取到目标小程序信息2、如何从小程序中提取资产信息  一.➢小程序获取-各大平台&amp;关键字搜索微信百度支付宝抖音头条  二.小程序主题结构1.主体结构小程序包含一个描述整体程序的 app 和多个描述各自页面的 page。一个小程序主体部分(即app)由三个文件组成，必须放在项目的根目录，如下：    文件 必需 作用    app.js 是 小程序逻辑   app.json 是 小程序公共配置   app.wxss 否 小程序公共样式表   2.一个小程序页面由四个文件组成，分别是:   xxx.js 页面逻辑    xxx.json 页面配置   xxx.wxml 页面结构   xxx.wxss 页面样式   3.项目整体目录结构   pages 页面文件夹    index 首页   logs 日志   utils util 工具类(mina框架自动生成,你也可以建立一个：...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="author-info-name">0xMouise</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">专注网络安全学习与探索，记录成长与心得分享</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#069-Web%E6%94%BB%E9%98%B2-Java%E5%AE%89%E5%85%A8-JWT%E9%A1%B9%E7%9B%AE%E6%8F%92%E4%BB%B6-Postman%E4%B8%AD%E6%96%87%E5%8C%85%E7%AD%89"><span class="toc-number">1.</span> <span class="toc-text">069-Web攻防-Java安全&amp;JWT项目插件&amp;Postman中文包等</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E5%AE%89%E5%85%A8-Druid%E7%9B%91%E6%8E%A7-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE-%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">Java安全-Druid监控-未授权访问&amp;信息泄漏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E5%AE%89%E5%85%A8-Swagger%E6%8E%A5%E5%8F%A3-%E5%AF%BC%E5%85%A5-%E8%81%94%E5%8A%A8%E6%89%B9%E9%87%8F%E6%B5%8B%E8%AF%95"><span class="toc-number">1.2.</span> <span class="toc-text">Java安全-Swagger接口-导入&amp;联动批量测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8F%91%E5%8C%85%E6%B5%8B%E8%AF%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">自动化发包测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%B5%8B%E8%AF%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">自动化漏洞测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8None%E7%AE%97%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">使用None算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%AE%E6%94%B9%E7%94%9F%E6%88%90"><span class="toc-number">3.</span> <span class="toc-text">自定义修改生成</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%AD%97%E5%85%B8%E7%A0%B4%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">使用字典破解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E5%AF%86%E7%A0%81%E6%B5%8B%E8%AF%95"><span class="toc-number">5.</span> <span class="toc-text">指定密码测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Web350-%E5%AF%86%E9%92%A5%E6%B7%B7%E6%B7%86%E6%94%BB%E5%87%BBRS256-HS256"><span class="toc-number">5.0.0.1.</span> <span class="toc-text">Web350(密钥混淆攻击RS256&#x3D;&gt;HS256)</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found"><img src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="(eval)1 _python-argcomplete function definition file not found"/></a><div class="content"><a class="title" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found">(eval)1 _python-argcomplete function definition file not found</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误">Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali 字体大小设置"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置">Kali 字体大小设置</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"><img src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程">Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="OutGuess 安装与问题排查指南（Kali Linux 环境）"/></a><div class="content"><a class="title" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）">OutGuess 安装与问题排查指南（Kali Linux 环境）</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 0xMouise</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div><div class="footer_custom_text">如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="用我三生烟火，换你一世迷离,长街长，烟花繁，你挑灯回看,回得了过去，回不了当初,抬头看，人生是星辰大海,当你想要放弃时，想想当初为什么开始,因为现在的坚持正在重塑未来的你,抬头看，人生是星辰大海,你最大的冒险，是过你梦想的生活,等待完美条件的人永远无法开始,认知的边界就是命运的边界,在长大，在失去，在努力，在接受，在好好生活,如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机,纵有狂风拔地起 我亦乘风破万里,汗水不会辜负你的期待,享受你每一次锻炼完后的肌肉酸痛,因为这意味昨天那个预示着懦弱你的已经被你杀死了,肌肉的酸痛预示着懦弱的离场,当你快坚持不住的时候 困难也快坚持不住了,有些事不是看到了希望才努力，而是努力了才看到了希望,在无人问津的地方历练，在万众瞩目的地方出现,破茧成蝶必经淬炼,一颗向上跳动的心脏，不该有一副下坠的躯体,向下的躯体无法承载向上的灵魂,一个人要想成长你的意志力和身体都得尽力磨砺,宝剑锋从磨砺出梅花香自苦寒来" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
