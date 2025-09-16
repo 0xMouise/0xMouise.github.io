@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移） | 0xMouise</title><meta name="author" content="0xMouise"><meta name="copyright" content="0xMouise"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）一、Markdown 笔记批量迁移到 Hexo1. 问题：本地笔记（D:\Blog\ 小迪学习笔记）迁移到 Hexo _posts 目录 需求：批量迁移大量网络安全笔记，自动生成 Hexo 所需 Front-matter（避免手动修改），要求 title 用笔记文件名，categories&#x2F;tags">
+<meta property="og:type" content="article">
+<meta property="og:title" content="今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）">
+<meta property="og:url" content="https://0xmouise.github.io/2025/09/16/%E4%BB%8A%E6%97%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%95%B4%E7%90%86%EF%BC%88Hexo%20Butterfly%20%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%20+%20%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%AC%94%E8%AE%B0%E8%BF%81%E7%A7%BB%EF%BC%89/index.html">
+<meta property="og:site_name" content="0xMouise">
+<meta property="og:description" content="今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）一、Markdown 笔记批量迁移到 Hexo1. 问题：本地笔记（D:\Blog\ 小迪学习笔记）迁移到 Hexo _posts 目录 需求：批量迁移大量网络安全笔记，自动生成 Hexo 所需 Front-matter（避免手动修改），要求 title 用笔记文件名，categories&#x2F;tags">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg">
+<meta property="article:published_time" content="2025-09-16T05:44:53.000Z">
+<meta property="article:modified_time" content="2025-09-16T12:00:23.445Z">
+<meta property="article:author" content="0xMouise">
+<meta property="article:tag" content="疑难杂症">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）",
+  "url": "https://0xmouise.github.io/2025/09/16/%E4%BB%8A%E6%97%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%95%B4%E7%90%86%EF%BC%88Hexo%20Butterfly%20%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%20+%20%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%AC%94%E8%AE%B0%E8%BF%81%E7%A7%BB%EF%BC%89/",
+  "image": "https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg",
+  "datePublished": "2025-09-16T05:44:53.000Z",
+  "dateModified": "2025-09-16T12:00:23.445Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "0xMouise",
+      "url": "https://0xMouise.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg"><link rel="canonical" href="https://0xmouise.github.io/2025/09/16/%E4%BB%8A%E6%97%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%95%B4%E7%90%86%EF%BC%88Hexo%20Butterfly%20%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%20+%20%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%AC%94%E8%AE%B0%E8%BF%81%E7%A7%BB%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">106</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">0xMouise</span></a><a class="nav-page-title" href="/"><span class="site-name">今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-16T05:44:53.000Z" title="发表于 2025-09-16 13:44:53">2025-09-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-16T12:00:23.445Z" title="更新于 2025-09-16 20:00:23">2025-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="今日问题与解决方案整理（Hexo-Butterfly-主题博客搭建-网络安全笔记迁移）"><a href="#今日问题与解决方案整理（Hexo-Butterfly-主题博客搭建-网络安全笔记迁移）" class="headerlink" title="今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）"></a>今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）</h1><h2 id="一、Markdown-笔记批量迁移到-Hexo"><a href="#一、Markdown-笔记批量迁移到-Hexo" class="headerlink" title="一、Markdown 笔记批量迁移到 Hexo"></a>一、Markdown 笔记批量迁移到 Hexo</h2><h3 id="1-问题：本地笔记（D-Blog-小迪学习笔记）迁移到-Hexo-posts-目录"><a href="#1-问题：本地笔记（D-Blog-小迪学习笔记）迁移到-Hexo-posts-目录" class="headerlink" title="1. 问题：本地笔记（D:\Blog\ 小迪学习笔记）迁移到 Hexo _posts 目录"></a>1. 问题：本地笔记（D:\Blog\ 小迪学习笔记）迁移到 Hexo _posts 目录</h3><ul>
+<li><p><strong>需求</strong>：批量迁移大量网络安全笔记，自动生成 Hexo 所需 Front-matter（避免手动修改），要求 title 用笔记文件名，categories&#x2F;tags 固定为网络安全相关分类。</p>
+</li>
+<li><p><strong>解决方案</strong>：使用 Python 迁移脚本（自动添加 Front-matter + 复制文件）：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">from datetime import datetime</span><br><span class="line"></span><br><span class="line"># 配置路径（根据实际情况修改）</span><br><span class="line">src_dir = r&quot;D:\Blog\小迪学习笔记&quot;  # 本地笔记源目录</span><br><span class="line">dst_dir = r&quot;D:\BlogFile\source\_posts&quot;  # Hexo 文章存储目录（_posts）</span><br><span class="line"></span><br><span class="line"># 若目标目录不存在，自动创建</span><br><span class="line">if not os.path.exists(dst_dir):</span><br><span class="line">    os.makedirs(dst_dir)</span><br><span class="line"></span><br><span class="line"># 遍历所有 Markdown 笔记</span><br><span class="line">for file in os.listdir(src_dir):</span><br><span class="line">    if file.endswith(&quot;.md&quot;):</span><br><span class="line">        src_path = os.path.join(src_dir, file)  # 原笔记路径</span><br><span class="line">        dst_path = os.path.join(dst_dir, file)  # 迁移后路径</span><br><span class="line"></span><br><span class="line">        # 读取原笔记内容</span><br><span class="line">        with open(src_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            content = f.read()</span><br><span class="line"></span><br><span class="line">        # 自动生成 Front-matter（适配 Butterfly 主题）</span><br><span class="line">        title = os.path.splitext(file)[0]  # 用文件名作为文章标题（去掉.md后缀）</span><br><span class="line">        date_str = datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)  # 生成当前时间作为发布时间</span><br><span class="line">        front_matter = f&quot;&quot;&quot;---</span><br><span class="line">updated: 2025-09-16 15:50:31</span><br><span class="line">title: &#123;title&#125;</span><br><span class="line">date: 2025-09-16 13:44:53</span><br><span class="line">categories: </span><br><span class="line">  - 你的种类</span><br><span class="line">tags: </span><br><span class="line">  - 文章标签</span><br><span class="line">---</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">        # 将 Front-matter 与笔记内容合并，写入目标文件</span><br><span class="line">        with open(dst_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            f.write(front_matter + content)</span><br><span class="line"></span><br><span class="line">        print(f&quot;已迁移：&#123;file&#125;&quot;)  # 打印迁移进度</span><br><span class="line"></span><br><span class="line">print(&quot;所有网络安全笔记迁移完成！&quot;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>使用步骤</strong>：</li>
+</ul>
+<ol>
+<li><p>将脚本保存为 <a target="_blank" rel="noopener" href="http://migrate_notes.py/">migrate_notes.py</a>，放在 D:\Blog 目录（与笔记源目录同级）。</p>
+</li>
+<li><p>打开 CMD 命令行，执行 cd D:\Blog 切换到脚本目录。</p>
+</li>
+<li><p>运行 python <a target="_blank" rel="noopener" href="http://migrate_notes.py/">migrate_notes.py</a>，等待脚本完成所有笔记迁移。</p>
+</li>
+</ol>
+<h2 id="二、Hexo-构建（hexo-g）报错解决"><a href="#二、Hexo-构建（hexo-g）报错解决" class="headerlink" title="二、Hexo 构建（hexo g）报错解决"></a>二、Hexo 构建（hexo g）报错解决</h2><h3 id="1-问题-1：Nunjucks-Error（无法解析-SSTI-代码中的-123-123-125-125-语法）"><a href="#1-问题-1：Nunjucks-Error（无法解析-SSTI-代码中的-123-123-125-125-语法）" class="headerlink" title="1. 问题 1：Nunjucks Error（无法解析 SSTI 代码中的 &#123;&#123; &#125;&#125; 语法）"></a>1. 问题 1：Nunjucks Error（无法解析 SSTI 代码中的 &#123;&#123; &#125;&#125; 语法）</h3><ul>
+<li><p><strong>报错信息</strong>：Unable to call <strong>class</strong>.<strong>base</strong>.<strong>subclasses</strong>, which is undefined or falsey。原因是笔记中 SSTI 渗透测试代码的 &#123;&#123; &#125;&#125; 被 Hexo&#x2F;Butterfly 主题的 Nunjucks 模板引擎误解析为模板语法。</p>
+</li>
+<li><p><strong>解决方案</strong>：如果代码块中含有 <code>&#123;&#123; &#125;&#125;</code>，必须用 <code>` 和 `</code> 包裹，避免模板引擎解析。例如：</p>
+</li>
+</ul>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line"># 配置 Hexo 文章目录</span><br><span class="line">posts_dir = r&quot;D:\BlogFile\source\_posts&quot;</span><br><span class="line"></span><br><span class="line">for filename in os.listdir(posts_dir):</span><br><span class="line">    if filename.endswith(&quot;.md&quot;):</span><br><span class="line">        file_path = os.path.join(posts_dir, filename)</span><br><span class="line">        with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            lines = f.readlines()  # 按行读取文章内容</span><br><span class="line"></span><br><span class="line">        new_lines = []</span><br><span class="line">        in_code_block = False  # 标记是否处于 ``` 代码块内</span><br><span class="line">        code_block_content = []  # 暂存代码块内容</span><br><span class="line"></span><br><span class="line">        for line in lines:</span><br><span class="line">            stripped_line = line.strip()</span><br><span class="line"></span><br><span class="line">            # 检测代码块开始（``` 开头）</span><br><span class="line">            if stripped_line.startswith(&quot;```&quot;):</span><br><span class="line">                if not in_code_block:</span><br><span class="line">                    # 进入代码块，初始化暂存列表</span><br><span class="line">                    in_code_block = True</span><br><span class="line">                    code_block_content = [line]</span><br><span class="line">                else:</span><br><span class="line">                    # 退出代码块，检查是否含 &#123;&#123; &#125;&#125;</span><br><span class="line">                    code_block_content.append(line)</span><br><span class="line">                    in_code_block = False</span><br><span class="line"></span><br><span class="line">                    # 若代码块含 &#123;&#123;，则用 &#123;% raw %&#125; 包裹</span><br><span class="line">                    if any(&quot;&#123;&#123;&quot; in content_line for content_line in code_block_content):</span><br><span class="line">                        new_lines.append(&quot;&#123;% raw %&#125;\n&quot;)  # 加 raw 开始标记</span><br><span class="line">                        new_lines.extend(code_block_content)  # 加代码块内容</span><br><span class="line">                        new_lines.append(&quot;&#123;% endraw %&#125;\n&quot;)  # 加 raw 结束标记</span><br><span class="line">                    else:</span><br><span class="line">                        new_lines.extend(code_block_content)  # 不含 &#123;&#123;，直接添加</span><br><span class="line"></span><br><span class="line">            elif in_code_block:</span><br><span class="line">                # 处于代码块内，暂存内容</span><br><span class="line">                code_block_content.append(line)</span><br><span class="line">            else:</span><br><span class="line">                # 非代码块内容，直接添加</span><br><span class="line">                new_lines.append(line)</span><br><span class="line"></span><br><span class="line">        # 将处理后的内容写回文件</span><br><span class="line">        with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            f.writelines(new_lines)</span><br><span class="line"></span><br><span class="line">        print(f&quot;已处理代码块：&#123;filename&#125;&quot;)</span><br><span class="line"></span><br><span class="line">print(&quot;所有文章代码块 &#123;&#123; &#125;&#125; 解析问题修复完成！&quot;)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-问题-2：unknown-block-tag-endraw（（如表格、列表中），或"><a href="#2-问题-2：unknown-block-tag-endraw（（如表格、列表中），或" class="headerlink" title="2. 问题 2：unknown block tag: endraw（（如表格、列表中），或 "></a>2. 问题 2：unknown block tag: endraw（ 成对 / 嵌套错误）
+
+- **报错原因**：正文中误加多余的 {% raw %}/{% endraw %}（如表格、列表中），或 {% raw %} 未完整包裹代码块导致标签不成对。
+
+- **解决方案**：用脚本清理正文中多余的 raw 标签，仅保留代码块内的有效 raw 标记：
+
+{% raw %}
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line"># 配置 Hexo 文章目录</span><br><span class="line">posts_dir = r&quot;D:\BlogFile\source\_posts&quot;</span><br><span class="line"></span><br><span class="line">for filename in os.listdir(posts_dir):</span><br><span class="line">    if filename.endswith(&quot;.md&quot;):</span><br><span class="line">        file_path = os.path.join(posts_dir, filename)</span><br><span class="line">        with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            lines = f.readlines()</span><br><span class="line"></span><br><span class="line">        new_lines = []</span><br><span class="line">        in_code_block = False</span><br><span class="line">        code_block_content = []</span><br><span class="line"></span><br><span class="line">        for line in lines:</span><br><span class="line">            stripped_line = line.strip()</span><br><span class="line"></span><br><span class="line">            # 跳过正文中单独的 raw 标签（非代码块内）</span><br><span class="line">            if stripped_line in (&quot;&#123;% raw %&#125;&quot;, &quot;&#123;% endraw %&#125;&quot;):</span><br><span class="line">                continue</span><br><span class="line"></span><br><span class="line">            # 处理代码块</span><br><span class="line">            if stripped_line.startswith(&quot;```&quot;):</span><br><span class="line">                if not in_code_block:</span><br><span class="line">                    in_code_block = True</span><br><span class="line">                    code_block_content = [line]</span><br><span class="line">                else:</span><br><span class="line">                    code_block_content.append(line)</span><br><span class="line">                    in_code_block = False</span><br><span class="line"></span><br><span class="line">                    # 含 &#123;&#123; 的代码块加 raw 包裹</span><br><span class="line">                    if any(&quot;&#123;&#123;&quot; in c for c in code_block_content):</span><br><span class="line">                        new_lines.append(&quot;&#123;% raw %&#125;\n&quot;)</span><br><span class="line">                        new_lines.extend(code_block_content)</span><br><span class="line">                        new_lines.append(&quot;&#123;% endraw %&#125;\n&quot;)</span><br><span class="line">                    else:</span><br><span class="line">                        new_lines.extend(code_block_content)</span><br><span class="line">            elif in_code_block:</span><br><span class="line">                code_block_content.append(line)</span><br><span class="line">            else:</span><br><span class="line">                new_lines.append(line)</span><br><span class="line"></span><br><span class="line">        # 写回处理后的内容</span><br><span class="line">        with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            f.writelines(new_lines)</span><br><span class="line"></span><br><span class="line">        print(f&quot;已清理多余 raw 标签：&#123;filename&#125;&quot;)</span><br><span class="line"></span><br><span class="line">print(&quot;所有文章 raw 标签错误修复完成！&quot;)</span><br></pre></td></tr></table></figure>
+{% endraw %}</h3><h2 id="三、Hexo-图片路径适配问题"><a href="#三、Hexo-图片路径适配问题" class="headerlink" title="三、Hexo 图片路径适配问题"></a>三、Hexo 图片路径适配问题</h2><h3 id="1-问题：本地-Windows-路径（C-Users…-image-png）无法显示"><a href="#1-问题：本地-Windows-路径（C-Users…-image-png）无法显示" class="headerlink" title="1. 问题：本地 Windows 路径（C:\Users…\image.png）无法显示"></a>1. 问题：本地 Windows 路径（C:\Users…\image.png）无法显示</h3><ul>
+<li><p><strong>原因</strong>：Hexo 生成的是静态网页，无法访问本地电脑的绝对路径（如 C:\Users\…\image.png），仅支持项目内相对路径或网络图片 URL。</p>
+</li>
+<li><p><strong>解决方案</strong>：用脚本自动迁移本地图片到 Hexo 图片目录，并替换 Markdown 中的路径：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">import shutil</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line"># 配置路径</span><br><span class="line">posts_dir = r&quot;D:\BlogFile\source\_posts&quot;  # Hexo 文章目录</span><br><span class="line">hexo_img_dir = r&quot;D:\BlogFile\source\img&quot;  # Hexo 图片存储目录（自动创建）</span><br><span class="line"># 匹配 Typora 默认的本地图片路径（格式：C:\Users\用户名\...\image-时间戳.png）</span><br><span class="line">img_path_pattern = re.compile(r&#x27;C:\\Users\\[^\\]+\.*\\image-\d+\.png&#x27;)</span><br><span class="line"></span><br><span class="line"># 若 Hexo 图片目录不存在，自动创建</span><br><span class="line">if not os.path.exists(hexo_img_dir):</span><br><span class="line">    os.makedirs(hexo_img_dir)</span><br><span class="line"></span><br><span class="line"># 遍历所有文章，处理图片</span><br><span class="line">for filename in os.listdir(posts_dir):</span><br><span class="line">    if filename.endswith(&quot;.md&quot;):</span><br><span class="line">        file_path = os.path.join(posts_dir, filename)</span><br><span class="line">        with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            article_content = f.read()</span><br><span class="line"></span><br><span class="line">        # 提取文章中所有本地图片路径</span><br><span class="line">        local_img_paths = img_path_pattern.findall(article_content)</span><br><span class="line">        if local_img_paths:</span><br><span class="line">            for local_img_path in local_img_paths:</span><br><span class="line">                # 提取图片文件名（如 image-20250701191610806.png）</span><br><span class="line">                img_filename = os.path.basename(local_img_path)</span><br><span class="line">                # 复制本地图片到 Hexo 图片目录</span><br><span class="line">                shutil.copy2(local_img_path, os.path.join(hexo_img_dir, img_filename))</span><br><span class="line">                # 替换文章中的路径为 Hexo 相对路径（/img/图片名.png）</span><br><span class="line">                article_content = article_content.replace(local_img_path, f&#x27;/img/&#123;img_filename&#125;&#x27;)</span><br><span class="line"></span><br><span class="line">            # 将修改后的内容写回文章</span><br><span class="line">            with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">                f.write(article_content)</span><br><span class="line"></span><br><span class="line">            print(f&quot;已处理图片：&#123;filename&#125;（共迁移 &#123;len(local_img_paths)&#125; 张）&quot;)</span><br><span class="line">        else:</span><br><span class="line">            print(f&quot;无本地图片：&#123;filename&#125;&quot;)</span><br><span class="line"></span><br><span class="line">print(&quot;所有文章图片路径适配完成！&quot;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>关键说明</strong>：</li>
+</ul>
+<ol>
+<li><p>脚本仅匹配 Typora 默认截图路径（C:\Users...\image-xxxx.png），若图片路径不同，可修改 img_path_pattern 正则表达式。</p>
+</li>
+<li><p>迁移后图片存储在 Hexo 项目的 source&#x2F;img 目录，文章中路径变为 &#x2F;img&#x2F;xxx.png（Butterfly 主题可直接识别）。</p>
+</li>
+</ol>
+<h2 id="四、其他关键问题"><a href="#四、其他关键问题" class="headerlink" title="四、其他关键问题"></a>四、其他关键问题</h2><h3 id="1-问题：Butterfly-主题-cover-字段不填的影响"><a href="#1-问题：Butterfly-主题-cover-字段不填的影响" class="headerlink" title="1. 问题：Butterfly 主题 cover 字段不填的影响"></a>1. 问题：Butterfly 主题 cover 字段不填的影响</h3><ul>
+<li><p><strong>答案</strong>：</p>
+</li>
+<li><ul>
+<li>不填 cover：文章列表页（首页 &#x2F; 分类页）的文章卡片无自定义封面，显示主题默认背景（无报错，功能完全正常）。</li>
+</ul>
+</li>
+<li><ul>
+<li>填 cover：需配置 cover: &#x2F;img&#x2F;xxx.webp（图片需放在 source&#x2F;img 目录），列表页和文章详情页顶部会显示自定义封面，提升视觉效果；若需统一封面，可在主题配置文件中设置默认封面。</li>
+</ul>
+</li>
+</ul>
+<h2 id="五、核心工具-命令总结"><a href="#五、核心工具-命令总结" class="headerlink" title="五、核心工具 &#x2F; 命令总结"></a>五、核心工具 &#x2F; 命令总结</h2><table>
+<thead>
+<tr>
+<th>操作场景</th>
+<th>关键命令 &#x2F; 工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hexo 文章预览</td>
+<td>hexo clean &amp;&amp; hexo g &amp;&amp; hexo s（清理缓存→生成静态文件→启动本地服务器，访问 <a href="http://localhost:4000）">http://localhost:4000）</a></td>
+</tr>
+<tr>
+<td>Hexo 文章部署</td>
+<td>hexo d（需提前配置 GitHub Pages&#x2F;Gitee Pages 等部署目标）</td>
+</tr>
+<tr>
+<td>Markdown 笔记迁移</td>
+<td>上述 migrate_notes.py 脚本</td>
+</tr>
+<tr>
+<td>代码块 &#123;&#123; &#125;&#125; 解析修复</td>
+<td>上述 fix_code_raw.py 脚本</td>
+</tr>
+<tr>
+<td>本地图片路径适配</td>
+<td>上述 migrate_imgs.py 脚本</td>
+</tr>
+<tr>
+<td>批量转换 WebP 图片（可选）</td>
+<td>Windows 批处理脚本 toWebp.bat（依赖 Google cwebp 工具）</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://0xMouise.github.io">0xMouise</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://0xmouise.github.io/2025/09/16/%E4%BB%8A%E6%97%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%95%B4%E7%90%86%EF%BC%88Hexo%20Butterfly%20%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%20+%20%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%AC%94%E8%AE%B0%E8%BF%81%E7%A7%BB%EF%BC%89/">https://0xmouise.github.io/2025/09/16/%E4%BB%8A%E6%97%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%95%B4%E7%90%86%EF%BC%88Hexo%20Butterfly%20%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%20+%20%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%AC%94%E8%AE%B0%E8%BF%81%E7%A7%BB%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://0xMouise.github.io" target="_blank">0xMouise</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></div><div class="post-share"><div class="social-share" data-image="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/16/Agent%20Sudo%20%20Writeup%20%20TryHackMe/" title="Agent Sudo  Writeup  TryHackMe"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Agent Sudo  Writeup  TryHackMe</div></div><div class="info-2"><div class="info-item-1">Agent Sudo | Writeup | TryHackMe、一、信息收集使用nmap对ip地址的端口进行探测 1nmap -sS -sV -A  &lt;ip&gt;    可以看到上面80端口开放这一个web服务器我们看看    这里提示了R作为user-agent来进行访问，使用curl命令看看  1curl -A &quot;R&quot; -L 10.10.12.116    这里又给了我们一段提示告诉我们这里不是R但是是26个英文字母之一，然后我去从A开始尝试，到C这里找到了我想要的   二、哈希破解和暴力破解 这里给了我们一个用户名chris但是不知道这个用户是FTP的还是SSH的我们使用hydra来爆破看看  1hydra -l chris -P /usr/share/wordlists/rockyou.txt 10.10.12.116 ftp     成功爆破出了密码，我们登录看看    下面有一个写给J的文件和两张图片我们全部下载下来    查看写给J的文件其中解释说密码在假图像中    我们使用binwalk来查看文件   binwalk 是一个 二进制...</div></div></div></a><a class="pagination-related" href="/2025/09/16/080-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%B7%A5%E5%85%B7%E7%AE%B1&amp;WPS%E5%A4%8D%E7%8E%B0&amp;%E5%85%B6%E4%BB%96%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="080-服务攻防-工具箱&amp;WPS复现&amp;其他项目等"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">080-服务攻防-工具箱&WPS复现&其他项目等</div></div><div class="info-2"><div class="info-item-1">080-服务攻防-工具箱&amp;WPS复现&amp;其他项目等应用WPS-HW2023-RCE执行&amp;复现&amp;上线CS金山WPS RCE wps影响范围为:WPS Office 2023 个人版&lt; 11.1.0.15120 WPS Office 2019 企业版&lt; 11.8.2.12085 POC在1.html当前路径下启动http server并监听80端口，修改hosts文件(测试写死的)127.0.0.1 clientweb.docer.wps.cn.cloudwps.cn漏洞触发需让域名规则满足 clientweb.docer,wps.cn.{xxxxx}wps.cn cloudwps.cn和wps.cn没有任何关系 代码块在底下。(需要原pdf加wechat) 1、简单复现网上 POC分析1.html poc.docx 使用python环境启动 1python --m http.server 80   	   2、修改配合联动上线CS-修改 html 中的 shellcode(C#)-修改 docx 中的指向连接 URL-修改 hosts 绑定...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="author-info-name">0xMouise</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">106</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">专注网络安全学习与探索，记录成长与心得分享</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8A%E6%97%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%95%B4%E7%90%86%EF%BC%88Hexo-Butterfly-%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%AC%94%E8%AE%B0%E8%BF%81%E7%A7%BB%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">今日问题与解决方案整理（Hexo Butterfly 主题博客搭建 + 网络安全笔记迁移）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Markdown-%E7%AC%94%E8%AE%B0%E6%89%B9%E9%87%8F%E8%BF%81%E7%A7%BB%E5%88%B0-Hexo"><span class="toc-number">1.1.</span> <span class="toc-text">一、Markdown 笔记批量迁移到 Hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%AC%E5%9C%B0%E7%AC%94%E8%AE%B0%EF%BC%88D-Blog-%E5%B0%8F%E8%BF%AA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%89%E8%BF%81%E7%A7%BB%E5%88%B0-Hexo-posts-%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 问题：本地笔记（D:\Blog\ 小迪学习笔记）迁移到 Hexo _posts 目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Hexo-%E6%9E%84%E5%BB%BA%EF%BC%88hexo-g%EF%BC%89%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3"><span class="toc-number">1.2.</span> <span class="toc-text">二、Hexo 构建（hexo g）报错解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%97%AE%E9%A2%98-1%EF%BC%9ANunjucks-Error%EF%BC%88%E6%97%A0%E6%B3%95%E8%A7%A3%E6%9E%90-SSTI-%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84-123-123-125-125-%E8%AF%AD%E6%B3%95%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 问题 1：Nunjucks Error（无法解析 SSTI 代码中的 {{ }} 语法）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%97%AE%E9%A2%98-2%EF%BC%9Aunknown-block-tag-endraw%EF%BC%88%EF%BC%88%E5%A6%82%E8%A1%A8%E6%A0%BC%E3%80%81%E5%88%97%E8%A1%A8%E4%B8%AD%EF%BC%89%EF%BC%8C%E6%88%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 问题 2：unknown block tag: endraw（ 成对 &#x2F; 嵌套错误）
+
+- **报错原因**：正文中误加多余的 {% raw %}&#x2F;{% endraw %}（如表格、列表中），或 {% raw %} 未完整包裹代码块导致标签不成对。
+
+- **解决方案**：用脚本清理正文中多余的 raw 标签，仅保留代码块内的有效 raw 标记：
+
+{% raw %}
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950import os# 配置 Hexo 文章目录posts_dir &#x3D; r&quot;D:\BlogFile\source\_posts&quot;for filename in os.listdir(posts_dir):    if filename.endswith(&quot;.md&quot;):        file_path &#x3D; os.path.join(posts_dir, filename)        with open(file_path, &quot;r&quot;, encoding&#x3D;&quot;utf-8&quot;) as f:            lines &#x3D; f.readlines()        new_lines &#x3D; []        in_code_block &#x3D; False        code_block_content &#x3D; []        for line in lines:            stripped_line &#x3D; line.strip()            # 跳过正文中单独的 raw 标签（非代码块内）            if stripped_line in (&quot;{% raw %}&quot;, &quot;{% endraw %}&quot;):                continue            # 处理代码块            if stripped_line.startswith(&quot;&#96;&#96;&#96;&quot;):                if not in_code_block:                    in_code_block &#x3D; True                    code_block_content &#x3D; [line]                else:                    code_block_content.append(line)                    in_code_block &#x3D; False                    # 含 {{ 的代码块加 raw 包裹                    if any(&quot;{{&quot; in c for c in code_block_content):                        new_lines.append(&quot;{% raw %}\n&quot;)                        new_lines.extend(code_block_content)                        new_lines.append(&quot;{% endraw %}\n&quot;)                    else:                        new_lines.extend(code_block_content)            elif in_code_block:                code_block_content.append(line)            else:                new_lines.append(line)        # 写回处理后的内容        with open(file_path, &quot;w&quot;, encoding&#x3D;&quot;utf-8&quot;) as f:            f.writelines(new_lines)        print(f&quot;已清理多余 raw 标签：{filename}&quot;)print(&quot;所有文章 raw 标签错误修复完成！&quot;)
+{% endraw %}</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-%E5%9B%BE%E7%89%87%E8%B7%AF%E5%BE%84%E9%80%82%E9%85%8D%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">三、Hexo 图片路径适配问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%AC%E5%9C%B0-Windows-%E8%B7%AF%E5%BE%84%EF%BC%88C-Users%E2%80%A6-image-png%EF%BC%89%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 问题：本地 Windows 路径（C:\Users…\image.png）无法显示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%85%B6%E4%BB%96%E5%85%B3%E9%94%AE%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">四、其他关键问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%97%AE%E9%A2%98%EF%BC%9AButterfly-%E4%B8%BB%E9%A2%98-cover-%E5%AD%97%E6%AE%B5%E4%B8%8D%E5%A1%AB%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 问题：Butterfly 主题 cover 字段不填的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">五、核心工具 &#x2F; 命令总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="(eval)1 _python-argcomplete function definition file not found"/></a><div class="content"><a class="title" href="/2025/09/16/(eval)1%20_python-argcomplete%20function%20definition%20file%20not%20found/" title="(eval)1 _python-argcomplete function definition file not found">(eval)1 _python-argcomplete function definition file not found</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20Linux%20%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%89%A7%E8%A1%8C%20sudo%20apt-get%20update%20%E6%97%B6%E5%87%BA%E7%8E%B0%E4%BA%86%20GPG%20%E5%85%AC%E9%92%A5%E7%BC%BA%E5%A4%B1%E9%94%99%E8%AF%AF/" title="Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误">Kali Linux 系统在执行 sudo apt-get update 时出现了 GPG 公钥缺失错误</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%E7%9A%84KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E5%90%AF%E7%94%A8%E4%BB%8E%E4%B8%BB%E6%9C%BA%E5%90%91%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B7%A8%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E6%8B%96%E5%8A%A8%E6%96%87%E4%BB%B6%E6%95%99%E7%A8%8B/" title="Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程">Kali的KDE桌面环境启用从主机向虚拟机跨系统复制粘贴拖动文件教程</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置"><img src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="Kali 字体大小设置"/></a><div class="content"><a class="title" href="/2025/09/16/Kali%20%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE/" title="Kali 字体大小设置">Kali 字体大小设置</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）"><img src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="OutGuess 安装与问题排查指南（Kali Linux 环境）"/></a><div class="content"><a class="title" href="/2025/09/16/OutGuess%20%E5%AE%89%E8%A3%85%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97%EF%BC%88Kali%20Linux%20%E7%8E%AF%E5%A2%83%EF%BC%89/" title="OutGuess 安装与问题排查指南（Kali Linux 环境）">OutGuess 安装与问题排查指南（Kali Linux 环境）</a><time datetime="2025-09-16T07:48:08.000Z" title="发表于 2025-09-16 15:48:08">2025-09-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 0xMouise</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div><div class="footer_custom_text">如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="用我三生烟火，换你一世迷离,长街长，烟花繁，你挑灯回看,回得了过去，回不了当初,抬头看，人生是星辰大海,当你想要放弃时，想想当初为什么开始,因为现在的坚持正在重塑未来的你,抬头看，人生是星辰大海,你最大的冒险，是过你梦想的生活,等待完美条件的人永远无法开始,认知的边界就是命运的边界,在长大，在失去，在努力，在接受，在好好生活,如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机,纵有狂风拔地起 我亦乘风破万里,汗水不会辜负你的期待,享受你每一次锻炼完后的肌肉酸痛,因为这意味昨天那个预示着懦弱你的已经被你杀死了,肌肉的酸痛预示着懦弱的离场,当你快坚持不住的时候 困难也快坚持不住了,有些事不是看到了希望才努力，而是努力了才看到了希望,在无人问津的地方历练，在万众瞩目的地方出现,破茧成蝶必经淬炼,一颗向上跳动的心脏，不该有一副下坠的躯体,向下的躯体无法承载向上的灵魂,一个人要想成长你的意志力和身体都得尽力磨砺,宝剑锋从磨砺出梅花香自苦寒来" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
