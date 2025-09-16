@@ -1,0 +1,889 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>应急响应常用命令 | 0xMouise</title><meta name="author" content="0xMouise"><meta name="copyright" content="0xMouise"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="应急响应常用命令Findfind 是 Linux 中非常强大且常用的命令行工具，用于在目录树中查找文件或目录。它支持按文件名、类型、时间、权限、大小等多种条件查找。 find 基本语法：1find [查找路径] [查找条件] [查找动作]   常用示例：1. 按文件名查找1find &#x2F;path&#x2F;to&#x2F;dir -name &quot;filename.txt&quot;   精确匹配文件名（区分大小">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应常用命令">
+<meta property="og:url" content="https://0xmouise.github.io/2025/09/15/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="0xMouise">
+<meta property="og:description" content="应急响应常用命令Findfind 是 Linux 中非常强大且常用的命令行工具，用于在目录树中查找文件或目录。它支持按文件名、类型、时间、权限、大小等多种条件查找。 find 基本语法：1find [查找路径] [查找条件] [查找动作]   常用示例：1. 按文件名查找1find &#x2F;path&#x2F;to&#x2F;dir -name &quot;filename.txt&quot;   精确匹配文件名（区分大小">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg">
+<meta property="article:published_time" content="2025-09-15T15:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-16T07:43:46.664Z">
+<meta property="article:author" content="0xMouise">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="日志分析">
+<meta property="article:tag" content="安全运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "应急响应常用命令",
+  "url": "https://0xmouise.github.io/2025/09/15/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/",
+  "image": "https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg",
+  "datePublished": "2025-09-15T15:30:00.000Z",
+  "dateModified": "2025-09-16T07:43:46.664Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "0xMouise",
+      "url": "https://0xMouise.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg"><link rel="canonical" href="https://0xmouise.github.io/2025/09/15/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '应急响应常用命令',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">0xMouise</span></a><a class="nav-page-title" href="/"><span class="site-name">应急响应常用命令</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">应急响应常用命令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-16T07:43:46.664Z" title="更新于 2025-09-16 15:43:46">2025-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">日志分析</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="应急响应常用命令"><a href="#应急响应常用命令" class="headerlink" title="应急响应常用命令"></a>应急响应常用命令</h1><h2 id="Find"><a href="#Find" class="headerlink" title="Find"></a>Find</h2><p><code>find</code> 是 Linux 中非常强大且常用的命令行工具，用于在目录树中查找文件或目录。它支持按文件名、类型、时间、权限、大小等多种条件查找。</p>
+<h2 id="find-基本语法："><a href="#find-基本语法：" class="headerlink" title="find 基本语法："></a><code>find</code> 基本语法：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [查找路径] [查找条件] [查找动作]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="常用示例："><a href="#常用示例：" class="headerlink" title="常用示例："></a>常用示例：</h2><h3 id="1-按文件名查找"><a href="#1-按文件名查找" class="headerlink" title="1. 按文件名查找"></a>1. <strong>按文件名查找</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /path/to/dir -name <span class="string">&quot;filename.txt&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>精确匹配文件名（区分大小写）</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -iname <span class="string">&quot;readme.md&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>不区分大小写查找 <code>readme.md</code> 文件</p>
+</blockquote>
+<hr>
+<h3 id="2-查找目录"><a href="#2-查找目录" class="headerlink" title="2. 查找目录"></a>2. <strong>查找目录</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -<span class="built_in">type</span> d -name <span class="string">&quot;log&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找当前目录下名为 <code>log</code> 的目录</p>
+</blockquote>
+<hr>
+<h3 id="3-查找普通文件"><a href="#3-查找普通文件" class="headerlink" title="3. 查找普通文件"></a>3. <strong>查找普通文件</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /etc -<span class="built_in">type</span> f -name <span class="string">&quot;*.conf&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找 <code>/etc</code> 下所有以 <code>.conf</code> 结尾的配置文件</p>
+</blockquote>
+<hr>
+<h3 id="4-按修改时间查找"><a href="#4-按修改时间查找" class="headerlink" title="4. 按修改时间查找"></a>4. <strong>按修改时间查找</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -mtime -3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找<strong>3天内修改过</strong>的文件（<code>-mtime</code> 单位是天）</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -mmin -30</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找<strong>30分钟内</strong>修改的文件</p>
+</blockquote>
+<hr>
+<h3 id="5-按文件大小查找"><a href="#5-按文件大小查找" class="headerlink" title="5. 按文件大小查找"></a>5. <strong>按文件大小查找</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -size +100M</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找大于 100MB 的文件</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -size -1k</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找小于 1KB 的文件</p>
+</blockquote>
+<hr>
+<h3 id="6-按权限查找"><a href="#6-按权限查找" class="headerlink" title="6. 按权限查找"></a>6. <strong>按权限查找</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -perm 777</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找权限为 777 的文件（所有人可读写执行）</p>
+</blockquote>
+<hr>
+<h3 id="7-查找后执行操作（如删除）"><a href="#7-查找后执行操作（如删除）" class="headerlink" title="7. 查找后执行操作（如删除）"></a>7. <strong>查找后执行操作（如删除）</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.tmp&quot;</span> -delete</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找并删除所有 <code>.tmp</code> 文件</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /var/log -<span class="built_in">type</span> f -name <span class="string">&quot;*.log&quot;</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找 <code>.log</code> 文件并执行 <code>rm</code> 删除命令，<code>&#123;&#125;</code> 表示匹配到的文件</p>
+</blockquote>
+<hr>
+<h3 id="8-结合正则查找"><a href="#8-结合正则查找" class="headerlink" title="8. 结合正则查找"></a>8. <strong>结合正则查找</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -regex <span class="string">&quot;.*\.\(txt\|log\)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用正则查找 <code>.txt</code> 或 <code>.log</code> 文件（注意 <code>-regex</code> 默认匹配完整路径）</p>
+</blockquote>
+<hr>
+<h2 id="提示："><a href="#提示：" class="headerlink" title="提示："></a>提示：</h2><ul>
+<li><p><code>.</code> 表示当前目录</p>
+</li>
+<li><p>可以用 <code>-maxdepth N</code> 限制查找深度</p>
+</li>
+<li><p>可以结合 <code>grep</code> 使用，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">&quot;*.php&quot;</span> | xargs grep <span class="string">&quot;password&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="WC"><a href="#WC" class="headerlink" title="WC"></a>WC</h2><p><code>wc</code> 是 Linux 中的一个命令，代表 <strong>“word count”</strong>（字数计数），它用于统计文件或标准输入中的字数、行数、字节数等。<code>wc</code> 是一个非常常用的工具，尤其在处理文本文件时，它可以帮助我们快速获取文件的统计信息。</p>
+<h3 id="基本语法："><a href="#基本语法：" class="headerlink" title="基本语法："></a>基本语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> [选项] [文件...]</span><br></pre></td></tr></table></figure>
+
+<h3 id="常见选项："><a href="#常见选项：" class="headerlink" title="常见选项："></a>常见选项：</h3><ul>
+<li><strong><code>-l</code></strong>：统计行数。</li>
+<li><strong><code>-w</code></strong>：统计单词数。</li>
+<li><strong><code>-c</code></strong>：统计字节数（包括文件的所有字符）。</li>
+<li><strong><code>-m</code></strong>：统计字符数（和字节数类似，但考虑字符的编码，尤其在多字节字符集如 UTF-8 中有差异）。</li>
+<li><strong><code>-L</code></strong>：统计最长一行的字符数。</li>
+</ul>
+<h3 id="常见用法示例："><a href="#常见用法示例：" class="headerlink" title="常见用法示例："></a>常见用法示例：</h3><h4 id="1-统计行数（-l）"><a href="#1-统计行数（-l）" class="headerlink" title="1. 统计行数（-l）"></a>1. <strong>统计行数</strong>（<code>-l</code>）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -l file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：输出 <code>file.txt</code> 文件的总行数。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100 file.txt</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>file.txt</code> 中有 100 行。</p>
+<h4 id="2-统计单词数（-w）"><a href="#2-统计单词数（-w）" class="headerlink" title="2. 统计单词数（-w）"></a>2. <strong>统计单词数</strong>（<code>-w</code>）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -w file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：输出 <code>file.txt</code> 中的单词数量。一个单词是由空格、换行符或其他分隔符分开的。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">500 file.txt</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>file.txt</code> 中有 500 个单词。</p>
+<h4 id="3-统计字节数（-c）"><a href="#3-统计字节数（-c）" class="headerlink" title="3. 统计字节数（-c）"></a>3. <strong>统计字节数</strong>（<code>-c</code>）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -c file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：输出 <code>file.txt</code> 的字节数，包括所有字符。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1024 file.txt</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>file.txt</code> 中的内容占用了 1024 字节。</p>
+<h4 id="4-统计字符数（-m）"><a href="#4-统计字符数（-m）" class="headerlink" title="4. 统计字符数（-m）"></a>4. <strong>统计字符数</strong>（<code>-m</code>）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -m file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：输出 <code>file.txt</code> 的字符数。与字节数类似，但在多字节字符编码下有所不同。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1120 file.txt</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>file.txt</code> 中的字符数为 1120。字符数和字节数的区别主要在于文件内容的编码。</p>
+<h4 id="5-统计最长行的长度（-L）"><a href="#5-统计最长行的长度（-L）" class="headerlink" title="5. 统计最长行的长度（-L）"></a>5. <strong>统计最长行的长度</strong>（<code>-L</code>）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -L file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：输出 <code>file.txt</code> 中最长一行的字符数。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">120</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>file.txt</code> 中最长的行有 120 个字符。</p>
+<h4 id="6-同时显示多个统计信息"><a href="#6-同时显示多个统计信息" class="headerlink" title="6. 同时显示多个统计信息"></a>6. <strong>同时显示多个统计信息</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -l -w -c file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：统计文件的行数、单词数和字节数，并一起显示。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100 500 1024 file.txt</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>file.txt</code> 中有 100 行，500 个单词，占用了 1024 字节。</p>
+<h4 id="7-对标准输入进行统计"><a href="#7-对标准输入进行统计" class="headerlink" title="7. 对标准输入进行统计"></a>7. <strong>对标准输入进行统计</strong></h4><p>你可以使用管道将标准输入传递给 <code>wc</code>，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello World&quot;</span> | <span class="built_in">wc</span> -w</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：统计输入的单词数。</p>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>&quot;Hello World&quot;</code> 中有 2 个单词。</p>
+<h4 id="8-统计多个文件"><a href="#8-统计多个文件" class="headerlink" title="8. 统计多个文件"></a>8. <strong>统计多个文件</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -l file1.txt file2.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：统计 <code>file1.txt</code> 和 <code>file2.txt</code> 中的行数。<code>wc</code> 会显示每个文件的行数，以及所有文件的总行数。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">100 file1.txt</span><br><span class="line">200 file2.txt</span><br><span class="line">300 total</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>file1.txt</code> 有 100 行，<code>file2.txt</code> 有 200 行，总共有 300 行。</p>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p><code>grep</code> 是 Linux 中用于在文本文件中搜索匹配的字符串并输出的强大命令。它可以使用正则表达式来进行模式匹配，广泛应用于日志分析、文本处理、脚本编写等。</p>
+<h3 id="基本语法：-1"><a href="#基本语法：-1" class="headerlink" title="基本语法："></a>基本语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep [选项] PATTERN [文件...]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>PATTERN</strong>：要搜索的模式，可以是简单的文本字符串或正则表达式。</li>
+<li><strong>文件</strong>：要搜索的文件。如果未指定文件，<code>grep</code> 会从标准输入读取数据。</li>
+</ul>
+<h3 id="常用选项："><a href="#常用选项：" class="headerlink" title="常用选项："></a>常用选项：</h3><ul>
+<li><strong><code>-i</code></strong>：忽略大小写。</li>
+<li><strong><code>-v</code></strong>：反向匹配，显示不包含模式的行。</li>
+<li><strong><code>-r</code> 或 <code>-R</code></strong>：递归搜索目录中的文件。</li>
+<li><strong><code>-l</code></strong>：只显示匹配模式的文件名。</li>
+<li><strong><code>-n</code></strong>：显示匹配行的行号。</li>
+<li><strong><code>-c</code></strong>：显示匹配的行数。</li>
+<li><strong><code>-o</code></strong>：只显示匹配的文本部分，而不是整行。</li>
+<li><strong><code>-w</code></strong>：匹配整个单词。</li>
+<li><strong><code>-x</code></strong>：只匹配整行。</li>
+<li><strong><code>-H</code></strong>：输出匹配行所在的文件名。</li>
+<li><strong><code>-A NUM</code></strong>：输出匹配行及其之后的 NUM 行。</li>
+<li><strong><code>-B NUM</code></strong>：输出匹配行及其之前的 NUM 行。</li>
+<li><strong><code>-C NUM</code></strong>：输出匹配行及其前后各 NUM 行。</li>
+</ul>
+<h3 id="例子："><a href="#例子：" class="headerlink" title="例子："></a>例子：</h3><h4 id="1-基本搜索"><a href="#1-基本搜索" class="headerlink" title="1. 基本搜索"></a>1. <strong>基本搜索</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：在 <code>logfile.txt</code> 文件中搜索包含 <code>error</code> 的行，并输出。</li>
+</ul>
+<h4 id="2-忽略大小写"><a href="#2-忽略大小写" class="headerlink" title="2. 忽略大小写"></a>2. <strong>忽略大小写</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：搜索 <code>logfile.txt</code> 文件中的 <code>error</code>（忽略大小写），匹配 <code>ERROR</code>、<code>Error</code> 等不同形式。</li>
+</ul>
+<h4 id="3-显示行号"><a href="#3-显示行号" class="headerlink" title="3. 显示行号"></a>3. <strong>显示行号</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>作用</strong>：显示每个匹配行的行号，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3:error in connection</span><br><span class="line">15:error occurred</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-反向匹配（显示不包含指定文本的行）"><a href="#4-反向匹配（显示不包含指定文本的行）" class="headerlink" title="4. 反向匹配（显示不包含指定文本的行）"></a>4. <strong>反向匹配（显示不包含指定文本的行）</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示不包含 <code>error</code> 的所有行。</li>
+</ul>
+<h4 id="5-统计匹配的行数"><a href="#5-统计匹配的行数" class="headerlink" title="5. 统计匹配的行数"></a>5. <strong>统计匹配的行数</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：输出 <code>logfile.txt</code> 文件中匹配 <code>error</code> 的行数。</li>
+</ul>
+<h4 id="6-递归搜索目录中的所有文件"><a href="#6-递归搜索目录中的所有文件" class="headerlink" title="6. 递归搜索目录中的所有文件"></a>6. <strong>递归搜索目录中的所有文件</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r <span class="string">&quot;error&quot;</span> /var/log/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：在 <code>/var/log/</code> 目录下的所有文件中搜索 <code>error</code>。</li>
+</ul>
+<h4 id="7-只显示匹配的文件名"><a href="#7-只显示匹配的文件名" class="headerlink" title="7. 只显示匹配的文件名"></a>7. <strong>只显示匹配的文件名</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">&quot;error&quot;</span> *.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示当前目录下所有 <code>.log</code> 文件中包含 <code>error</code> 的文件名。</li>
+</ul>
+<h4 id="8-只显示匹配的文本部分"><a href="#8-只显示匹配的文本部分" class="headerlink" title="8. 只显示匹配的文本部分"></a>8. <strong>只显示匹配的文本部分</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：只输出匹配的文本部分，而不是整行。例如，如果一行包含多个 “error”，会显示多个 <code>error</code>。</li>
+</ul>
+<h4 id="9-匹配整个单词"><a href="#9-匹配整个单词" class="headerlink" title="9. 匹配整个单词"></a>9. <strong>匹配整个单词</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -w <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：仅匹配完整的单词 <code>error</code>，不匹配像 <code>errors</code> 或 <code>supererror</code> 这样的词。</li>
+</ul>
+<h4 id="10-搜索多个模式"><a href="#10-搜索多个模式" class="headerlink" title="10. 搜索多个模式"></a>10. <strong>搜索多个模式</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">&quot;error&quot;</span> -e <span class="string">&quot;warning&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：同时搜索 <code>error</code> 和 <code>warning</code>。</li>
+</ul>
+<h4 id="11-显示匹配行及其上下文"><a href="#11-显示匹配行及其上下文" class="headerlink" title="11. 显示匹配行及其上下文"></a>11. <strong>显示匹配行及其上下文</strong></h4><ul>
+<li><p><strong><code>-A NUM</code></strong>：显示匹配行及其后 <code>NUM</code> 行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -A 2 <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示匹配 <code>error</code> 的行及其后两行。</li>
+</ul>
+</li>
+<li><p><strong><code>-B NUM</code></strong>：显示匹配行及其前 <code>NUM</code> 行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -B 2 <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示匹配 <code>error</code> 的行及其前两行。</li>
+</ul>
+</li>
+<li><p><strong><code>-C NUM</code></strong>：显示匹配行及其前后各 <code>NUM</code> 行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -C 2 <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示匹配 <code>error</code> 的行及其前后两行。</li>
+</ul>
+</li>
+</ul>
+<h4 id="12-匹配正则表达式"><a href="#12-匹配正则表达式" class="headerlink" title="12. 匹配正则表达式"></a>12. <strong>匹配正则表达式</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">&quot;erro(r|r*)&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：使用扩展正则表达式（ERE），匹配 <code>erro</code> 后跟一个或多个 <code>r</code> 的字符串，例如 <code>error</code> 和 <code>errrrr</code>。</li>
+</ul>
+<h4 id="13-只匹配整行"><a href="#13-只匹配整行" class="headerlink" title="13. 只匹配整行"></a>13. <strong>只匹配整行</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -x <span class="string">&quot;error&quot;</span> logfile.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：只匹配整行内容为 <code>error</code> 的行。</li>
+</ul>
+<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><p><code>awk</code> 是一个强大的文本处理工具，常用于对文件中的数据进行操作和分析。<code>awk</code> 基于模式匹配，能够按列（字段）处理文件中的文本数据，非常适合用来处理结构化的文本，如日志文件、CSV 文件等。</p>
+<h3 id="基本语法：-2"><a href="#基本语法：-2" class="headerlink" title="基本语法："></a>基本语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;pattern &#123;action&#125;&#x27;</span> input_file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>pattern</strong>：模式，<code>awk</code> 会搜索与该模式匹配的行。</li>
+<li><strong>action</strong>：对匹配的行执行的操作。常见的操作包括打印某些字段、计算、替换等。如果没有指定 <code>action</code>，则默认打印匹配行。</li>
+</ul>
+<h3 id="常见选项：-1"><a href="#常见选项：-1" class="headerlink" title="常见选项："></a>常见选项：</h3><ul>
+<li><strong><code>-F</code></strong>：指定字段分隔符。默认情况下，<code>awk</code> 使用空格或制表符作为字段分隔符，但可以通过 <code>-F</code> 选项指定其他分隔符。</li>
+<li><strong><code>-v</code></strong>：设置变量值，允许在 <code>awk</code> 脚本中传递外部变量。</li>
+</ul>
+<h3 id="字段（-符号）："><a href="#字段（-符号）：" class="headerlink" title="字段（$符号）："></a>字段（<code>$</code>符号）：</h3><ul>
+<li><code>$1</code>：第一个字段（列）。</li>
+<li><code>$2</code>：第二个字段（列）。</li>
+<li><code>$0</code>：整行文本（包括所有字段）。</li>
+</ul>
+<h3 id="常见用法："><a href="#常见用法：" class="headerlink" title="常见用法："></a>常见用法：</h3><h4 id="1-打印文件的内容"><a href="#1-打印文件的内容" class="headerlink" title="1. 打印文件的内容"></a>1. <strong>打印文件的内容</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $0&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：打印文件的每一行。<code>$0</code> 代表整行文本。</li>
+</ul>
+<h4 id="2-打印文件中的某一列"><a href="#2-打印文件中的某一列" class="headerlink" title="2. 打印文件中的某一列"></a>2. <strong>打印文件中的某一列</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：打印文件的第一列。如果文件中有多个列，<code>$1</code> 表示第一个字段。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：打印第二列。</li>
+</ul>
+<h4 id="3-指定字段分隔符（例如-CSV-文件）"><a href="#3-指定字段分隔符（例如-CSV-文件）" class="headerlink" title="3. 指定字段分隔符（例如 CSV 文件）"></a>3. <strong>指定字段分隔符（例如 CSV 文件）</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F, <span class="string">&#x27;&#123;print $1, $2&#125;&#x27;</span> file.csv</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：在 CSV 文件中指定逗号（<code>,</code>）作为字段分隔符，打印文件的前两列。</li>
+</ul>
+<h4 id="4-条件判断"><a href="#4-条件判断" class="headerlink" title="4. 条件判断"></a>4. <strong>条件判断</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;$1 == &quot;Alice&quot; &#123;print $2&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：打印第一列为 “Alice” 时的第二列。</li>
+</ul>
+<h4 id="5-计算列的总和"><a href="#5-计算列的总和" class="headerlink" title="5. 计算列的总和"></a>5. <strong>计算列的总和</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;sum += $1&#125; END &#123;print sum&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：对文件的第一列求和并打印总和。<code>sum += $1</code> 表示累加每行的第一个字段，<code>END &#123;print sum&#125;</code> 会在处理完所有行后输出结果。</li>
+</ul>
+<h4 id="6-打印特定条件下的行"><a href="#6-打印特定条件下的行" class="headerlink" title="6. 打印特定条件下的行"></a>6. <strong>打印特定条件下的行</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;$3 &gt; 50 &#123;print $1, $3&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：如果第三列的值大于 50，则打印第一列和第三列。</li>
+</ul>
+<h4 id="7-使用正则表达式进行匹配"><a href="#7-使用正则表达式进行匹配" class="headerlink" title="7. 使用正则表达式进行匹配"></a>7. <strong>使用正则表达式进行匹配</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;/pattern/ &#123;print $0&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：匹配包含 “pattern” 的行，并打印该行。可以使用正则表达式来匹配模式。</li>
+</ul>
+<h4 id="8-计算文件中的列平均值"><a href="#8-计算文件中的列平均值" class="headerlink" title="8. 计算文件中的列平均值"></a>8. <strong>计算文件中的列平均值</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;sum += $1&#125; END &#123;if (NR &gt; 0) print sum / NR&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：计算文件第一列的平均值。<code>NR</code> 是记录的行数（行号），<code>sum / NR</code> 计算平均值。</li>
+</ul>
+<h4 id="9-使用多个命令"><a href="#9-使用多个命令" class="headerlink" title="9. 使用多个命令"></a>9. <strong>使用多个命令</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $1; print $2&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：打印每行的第一列和第二列。</li>
+</ul>
+<h4 id="10-在-awk-中使用外部变量"><a href="#10-在-awk-中使用外部变量" class="headerlink" title="10. 在 awk 中使用外部变量"></a>10. <strong>在 <code>awk</code> 中使用外部变量</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -v threshold=50 <span class="string">&#x27;$3 &gt; threshold &#123;print $1, $3&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：使用外部变量 <code>threshold</code> 来过滤第三列大于该值的行。在这个例子中，<code>threshold</code> 的值为 50。</li>
+</ul>
+<h4 id="11-修改字段内容"><a href="#11-修改字段内容" class="headerlink" title="11. 修改字段内容"></a>11. <strong>修改字段内容</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;$2=&quot;modified&quot;; print $0&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：将每行的第二列修改为 “modified” 并打印整行。</li>
+</ul>
+<h4 id="12-按分隔符处理复杂数据（例如多个分隔符）"><a href="#12-按分隔符处理复杂数据（例如多个分隔符）" class="headerlink" title="12. 按分隔符处理复杂数据（例如多个分隔符）"></a>12. <strong>按分隔符处理复杂数据（例如多个分隔符）</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F<span class="string">&#x27;[: ]&#x27;</span> <span class="string">&#x27;&#123;print $1, $2&#125;&#x27;</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：使用冒号（<code>:</code>）和空格（<code> </code>）作为字段分隔符，打印第一列和第二列。</li>
+</ul>
+<h3 id="结合管道使用："><a href="#结合管道使用：" class="headerlink" title="结合管道使用："></a>结合管道使用：</h3><p><code>awk</code> 经常和其他命令（如 <code>grep</code>, <code>sort</code>, <code>cut</code> 等）结合使用。</p>
+<h4 id="示例-1：使用-grep-和-awk-查找并处理数据："><a href="#示例-1：使用-grep-和-awk-查找并处理数据：" class="headerlink" title="示例 1：使用 grep 和 awk 查找并处理数据："></a>示例 1：使用 <code>grep</code> 和 <code>awk</code> 查找并处理数据：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;pattern&quot;</span> file.txt | awk <span class="string">&#x27;&#123;print $1, $3&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：首先用 <code>grep</code> 查找包含 “pattern” 的行，然后用 <code>awk</code> 打印匹配行的第一列和第三列。</li>
+</ul>
+<h4 id="示例-2：用-awk-处理输出并排序："><a href="#示例-2：用-awk-处理输出并排序：" class="headerlink" title="示例 2：用 awk 处理输出并排序："></a>示例 2：用 <code>awk</code> 处理输出并排序：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $1, $2&#125;&#x27;</span> file.txt | <span class="built_in">sort</span> -k2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：用 <code>awk</code> 提取第一列和第二列，然后用 <code>sort</code> 按第二列排序。</li>
+</ul>
+<h2 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h2><p><code>sort</code> 是 Linux 中用于对文本行进行排序的命令。它非常强大，支持多种排序方式，适用于按字母、数字、日期等方式对文本数据进行排序。</p>
+<h3 id="基本语法：-3"><a href="#基本语法：-3" class="headerlink" title="基本语法："></a>基本语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> [选项] [文件...]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>文件</strong>：要排序的文件。如果没有指定文件，<code>sort</code> 将从标准输入（通常是终端）读取数据。</li>
+</ul>
+<h3 id="常用选项：-1"><a href="#常用选项：-1" class="headerlink" title="常用选项："></a>常用选项：</h3><ul>
+<li><strong><code>-n</code></strong>：按数值大小排序（默认按字典顺序排序）。</li>
+<li><strong><code>-r</code></strong>：按降序排序（默认按升序排序）。</li>
+<li><strong><code>-k</code></strong>：指定排序的列（字段）。</li>
+<li><strong><code>-t</code></strong>：指定字段分隔符，默认是空格或制表符。</li>
+<li><strong><code>-u</code></strong>：删除重复的行，只保留唯一的行。</li>
+<li><strong><code>-b</code></strong>：忽略行首的空格。</li>
+<li><strong><code>-f</code></strong>：忽略大小写进行排序。</li>
+<li><strong><code>-M</code></strong>：按月份排序（适用于包含月份名的日期格式）。</li>
+<li><strong><code>-T</code></strong>：指定临时文件的存储位置。</li>
+</ul>
+<h3 id="常见用法：-1"><a href="#常见用法：-1" class="headerlink" title="常见用法："></a>常见用法：</h3><h4 id="1-按字典顺序排序（升序）"><a href="#1-按字典顺序排序（升序）" class="headerlink" title="1. 按字典顺序排序（升序）"></a>1. <strong>按字典顺序排序（升序）</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：按字母（字典顺序）对 <code>file.txt</code> 文件中的行进行升序排序。</li>
+</ul>
+<h4 id="2-按数值排序"><a href="#2-按数值排序" class="headerlink" title="2. 按数值排序"></a>2. <strong>按数值排序</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -n file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：按照数值的大小对 <code>file.txt</code> 文件中的行进行排序，而不是字母顺序。</li>
+</ul>
+<h4 id="3-按降序排序"><a href="#3-按降序排序" class="headerlink" title="3. 按降序排序"></a>3. <strong>按降序排序</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -r file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：按降序对文件进行排序（默认是升序排序）。</li>
+</ul>
+<h4 id="4-按列排序"><a href="#4-按列排序" class="headerlink" title="4. 按列排序"></a>4. <strong>按列排序</strong></h4><p>假设 <code>file.txt</code> 文件内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">John 50</span><br><span class="line">Alice 25</span><br><span class="line">Bob 30</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>按第二列（年龄）排序</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -k2 file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：根据文件的第二列（年龄）对行进行升序排序。</li>
+</ul>
+<h4 id="5-指定分隔符进行排序"><a href="#5-指定分隔符进行排序" class="headerlink" title="5. 指定分隔符进行排序"></a>5. <strong>指定分隔符进行排序</strong></h4><p>假设 <code>file.csv</code> 文件内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">John,50</span><br><span class="line">Alice,25</span><br><span class="line">Bob,30</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>按逗号分隔并根据第二列排序</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -t<span class="string">&#x27;,&#x27;</span> -k2 file.csv</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：指定逗号（<code>,</code>）作为字段分隔符，然后根据第二列进行排序。</li>
+</ul>
+<h4 id="6-按降序排序并去重"><a href="#6-按降序排序并去重" class="headerlink" title="6. 按降序排序并去重"></a>6. <strong>按降序排序并去重</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -r -u file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：按降序排序，并去除重复的行，只保留唯一的行。</li>
+</ul>
+<h4 id="7-忽略大小写排序"><a href="#7-忽略大小写排序" class="headerlink" title="7. 忽略大小写排序"></a>7. <strong>忽略大小写排序</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -f file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：忽略大小写进行排序。例如，<code>apple</code> 和 <code>Apple</code> 会被视为相同。</li>
+</ul>
+<h4 id="8-按月份排序"><a href="#8-按月份排序" class="headerlink" title="8. 按月份排序"></a>8. <strong>按月份排序</strong></h4><p>假设 <code>file.txt</code> 文件内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Jan 10</span><br><span class="line">Feb 5</span><br><span class="line">Mar 20</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>按月份排序</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -M file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：根据月份名称（如 <code>Jan</code>, <code>Feb</code>, <code>Mar</code>）进行排序。</li>
+</ul>
+<h4 id="9-按照多个列进行排序"><a href="#9-按照多个列进行排序" class="headerlink" title="9. 按照多个列进行排序"></a>9. <strong>按照多个列进行排序</strong></h4><p>假设 <code>file.txt</code> 文件内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">John 50</span><br><span class="line">Alice 30</span><br><span class="line">Alice 25</span><br><span class="line">Bob 30</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>先按第二列（年龄）升序，再按第一列（名字）升序排序</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -k2 -k1 file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：首先根据第二列（年龄）升序排序，如果年龄相同，再根据第一列（名字）升序排序。</li>
+</ul>
+<h4 id="10-排序并输出到另一个文件"><a href="#10-排序并输出到另一个文件" class="headerlink" title="10. 排序并输出到另一个文件"></a>10. <strong>排序并输出到另一个文件</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> file.txt &gt; sorted_file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：将 <code>file.txt</code> 排序后的结果输出到 <code>sorted_file.txt</code> 文件中。</li>
+</ul>
+<h4 id="11-删除重复行"><a href="#11-删除重复行" class="headerlink" title="11. 删除重复行"></a>11. <strong>删除重复行</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -u file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：排序并去除重复的行。</li>
+</ul>
+<h3 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h3><p>假设 <code>file.txt</code> 内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">5</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>按数字升序排序</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -n file.txt</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>按数字降序排序</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> -n -r file.txt</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">4</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="uniq"><a href="#uniq" class="headerlink" title="uniq"></a>uniq</h2><p><code>uniq</code> 是 Linux 中的一个命令，用于删除文件中的重复行，并且可以对输入进行统计、排序等操作。通常，<code>uniq</code> 命令与 <code>sort</code> 命令一起使用，以便在排序的文本中去除重复行。</p>
+<h3 id="基本语法：-4"><a href="#基本语法：-4" class="headerlink" title="基本语法："></a>基本语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> [选项] [输入文件] [输出文件]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>输入文件</strong>：默认从标准输入读取，或指定输入文件。</li>
+<li><strong>输出文件</strong>：默认将结果输出到标准输出，也可以重定向到文件中。</li>
+</ul>
+<h3 id="常见选项：-2"><a href="#常见选项：-2" class="headerlink" title="常见选项："></a>常见选项：</h3><ul>
+<li><strong><code>-c</code></strong>：显示每行重复出现的次数。</li>
+<li><strong><code>-d</code></strong>：只显示重复出现的行。</li>
+<li><strong><code>-u</code></strong>：只显示唯一的、不重复的行。</li>
+<li><strong><code>-i</code></strong>：忽略大小写，进行不区分大小写的比较。</li>
+<li><strong><code>-w N</code></strong>：比较前 <code>N</code> 个字符。</li>
+<li><strong><code>-f N</code></strong>：忽略每行前 <code>N</code> 个字段。</li>
+<li><strong><code>-s N</code></strong>：忽略每行前 <code>N</code> 个字符（按字符跳过）。</li>
+</ul>
+<h3 id="常见用法：-2"><a href="#常见用法：-2" class="headerlink" title="常见用法："></a>常见用法：</h3><h4 id="1-去除重复行"><a href="#1-去除重复行" class="headerlink" title="1. 去除重复行"></a>1. <strong>去除重复行</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示 <code>file.txt</code> 文件中不重复的行，连续相同的行只保留一个。</li>
+</ul>
+<h4 id="2-统计每行出现的次数"><a href="#2-统计每行出现的次数" class="headerlink" title="2. 统计每行出现的次数"></a>2. <strong>统计每行出现的次数</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -c file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示 <code>file.txt</code> 文件中每行的出现次数。每个重复的行会在前面显示出现次数。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3 apple</span><br><span class="line">2 banana</span><br><span class="line">1 orange</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>apple</code> 出现了 3 次，<code>banana</code> 出现了 2 次，<code>orange</code> 出现了 1 次。</p>
+<h4 id="3-只显示重复的行"><a href="#3-只显示重复的行" class="headerlink" title="3. 只显示重复的行"></a>3. <strong>只显示重复的行</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -d file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：仅显示在 <code>file.txt</code> 文件中重复出现的行。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apple</span><br><span class="line">banana</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>apple</code> 和 <code>banana</code> 是重复的行。</p>
+<h4 id="4-只显示唯一的行（不重复的行）"><a href="#4-只显示唯一的行（不重复的行）" class="headerlink" title="4. 只显示唯一的行（不重复的行）"></a>4. <strong>只显示唯一的行（不重复的行）</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -u file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：显示 <code>file.txt</code> 文件中唯一的、不重复的行。</li>
+</ul>
+<p><strong>示例输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">orange</span><br></pre></td></tr></table></figure>
+
+<p>这表示 <code>orange</code> 是唯一的、不重复的行。</p>
+<h4 id="5-忽略大小写进行比较"><a href="#5-忽略大小写进行比较" class="headerlink" title="5. 忽略大小写进行比较"></a>5. <strong>忽略大小写进行比较</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -i file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：忽略大小写，去除重复的行。例如，<code>apple</code> 和 <code>APPLE</code> 被视为相同的行。</li>
+</ul>
+<h4 id="6-指定比较字段"><a href="#6-指定比较字段" class="headerlink" title="6. 指定比较字段"></a>6. <strong>指定比较字段</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -f 2 file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：忽略每行的前两个字段，只比较后面的字段。例如，如果每行包含多个字段（如空格分隔的字段），可以指定 <code>-f</code> 选项来跳过前 <code>N</code> 个字段进行比较。</li>
+</ul>
+<h4 id="7-指定比较字符数"><a href="#7-指定比较字符数" class="headerlink" title="7. 指定比较字符数"></a>7. <strong>指定比较字符数</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -w 5 file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：仅比较每行前 5 个字符，忽略其余字符进行去重。</li>
+</ul>
+<h4 id="8-与-sort-配合使用"><a href="#8-与-sort-配合使用" class="headerlink" title="8. 与 sort 配合使用"></a>8. <strong>与 <code>sort</code> 配合使用</strong></h4><p>为了确保 <code>uniq</code> 去重有效，通常会先使用 <code>sort</code> 排序文本文件，然后再使用 <code>uniq</code> 去除重复行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> file.txt | <span class="built_in">uniq</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：首先使用 <code>sort</code> 将文件按字典顺序排序，然后使用 <code>uniq</code> 去除重复行。</li>
+</ul>
+<h4 id="9-去重并输出到文件"><a href="#9-去重并输出到文件" class="headerlink" title="9. 去重并输出到文件"></a>9. <strong>去重并输出到文件</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> file.txt &gt; unique_file.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：去重 <code>file.txt</code> 中的重复行，并将结果输出到 <code>unique_file.txt</code> 文件中。</li>
+</ul>
+<h3 id="示例：-1"><a href="#示例：-1" class="headerlink" title="示例："></a>示例：</h3><p>假设 <code>file.txt</code> 内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apple</span><br><span class="line">banana</span><br><span class="line">apple</span><br><span class="line">orange</span><br><span class="line">banana</span><br><span class="line">grape</span><br><span class="line">apple</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>去除重复行</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> file.txt</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apple</span><br><span class="line">banana</span><br><span class="line">orange</span><br><span class="line">grape</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>统计每行出现的次数</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -c file.txt</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3 apple</span><br><span class="line">2 banana</span><br><span class="line">1 orange</span><br><span class="line">1 grape</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>只显示重复的行</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -d file.txt</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apple</span><br><span class="line">banana</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>只显示唯一的行（不重复的行）</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uniq</span> -u file.txt</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">orange</span><br><span class="line">grape</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="uniq-sort-awk-grep用法的组合使用"><a href="#uniq-sort-awk-grep用法的组合使用" class="headerlink" title="uniq sort awk grep用法的组合使用"></a>uniq sort awk grep用法的组合使用</h2><p>在应急响应中，经常会使用 <code>uniq</code>、<code>sort</code>、<code>awk</code> 和 <code>grep</code> 等命令来处理日志文件、统计数据、过滤和分析信息。这些命令各有独特的功能，组合使用可以实现更强大的数据处理和分析。以下是一些常见的命令组合，用于日志分析和数据筛选：</p>
+<h3 id="1-结合-sort-和-uniq-统计重复行"><a href="#1-结合-sort-和-uniq-统计重复行" class="headerlink" title="1. 结合 sort 和 uniq 统计重复行"></a>1. <strong>结合 <code>sort</code> 和 <code>uniq</code> 统计重复行</strong></h3><p>这两个命令结合使用，常用于去除重复行，并计算每行出现的次数。</p>
+<ul>
+<li><p><strong>示例</strong>：统计 Apache 访问日志中每个 IP 地址的访问次数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> access.log | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>sort</code>：将 <code>access.log</code> 中的行排序。</li>
+<li><code>uniq -c</code>：对排序后的结果进行去重，并统计每个 IP 地址的出现次数。</li>
+<li><code>sort -nr</code>：按降序排列输出结果，显示访问次数最多的 IP 地址。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-结合-grep-和-sort-筛选并排序"><a href="#2-结合-grep-和-sort-筛选并排序" class="headerlink" title="2. 结合 grep 和 sort 筛选并排序"></a>2. <strong>结合 <code>grep</code> 和 <code>sort</code> 筛选并排序</strong></h3><p><code>grep</code> 用于过滤数据，<code>sort</code> 用于排序，可以很方便地筛选并排序日志文件。</p>
+<ul>
+<li><p><strong>示例</strong>：显示包含 <code>error</code> 的行并按日期排序。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;error&quot;</span> access.log | <span class="built_in">sort</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>grep &quot;error&quot;</code>：筛选出包含 <code>error</code> 的所有行。</li>
+<li><code>sort</code>：按字典顺序对筛选出的行进行排序。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-结合-awk-和-sort-按列排序"><a href="#3-结合-awk-和-sort-按列排序" class="headerlink" title="3. 结合 awk 和 sort 按列排序"></a>3. <strong>结合 <code>awk</code> 和 <code>sort</code> 按列排序</strong></h3><p><code>awk</code> 用于提取并处理字段，<code>sort</code> 用于按某一列排序。</p>
+<ul>
+<li><p><strong>示例</strong>：按第一个字段（IP 地址）进行排序并显示 IP 和请求次数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> access.log | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>awk &#39;&#123;print $1&#125;&#39;</code>：提取 <code>access.log</code> 文件中的第一列（IP 地址）。</li>
+<li><code>sort</code>：对 IP 地址进行排序。</li>
+<li><code>uniq -c</code>：统计每个 IP 地址出现的次数。</li>
+<li><code>sort -nr</code>：按出现次数进行降序排序。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-结合-grep-和-awk-过滤并处理日志"><a href="#4-结合-grep-和-awk-过滤并处理日志" class="headerlink" title="4. 结合 grep 和 awk 过滤并处理日志"></a>4. <strong>结合 <code>grep</code> 和 <code>awk</code> 过滤并处理日志</strong></h3><p><code>grep</code> 用于快速过滤出相关内容，<code>awk</code> 用于进一步分析并处理数据。</p>
+<ul>
+<li><p><strong>示例</strong>：提取所有失败的登录尝试并显示 IP 地址和用户名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;Failed password&quot;</span> /var/log/auth.log | awk <span class="string">&#x27;&#123;print $1, $2, $3, $11&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>grep &quot;Failed password&quot;</code>：筛选出包含 <code>Failed password</code> 的日志行。</li>
+<li><code>awk &#39;&#123;print $1, $2, $3, $11&#125;&#39;</code>：显示日志行的前 3 个字段（日期、时间和主机名）和第 11 个字段（用户名）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-结合-grep-和-sort-排序后去重"><a href="#5-结合-grep-和-sort-排序后去重" class="headerlink" title="5. 结合 grep 和 sort 排序后去重"></a>5. <strong>结合 <code>grep</code> 和 <code>sort</code> 排序后去重</strong></h3><p><code>grep</code> 用于过滤，<code>sort</code> 和 <code>uniq</code> 结合使用来去重并按顺序输出。</p>
+<ul>
+<li><p><strong>示例</strong>：查找所有请求的 URL，并按照字母顺序去重和排序。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -oP <span class="string">&#x27;GET \K\S+&#x27;</span> access.log | <span class="built_in">sort</span> | <span class="built_in">uniq</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>grep -oP &#39;GET \K\S+&#39;</code>：使用 <code>grep</code> 和 Perl 正则表达式（<code>-P</code>）提取所有 <code>GET</code> 请求后的 URL 部分。</li>
+<li><code>sort</code>：对 URL 进行排序。</li>
+<li><code>uniq</code>：去重，确保每个 URL 只出现一次。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-结合-awk-和-grep-用于统计特定条件的数据"><a href="#6-结合-awk-和-grep-用于统计特定条件的数据" class="headerlink" title="6. 结合 awk 和 grep 用于统计特定条件的数据"></a>6. <strong>结合 <code>awk</code> 和 <code>grep</code> 用于统计特定条件的数据</strong></h3><p><code>awk</code> 用于过滤特定条件的数据，<code>grep</code> 用于更精细的文本搜索。</p>
+<ul>
+<li><p><strong>示例</strong>：查找访问次数最多的 URL，并显示访问的次数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;GET&quot;</span> access.log | awk <span class="string">&#x27;&#123;print $7&#125;&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>grep &quot;GET&quot;</code>：筛选出所有 GET 请求。</li>
+<li><code>awk &#39;&#123;print $7&#125;&#39;</code>：提取日志的第七列（即 URL）。</li>
+<li><code>sort</code>：排序。</li>
+<li><code>uniq -c</code>：统计每个 URL 的访问次数。</li>
+<li><code>sort -nr</code>：按访问次数降序排列。</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-结合-awk、grep-和-sort-筛选并按条件排序"><a href="#7-结合-awk、grep-和-sort-筛选并按条件排序" class="headerlink" title="7. 结合 awk、grep 和 sort 筛选并按条件排序"></a>7. <strong>结合 <code>awk</code>、<code>grep</code> 和 <code>sort</code> 筛选并按条件排序</strong></h3><p>可以结合多个命令，首先过滤、然后处理字段并排序。</p>
+<ul>
+<li><p><strong>示例</strong>：找出所有 HTTP 404 错误的请求，并按 IP 地址和状态码排序。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;404&quot;</span> access.log | awk <span class="string">&#x27;&#123;print $1, $9&#125;&#x27;</span> | <span class="built_in">sort</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>grep &quot;404&quot;</code>：筛选出所有 HTTP 404 错误的请求。</li>
+<li><code>awk &#39;&#123;print $1, $9&#125;&#39;</code>：提取 IP 地址（第一列）和 HTTP 状态码（第九列）。</li>
+<li><code>sort</code>：按 IP 地址和状态码进行排序。</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-结合-awk-和-sort-进行统计和排序"><a href="#8-结合-awk-和-sort-进行统计和排序" class="headerlink" title="8. 结合 awk 和 sort 进行统计和排序"></a>8. <strong>结合 <code>awk</code> 和 <code>sort</code> 进行统计和排序</strong></h3><p><code>awk</code> 和 <code>sort</code> 常用于提取某些字段进行统计后排序。</p>
+<ul>
+<li><p><strong>示例</strong>：计算每个 IP 地址访问的总字节数，并按降序排序。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $1, $10&#125;&#x27;</span> access.log | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>awk &#39;&#123;print $1, $10&#125;&#39;</code>：提取每行的 IP 地址（第一列）和字节数（第十列）。</li>
+<li><code>sort</code>：排序，按 IP 地址和字节数。</li>
+<li><code>uniq -c</code>：统计每个 IP 地址的访问次数。</li>
+<li><code>sort -nr</code>：按降序排序，显示访问最多的 IP 地址和它们的字节数。</li>
+</ul>
+</li>
+</ul>
+<h3 id="9-结合-sort、uniq-和-awk-查找访问频次最高的请求方法"><a href="#9-结合-sort、uniq-和-awk-查找访问频次最高的请求方法" class="headerlink" title="9. 结合 sort、uniq 和 awk 查找访问频次最高的请求方法"></a>9. <strong>结合 <code>sort</code>、<code>uniq</code> 和 <code>awk</code> 查找访问频次最高的请求方法</strong></h3><ul>
+<li><p><strong>示例</strong>：查看 HTTP 请求方法（如 GET、POST）的出现次数，并按频次降序排列。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;print $6&#125;&#x27;</span> access.log | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解释</strong>：</p>
+<ul>
+<li><code>awk &#39;&#123;print $6&#125;&#39;</code>：提取每行的 HTTP 请求方法（通常是第六列）。</li>
+<li><code>sort</code>：对方法进行排序。</li>
+<li><code>uniq -c</code>：统计每种请求方法的出现次数。</li>
+<li><code>sort -nr</code>：按出现次数降序排列。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p><code>uniq</code>、<code>sort</code>、<code>awk</code> 和 <code>grep</code> 是 Linux 中常用的文本处理工具，它们在应急响应过程中可以用于日志分析、流量监控、数据提取和统计等任务。通过组合使用这些命令，可以高效地筛选、排序、统计和分析大量的日志数据，帮助分析系统的状态和潜在的安全威胁。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://0xMouise.github.io">0xMouise</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://0xmouise.github.io/2025/09/15/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">https://0xmouise.github.io/2025/09/15/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://0xMouise.github.io" target="_blank">0xMouise</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a><a class="post-meta__tags" href="/tags/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应</a><a class="post-meta__tags" href="/tags/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">日志分析</a><a class="post-meta__tags" href="/tags/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a></div><div class="post-share"><div class="social-share" data-image="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/15/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90-ssh%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="日志分析-ssh日志分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">日志分析-ssh日志分析</div></div><div class="info-2"><div class="info-item-1">日志分析-ssh日志分析题目：     1、可以登录 SSH 的账号数量是多少      2、SSH日志中登录成功的日志条数是多少（去除自己登陆产生的两次）      3、SSH日志中登录成功次数最多的用户的用户名是什么      4、SSH日志中登录失败次数最多的用户以及登录使用的ip是什么(flag:flag&#123;用户名,ip&#125;)  1、可以登录 SSH 的账号数量是多少这里直接查看ssh的服务配置文件/etc/ssh/sshd_config 是 SSH 服务端配置文件，用于控制 SSH 服务（sshd）的各种行为。 1cat /etc/ssh/sshd_config    AllowGroups SSHD_USER root：表示只有属于 SSHD_USER 组或 root 用户所在组的用户才可以登录 SSH。 其它用户 无论是否存在 shell，也无法登录 SSH，除非属于上面两个组之一 下一步我们查看所属组的用户 1cat /etc/group   可以看到只有两个用户属于SSHD_USER组一个是toor 另一个是root 所以flag{2} 常见配置...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90-Tomcat%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="日志分析-Tomcat日志分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">日志分析-Tomcat日志分析</div></div><div class="info-2"><div class="info-item-1">日志分析-Tomcat日志分析1、Tomcat日志所在的绝对路径是？ 2、攻击者对某网站进行了口令爆破。请你判断口令成功匹配的请求的响应码是？ 3、攻击者向admin.jsp的管理员留言板界面发送了恶意JS代码从而构成了存储型XSS。已知攻击者试图盗取管理员cookie，并将其发送至其本地服务器上。请你判断其服务器上用于盗取cookie而监听的端口是？ 4、攻击者利用执行系统命令的参数是？ 5、攻击者通过某种手段遗留了后门文件，请你找到该文件并按需提交其文件中的flag 1、Tomcat日志所在的绝对路径是？在C盘打开就能看到一个server点进去就找到日志路径了 1flag&#123;C:\server\apache-tomcat-11.0.5\logs&#125;   2、攻击者对某网站进行了口令爆破。请你判断口令成功匹配的请求的响应码是？我们查看tomcat日志，找到这个最大的日志文件  拉倒最下面，看到黑客对网站爆破最后一条日志的请求状态码是302，就是这个了 1flag&#123;302&#125;   3、攻击者向admin.jsp的管理员留言板界面发送了恶意JS代码...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/15/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90-Tomcat%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="日志分析-Tomcat日志分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">日志分析-Tomcat日志分析</div></div><div class="info-2"><div class="info-item-1">日志分析-Tomcat日志分析1、Tomcat日志所在的绝对路径是？ 2、攻击者对某网站进行了口令爆破。请你判断口令成功匹配的请求的响应码是？ 3、攻击者向admin.jsp的管理员留言板界面发送了恶意JS代码从而构成了存储型XSS。已知攻击者试图盗取管理员cookie，并将其发送至其本地服务器上。请你判断其服务器上用于盗取cookie而监听的端口是？ 4、攻击者利用执行系统命令的参数是？ 5、攻击者通过某种手段遗留了后门文件，请你找到该文件并按需提交其文件中的flag 1、Tomcat日志所在的绝对路径是？在C盘打开就能看到一个server点进去就找到日志路径了 1flag&#123;C:\server\apache-tomcat-11.0.5\logs&#125;   2、攻击者对某网站进行了口令爆破。请你判断口令成功匹配的请求的响应码是？我们查看tomcat日志，找到这个最大的日志文件  拉倒最下面，看到黑客对网站爆破最后一条日志的请求状态码是302，就是这个了 1flag&#123;302&#125;   3、攻击者向admin.jsp的管理员留言板界面发送了恶意JS代码...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90-ssh%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="日志分析-ssh日志分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">日志分析-ssh日志分析</div></div><div class="info-2"><div class="info-item-1">日志分析-ssh日志分析题目：     1、可以登录 SSH 的账号数量是多少      2、SSH日志中登录成功的日志条数是多少（去除自己登陆产生的两次）      3、SSH日志中登录成功次数最多的用户的用户名是什么      4、SSH日志中登录失败次数最多的用户以及登录使用的ip是什么(flag:flag&#123;用户名,ip&#125;)  1、可以登录 SSH 的账号数量是多少这里直接查看ssh的服务配置文件/etc/ssh/sshd_config 是 SSH 服务端配置文件，用于控制 SSH 服务（sshd）的各种行为。 1cat /etc/ssh/sshd_config    AllowGroups SSHD_USER root：表示只有属于 SSHD_USER 组或 root 用户所在组的用户才可以登录 SSH。 其它用户 无论是否存在 shell，也无法登录 SSH，除非属于上面两个组之一 下一步我们查看所属组的用户 1cat /etc/group   可以看到只有两个用户属于SSHD_USER组一个是toor 另一个是root 所以flag{2} 常见配置...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94-Linux%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="第一章 应急响应-Linux日志分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">第一章 应急响应-Linux日志分析</div></div><div class="info-2"><div class="info-item-1">第一章 应急响应-Linux日志分析  https://threatbook.cn/next/product/sandbox)     1234567账号root密码linuxrzssh root@IP1.有多少IP在爆破主机ssh的root帐号，如果有多个使用&quot;,&quot;分割2.ssh爆破成功登陆的IP是多少，如果有多个使用&quot;,&quot;分割3.爆破用户名字典是什么？如果有多个使用&quot;,&quot;分割4.登陆成功的IP共爆破了多少次5.黑客登陆主机后新建了一个后门用户，用户名是多少 一、查找爆破 SSH 服务的 IP 第一个 Flag 的目标是查找爆破 SSH 服务 Root 账户的 IP，故这里我们需要分析 auth 日志，auth 日志常见于 Debian 系（这台靶机就是 Debian）      此外，Linux 下还有这些日志  ![linux log](C:\Users\liuyuanbiao\Desktop\BlogPhoto\linux log.jpg)    这里 auth 日志有两条，分别是auth.log和auth.lo...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%AC%AC%E4%B9%9D%E7%AB%A0-blueteam%20%E7%9A%84%E5%B0%8F%E5%BF%83%E6%80%9D/" title="第九章-blueteam 的小心思"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">第九章-blueteam 的小心思</div></div><div class="info-2"><div class="info-item-1">第九章-blueteam 的小心思1234567服务器场景操作系统 Linux服务器账号密码 root qi5qaz任务环境说明    注：进去后执行  sed -i &#x27;s/Listen 80/Listen 9999/&#x27; /etc/apache2/ports.conf &amp;&amp; service apache2 restart开放题目    漏洞修复  题目； 1、攻击者通过什么密码成功登录了网站的后台？提交密码字符串的小写md5值，格式flag{md5}。 2、攻击者在哪个PHP页面中成功上传了后门文件？例如upload.php页面，上传字符串”upload.php”的小写md5值，格式flag{md5}。 3、找到攻击者上传的webshell文件，提交该文件的小写md5值，格式flag{md5}。 4、攻击者后续又下载了一个可执行的后门程序，提交该文件的小写md5值，格式flag{md5}。 5、攻击者创建了后门用户的名称是？例如attack恶意用户，上传字符串”attack”的小写md5值，格式flag{md5}。 6、攻击者创建了一个持久化的...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94-webshell%E6%9F%A5%E6%9D%80/" title="第一章 应急响应-webshell查杀"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">第一章 应急响应-webshell查杀</div></div><div class="info-2"><div class="info-item-1">第一章 应急响应-webshell查杀前置知识什么是应急响应？ 简单官方一点：WebShell应急响应是指在检测到WebShell（恶意Web脚本）攻击后，采取一系列措施来控制、消除威胁，并恢复受影响的系统和服务。WebShell是一种常见的攻击手段，攻击者通过上传或注入恶意脚本到Web服务器上，从而获得对服务器的远程控制权限，而我们需要做的就是找到问题所在根源并且解决掉它 一、手动排查webshell  静态检测  我们可以查找一些特殊后缀结尾的文件。例如：.asp、.php、.jsp、.aspx。然后再从这类文件中查找后门的特征码，特征值，危险函数来查找webshell，例如查找内容含有exec()、eval()、system()的文件。  优点：快速方便，对已知的webshell查找准确率高，部署方便，一个脚本就能搞定。  缺点：漏报率、误报率高，无法查找0day型webshell，而且容易被绕过。    动态检测  webshell执行时刻表现出来的特征，我们称为动态特征。只要我们把webshell特有的HTTP请求&#x2F;响应做成特征库，加到IDS里面去检测所有的H...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%AC%AC%E4%BA%94%E7%AB%A0%20Windows%20%E5%AE%9E%E6%88%98-evtx%20%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90/" title="第五章 Windows 实战-evtx 文件分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzvnvj31hc0xc1ky.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">第五章 Windows 实战-evtx 文件分析</div></div><div class="info-2"><div class="info-item-1">第五章 Windows 实战-evtx 文件分析1234567服务器场景操作系统 None点击下载附件获取附件任务环境说明    注：样本请勿在本地运行！！！样本请勿在本地运行！！！样本请勿在本地运行！！！    应急响应工程师在收到设备告警后，在受到攻击的服务器保存了一份log 请你协助分析 LOG 文件提交对应的 FLAG开放题目    漏洞修复  .evtx 文件是 Windows 系统的事件日志文件格式，用于记录操作系统中各种事件（如用户登录、程序崩溃、安全操作、系统错误等），是应急响应、运维监控、取证分析中非常重要的证据来源。 如何打开 .evtx 文件？使用系统自带事件查看器  打开方式：按 Win + R → 输入 eventvwr.msc 或直接双击 .evtx 文件，默认会用“事件查看器”打开  第一题将黑客成功登录系统所使用的IP地址作为Flag值提交； 这里告诉我们找成功登录，关于登录这两个，我们筛选一下事件 ID 4624进行分析即可；  当 某个用户成功登录系统（本地、远程、RDP、网络等），Windows 就会在安全日志中记录一个 ID 为 4624 ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="author-info-name">0xMouise</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">应急响应常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Find"><span class="toc-number">1.1.</span> <span class="toc-text">Find</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#find-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">find 基本语法：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">常用示例：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%8C%89%E6%96%87%E4%BB%B6%E5%90%8D%E6%9F%A5%E6%89%BE"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 按文件名查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E6%89%BE%E7%9B%AE%E5%BD%95"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 查找目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9F%A5%E6%89%BE%E6%99%AE%E9%80%9A%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 查找普通文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%8C%89%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%E6%9F%A5%E6%89%BE"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 按修改时间查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%8C%89%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E6%9F%A5%E6%89%BE"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 按文件大小查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%8C%89%E6%9D%83%E9%99%90%E6%9F%A5%E6%89%BE"><span class="toc-number">1.3.6.</span> <span class="toc-text">6. 按权限查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E6%9F%A5%E6%89%BE%E5%90%8E%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%EF%BC%88%E5%A6%82%E5%88%A0%E9%99%A4%EF%BC%89"><span class="toc-number">1.3.7.</span> <span class="toc-text">7. 查找后执行操作（如删除）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E7%BB%93%E5%90%88%E6%AD%A3%E5%88%99%E6%9F%A5%E6%89%BE"><span class="toc-number">1.3.8.</span> <span class="toc-text">8. 结合正则查找</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">提示：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WC"><span class="toc-number">1.5.</span> <span class="toc-text">WC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%EF%BC%9A"><span class="toc-number">1.5.1.</span> <span class="toc-text">基本语法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%80%89%E9%A1%B9%EF%BC%9A"><span class="toc-number">1.5.2.</span> <span class="toc-text">常见选项：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="toc-number">1.5.3.</span> <span class="toc-text">常见用法示例：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%BB%9F%E8%AE%A1%E8%A1%8C%E6%95%B0%EF%BC%88-l%EF%BC%89"><span class="toc-number">1.5.3.1.</span> <span class="toc-text">1. 统计行数（-l）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%BB%9F%E8%AE%A1%E5%8D%95%E8%AF%8D%E6%95%B0%EF%BC%88-w%EF%BC%89"><span class="toc-number">1.5.3.2.</span> <span class="toc-text">2. 统计单词数（-w）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%BB%9F%E8%AE%A1%E5%AD%97%E8%8A%82%E6%95%B0%EF%BC%88-c%EF%BC%89"><span class="toc-number">1.5.3.3.</span> <span class="toc-text">3. 统计字节数（-c）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E7%BB%9F%E8%AE%A1%E5%AD%97%E7%AC%A6%E6%95%B0%EF%BC%88-m%EF%BC%89"><span class="toc-number">1.5.3.4.</span> <span class="toc-text">4. 统计字符数（-m）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E7%BB%9F%E8%AE%A1%E6%9C%80%E9%95%BF%E8%A1%8C%E7%9A%84%E9%95%BF%E5%BA%A6%EF%BC%88-L%EF%BC%89"><span class="toc-number">1.5.3.5.</span> <span class="toc-text">5. 统计最长行的长度（-L）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E5%90%8C%E6%97%B6%E6%98%BE%E7%A4%BA%E5%A4%9A%E4%B8%AA%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">1.5.3.6.</span> <span class="toc-text">6. 同时显示多个统计信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E5%AF%B9%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5%E8%BF%9B%E8%A1%8C%E7%BB%9F%E8%AE%A1"><span class="toc-number">1.5.3.7.</span> <span class="toc-text">7. 对标准输入进行统计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-%E7%BB%9F%E8%AE%A1%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">1.5.3.8.</span> <span class="toc-text">8. 统计多个文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#grep"><span class="toc-number">1.6.</span> <span class="toc-text">grep</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%EF%BC%9A-1"><span class="toc-number">1.6.1.</span> <span class="toc-text">基本语法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9%EF%BC%9A"><span class="toc-number">1.6.2.</span> <span class="toc-text">常用选项：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90%EF%BC%9A"><span class="toc-number">1.6.3.</span> <span class="toc-text">例子：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%90%9C%E7%B4%A2"><span class="toc-number">1.6.3.1.</span> <span class="toc-text">1. 基本搜索</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99"><span class="toc-number">1.6.3.2.</span> <span class="toc-text">2. 忽略大小写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%98%BE%E7%A4%BA%E8%A1%8C%E5%8F%B7"><span class="toc-number">1.6.3.3.</span> <span class="toc-text">3. 显示行号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%8F%8D%E5%90%91%E5%8C%B9%E9%85%8D%EF%BC%88%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%8C%85%E5%90%AB%E6%8C%87%E5%AE%9A%E6%96%87%E6%9C%AC%E7%9A%84%E8%A1%8C%EF%BC%89"><span class="toc-number">1.6.3.4.</span> <span class="toc-text">4. 反向匹配（显示不包含指定文本的行）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E7%BB%9F%E8%AE%A1%E5%8C%B9%E9%85%8D%E7%9A%84%E8%A1%8C%E6%95%B0"><span class="toc-number">1.6.3.5.</span> <span class="toc-text">5. 统计匹配的行数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E9%80%92%E5%BD%92%E6%90%9C%E7%B4%A2%E7%9B%AE%E5%BD%95%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6"><span class="toc-number">1.6.3.6.</span> <span class="toc-text">6. 递归搜索目录中的所有文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E5%8F%AA%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D"><span class="toc-number">1.6.3.7.</span> <span class="toc-text">7. 只显示匹配的文件名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-%E5%8F%AA%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E7%9A%84%E6%96%87%E6%9C%AC%E9%83%A8%E5%88%86"><span class="toc-number">1.6.3.8.</span> <span class="toc-text">8. 只显示匹配的文本部分</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-%E5%8C%B9%E9%85%8D%E6%95%B4%E4%B8%AA%E5%8D%95%E8%AF%8D"><span class="toc-number">1.6.3.9.</span> <span class="toc-text">9. 匹配整个单词</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.6.3.10.</span> <span class="toc-text">10. 搜索多个模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E8%A1%8C%E5%8F%8A%E5%85%B6%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.6.3.11.</span> <span class="toc-text">11. 显示匹配行及其上下文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-%E5%8C%B9%E9%85%8D%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.6.3.12.</span> <span class="toc-text">12. 匹配正则表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-%E5%8F%AA%E5%8C%B9%E9%85%8D%E6%95%B4%E8%A1%8C"><span class="toc-number">1.6.3.13.</span> <span class="toc-text">13. 只匹配整行</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#awk"><span class="toc-number">1.7.</span> <span class="toc-text">awk</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%EF%BC%9A-2"><span class="toc-number">1.7.1.</span> <span class="toc-text">基本语法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%80%89%E9%A1%B9%EF%BC%9A-1"><span class="toc-number">1.7.2.</span> <span class="toc-text">常见选项：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E6%AE%B5%EF%BC%88-%E7%AC%A6%E5%8F%B7%EF%BC%89%EF%BC%9A"><span class="toc-number">1.7.3.</span> <span class="toc-text">字段（$符号）：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%EF%BC%9A"><span class="toc-number">1.7.4.</span> <span class="toc-text">常见用法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%89%93%E5%8D%B0%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">1.7.4.1.</span> <span class="toc-text">1. 打印文件的内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%89%93%E5%8D%B0%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E6%9F%90%E4%B8%80%E5%88%97"><span class="toc-number">1.7.4.2.</span> <span class="toc-text">2. 打印文件中的某一列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E5%88%86%E9%9A%94%E7%AC%A6%EF%BC%88%E4%BE%8B%E5%A6%82-CSV-%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-number">1.7.4.3.</span> <span class="toc-text">3. 指定字段分隔符（例如 CSV 文件）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="toc-number">1.7.4.4.</span> <span class="toc-text">4. 条件判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E8%AE%A1%E7%AE%97%E5%88%97%E7%9A%84%E6%80%BB%E5%92%8C"><span class="toc-number">1.7.4.5.</span> <span class="toc-text">5. 计算列的总和</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E6%89%93%E5%8D%B0%E7%89%B9%E5%AE%9A%E6%9D%A1%E4%BB%B6%E4%B8%8B%E7%9A%84%E8%A1%8C"><span class="toc-number">1.7.4.6.</span> <span class="toc-text">6. 打印特定条件下的行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%BF%9B%E8%A1%8C%E5%8C%B9%E9%85%8D"><span class="toc-number">1.7.4.7.</span> <span class="toc-text">7. 使用正则表达式进行匹配</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-%E8%AE%A1%E7%AE%97%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E5%88%97%E5%B9%B3%E5%9D%87%E5%80%BC"><span class="toc-number">1.7.4.8.</span> <span class="toc-text">8. 计算文件中的列平均值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="toc-number">1.7.4.9.</span> <span class="toc-text">9. 使用多个命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-%E5%9C%A8-awk-%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">1.7.4.10.</span> <span class="toc-text">10. 在 awk 中使用外部变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-%E4%BF%AE%E6%94%B9%E5%AD%97%E6%AE%B5%E5%86%85%E5%AE%B9"><span class="toc-number">1.7.4.11.</span> <span class="toc-text">11. 修改字段内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-%E6%8C%89%E5%88%86%E9%9A%94%E7%AC%A6%E5%A4%84%E7%90%86%E5%A4%8D%E6%9D%82%E6%95%B0%E6%8D%AE%EF%BC%88%E4%BE%8B%E5%A6%82%E5%A4%9A%E4%B8%AA%E5%88%86%E9%9A%94%E7%AC%A6%EF%BC%89"><span class="toc-number">1.7.4.12.</span> <span class="toc-text">12. 按分隔符处理复杂数据（例如多个分隔符）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E5%90%88%E7%AE%A1%E9%81%93%E4%BD%BF%E7%94%A8%EF%BC%9A"><span class="toc-number">1.7.5.</span> <span class="toc-text">结合管道使用：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1%EF%BC%9A%E4%BD%BF%E7%94%A8-grep-%E5%92%8C-awk-%E6%9F%A5%E6%89%BE%E5%B9%B6%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%EF%BC%9A"><span class="toc-number">1.7.5.1.</span> <span class="toc-text">示例 1：使用 grep 和 awk 查找并处理数据：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2%EF%BC%9A%E7%94%A8-awk-%E5%A4%84%E7%90%86%E8%BE%93%E5%87%BA%E5%B9%B6%E6%8E%92%E5%BA%8F%EF%BC%9A"><span class="toc-number">1.7.5.2.</span> <span class="toc-text">示例 2：用 awk 处理输出并排序：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sort"><span class="toc-number">1.8.</span> <span class="toc-text">sort</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%EF%BC%9A-3"><span class="toc-number">1.8.1.</span> <span class="toc-text">基本语法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9%EF%BC%9A-1"><span class="toc-number">1.8.2.</span> <span class="toc-text">常用选项：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%EF%BC%9A-1"><span class="toc-number">1.8.3.</span> <span class="toc-text">常见用法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%8C%89%E5%AD%97%E5%85%B8%E9%A1%BA%E5%BA%8F%E6%8E%92%E5%BA%8F%EF%BC%88%E5%8D%87%E5%BA%8F%EF%BC%89"><span class="toc-number">1.8.3.1.</span> <span class="toc-text">1. 按字典顺序排序（升序）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%8C%89%E6%95%B0%E5%80%BC%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.3.2.</span> <span class="toc-text">2. 按数值排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%8C%89%E9%99%8D%E5%BA%8F%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.3.3.</span> <span class="toc-text">3. 按降序排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%8C%89%E5%88%97%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.3.4.</span> <span class="toc-text">4. 按列排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E6%8C%87%E5%AE%9A%E5%88%86%E9%9A%94%E7%AC%A6%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.3.5.</span> <span class="toc-text">5. 指定分隔符进行排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E6%8C%89%E9%99%8D%E5%BA%8F%E6%8E%92%E5%BA%8F%E5%B9%B6%E5%8E%BB%E9%87%8D"><span class="toc-number">1.8.3.6.</span> <span class="toc-text">6. 按降序排序并去重</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.3.7.</span> <span class="toc-text">7. 忽略大小写排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-%E6%8C%89%E6%9C%88%E4%BB%BD%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.3.8.</span> <span class="toc-text">8. 按月份排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-%E6%8C%89%E7%85%A7%E5%A4%9A%E4%B8%AA%E5%88%97%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="toc-number">1.8.3.9.</span> <span class="toc-text">9. 按照多个列进行排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-%E6%8E%92%E5%BA%8F%E5%B9%B6%E8%BE%93%E5%87%BA%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">1.8.3.10.</span> <span class="toc-text">10. 排序并输出到另一个文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-%E5%88%A0%E9%99%A4%E9%87%8D%E5%A4%8D%E8%A1%8C"><span class="toc-number">1.8.3.11.</span> <span class="toc-text">11. 删除重复行</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="toc-number">1.8.4.</span> <span class="toc-text">示例：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uniq"><span class="toc-number">1.9.</span> <span class="toc-text">uniq</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%EF%BC%9A-4"><span class="toc-number">1.9.1.</span> <span class="toc-text">基本语法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%80%89%E9%A1%B9%EF%BC%9A-2"><span class="toc-number">1.9.2.</span> <span class="toc-text">常见选项：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%EF%BC%9A-2"><span class="toc-number">1.9.3.</span> <span class="toc-text">常见用法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%8E%BB%E9%99%A4%E9%87%8D%E5%A4%8D%E8%A1%8C"><span class="toc-number">1.9.3.1.</span> <span class="toc-text">1. 去除重复行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%BB%9F%E8%AE%A1%E6%AF%8F%E8%A1%8C%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0"><span class="toc-number">1.9.3.2.</span> <span class="toc-text">2. 统计每行出现的次数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%8F%AA%E6%98%BE%E7%A4%BA%E9%87%8D%E5%A4%8D%E7%9A%84%E8%A1%8C"><span class="toc-number">1.9.3.3.</span> <span class="toc-text">3. 只显示重复的行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%8F%AA%E6%98%BE%E7%A4%BA%E5%94%AF%E4%B8%80%E7%9A%84%E8%A1%8C%EF%BC%88%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E8%A1%8C%EF%BC%89"><span class="toc-number">1.9.3.4.</span> <span class="toc-text">4. 只显示唯一的行（不重复的行）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83"><span class="toc-number">1.9.3.5.</span> <span class="toc-text">5. 忽略大小写进行比较</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E6%8C%87%E5%AE%9A%E6%AF%94%E8%BE%83%E5%AD%97%E6%AE%B5"><span class="toc-number">1.9.3.6.</span> <span class="toc-text">6. 指定比较字段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E6%8C%87%E5%AE%9A%E6%AF%94%E8%BE%83%E5%AD%97%E7%AC%A6%E6%95%B0"><span class="toc-number">1.9.3.7.</span> <span class="toc-text">7. 指定比较字符数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-%E4%B8%8E-sort-%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-number">1.9.3.8.</span> <span class="toc-text">8. 与 sort 配合使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-%E5%8E%BB%E9%87%8D%E5%B9%B6%E8%BE%93%E5%87%BA%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">1.9.3.9.</span> <span class="toc-text">9. 去重并输出到文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A-1"><span class="toc-number">1.9.4.</span> <span class="toc-text">示例：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uniq-sort-awk-grep%E7%94%A8%E6%B3%95%E7%9A%84%E7%BB%84%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-number">1.10.</span> <span class="toc-text">uniq sort awk grep用法的组合使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BB%93%E5%90%88-sort-%E5%92%8C-uniq-%E7%BB%9F%E8%AE%A1%E9%87%8D%E5%A4%8D%E8%A1%8C"><span class="toc-number">1.10.1.</span> <span class="toc-text">1. 结合 sort 和 uniq 统计重复行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BB%93%E5%90%88-grep-%E5%92%8C-sort-%E7%AD%9B%E9%80%89%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="toc-number">1.10.2.</span> <span class="toc-text">2. 结合 grep 和 sort 筛选并排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BB%93%E5%90%88-awk-%E5%92%8C-sort-%E6%8C%89%E5%88%97%E6%8E%92%E5%BA%8F"><span class="toc-number">1.10.3.</span> <span class="toc-text">3. 结合 awk 和 sort 按列排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BB%93%E5%90%88-grep-%E5%92%8C-awk-%E8%BF%87%E6%BB%A4%E5%B9%B6%E5%A4%84%E7%90%86%E6%97%A5%E5%BF%97"><span class="toc-number">1.10.4.</span> <span class="toc-text">4. 结合 grep 和 awk 过滤并处理日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%BB%93%E5%90%88-grep-%E5%92%8C-sort-%E6%8E%92%E5%BA%8F%E5%90%8E%E5%8E%BB%E9%87%8D"><span class="toc-number">1.10.5.</span> <span class="toc-text">5. 结合 grep 和 sort 排序后去重</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%BB%93%E5%90%88-awk-%E5%92%8C-grep-%E7%94%A8%E4%BA%8E%E7%BB%9F%E8%AE%A1%E7%89%B9%E5%AE%9A%E6%9D%A1%E4%BB%B6%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">1.10.6.</span> <span class="toc-text">6. 结合 awk 和 grep 用于统计特定条件的数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%BB%93%E5%90%88-awk%E3%80%81grep-%E5%92%8C-sort-%E7%AD%9B%E9%80%89%E5%B9%B6%E6%8C%89%E6%9D%A1%E4%BB%B6%E6%8E%92%E5%BA%8F"><span class="toc-number">1.10.7.</span> <span class="toc-text">7. 结合 awk、grep 和 sort 筛选并按条件排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E7%BB%93%E5%90%88-awk-%E5%92%8C-sort-%E8%BF%9B%E8%A1%8C%E7%BB%9F%E8%AE%A1%E5%92%8C%E6%8E%92%E5%BA%8F"><span class="toc-number">1.10.8.</span> <span class="toc-text">8. 结合 awk 和 sort 进行统计和排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E7%BB%93%E5%90%88-sort%E3%80%81uniq-%E5%92%8C-awk-%E6%9F%A5%E6%89%BE%E8%AE%BF%E9%97%AE%E9%A2%91%E6%AC%A1%E6%9C%80%E9%AB%98%E7%9A%84%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95"><span class="toc-number">1.10.9.</span> <span class="toc-text">9. 结合 sort、uniq 和 awk 查找访问频次最高的请求方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.10.10.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&amp;WAF&amp;%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"><img src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"/></a><div class="content"><a class="title" href="/2025/09/15/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&amp;WAF&amp;%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&amp;%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&amp;%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&amp;API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&amp;FUZZ%E7%88%AC%E8%99%AB&amp;%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"/></a><div class="content"><a class="title" href="/2025/09/15/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&amp;%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&amp;%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&amp;API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&amp;FUZZ%E7%88%AC%E8%99%AB&amp;%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目">014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&amp;%E8%B5%84%E6%BA%90URL&amp;%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"/></a><div class="content"><a class="title" href="/2025/09/15/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&amp;%E8%B5%84%E6%BA%90URL&amp;%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&amp;%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&amp;%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"/></a><div class="content"><a class="title" href="/2025/09/15/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&amp;%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&amp;%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等">019-信息打点-小程序组手&amp;开发工具&amp;依赖等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&amp;%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&amp;%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&amp;%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&amp;%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&amp;%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzye0j31hc0xc7wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"/></a><div class="content"><a class="title" href="/2025/09/15/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&amp;%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&amp;%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&amp;%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&amp;%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&amp;%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试">018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15fyobj31hc0xc7wh.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 0xMouise</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div><div class="footer_custom_text">如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="用我三生烟火，换你一世迷离,长街长，烟花繁，你挑灯回看,回得了过去，回不了当初,抬头看，人生是星辰大海,当你想要放弃时，想想当初为什么开始,因为现在的坚持正在重塑未来的你,抬头看，人生是星辰大海,你最大的冒险，是过你梦想的生活,等待完美条件的人永远无法开始,认知的边界就是命运的边界,在长大，在失去，在努力，在接受，在好好生活,如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机,纵有狂风拔地起 我亦乘风破万里,汗水不会辜负你的期待,享受你每一次锻炼完后的肌肉酸痛,因为这意味昨天那个预示着懦弱你的已经被你杀死了,肌肉的酸痛预示着懦弱的离场,当你快坚持不住的时候 困难也快坚持不住了,有些事不是看到了希望才努力，而是努力了才看到了希望,在无人问津的地方历练，在万众瞩目的地方出现,破茧成蝶必经淬炼,一颗向上跳动的心脏，不该有一副下坠的躯体,向下的躯体无法承载向上的灵魂,一个人要想成长你的意志力和身体都得尽力磨砺,宝剑锋从磨砺出梅花香自苦寒来" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

